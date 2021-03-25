@@ -145,6 +145,9 @@ public class SetupResearcherUI : MonoBehaviour
         ResetMessageFields();
 
         SendMessageToResearcherChatLog(true, message);
+
+        ChatMessage chatMessage = new ChatMessage(message, responses);
+        this.transform.parent.GetComponent<ChatBehaviour>().Send(chatMessage);
     } 
 
     /// <summary>
@@ -204,13 +207,17 @@ public class SetupResearcherUI : MonoBehaviour
         ChatScrollView.GetComponent<ScrollRect>().verticalNormalizedPosition = 0;
         Canvas.ForceUpdateCanvases();
 
-
     }
 
 
     public void SendParticipantMessageToChatResearcherLog(string message)
     {
         SendMessageToResearcherChatLog(false, message);
+    }
+
+    public void HandleMessage(ChatMessage chatMessage)
+    {
+        SendParticipantMessageToChatResearcherLog(chatMessage.messageContent);
     }
 
 }

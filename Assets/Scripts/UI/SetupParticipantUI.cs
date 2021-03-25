@@ -45,7 +45,8 @@ public class SetupParticipantUI : MonoBehaviour
     /// <param name="selectedResponseButton"></param>
     void ProcessResponse(GameObject selectedResponseButton)
     {
-        SendMessageToParticipantChatLog(false, selectedResponseButton.transform.GetChild(0).GetComponent<Text>().text, null);
+        string response = selectedResponseButton.transform.GetChild(0).GetComponent<Text>().text;
+        SendMessageToParticipantChatLog(false, response, null);
 
         GameObject parentChatObject = selectedResponseButton.transform.parent.transform.parent.transform.parent.gameObject;
         
@@ -53,6 +54,9 @@ public class SetupParticipantUI : MonoBehaviour
 
         parentChatObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(parentChatObject.transform.GetComponent<RectTransform>().sizeDelta.x, parentChatObject.transform.GetChild(0).transform.GetChild(0).GetComponent<RectTransform>().sizeDelta.y + 10f);
         parentChatObject.transform.GetChild(0).GetComponent<RectTransform>().transform.localPosition = new Vector3(parentChatObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition.x, 0, 0f);
+
+        ChatMessage chatMessage = new ChatMessage(response, null);
+        this.transform.parent.GetComponent<ChatBehaviour>().Send(chatMessage);
     }
 
     /// <summary>
@@ -124,6 +128,11 @@ public class SetupParticipantUI : MonoBehaviour
         Canvas.ForceUpdateCanvases();
         ChatScrollView.GetComponent<ScrollRect>().verticalNormalizedPosition = 0;
         Canvas.ForceUpdateCanvases();
+    }
+
+    public void HandleMessage(ChatMessage chatMessage)
+    {
+        SendMessageToParticipantChatLog(true, chatMessage.messageContent, chatMessage.messageResponses);
     }
 
 }
