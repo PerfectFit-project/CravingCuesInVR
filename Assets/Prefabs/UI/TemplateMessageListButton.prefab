@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 8170471254035546165}
   - component: {fileID: 6191610453214277211}
   m_Layer: 5
-  m_Name: TemplateMessageListButton 1
+  m_Name: TemplateMessageListButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -139,7 +139,7 @@ MonoBehaviour:
   m_IgnoreLayout: 0
   m_MinWidth: -1
   m_MinHeight: 25
-  m_PreferredWidth: 455
+  m_PreferredWidth: 453
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
@@ -294,7 +294,7 @@ MonoBehaviour:
   m_IgnoreLayout: 0
   m_MinWidth: -1
   m_MinHeight: -1
-  m_PreferredWidth: 450
+  m_PreferredWidth: 448
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
