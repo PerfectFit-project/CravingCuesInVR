@@ -4,6 +4,10 @@ using UnityEngine.UI;
 using TMPro;
 using Mirror;
 
+/// <summary>
+/// Handle creationing and positioning of messages on a Canvas chat log.
+/// Used on Participant_Canvas_NTW and Researcher_Canvas_NTW objects, which have compatible chat logs.
+/// </summary>
 public class ChatLogBehaviour : MonoBehaviour
 {
     public GameObject ChatScrollView;
@@ -17,14 +21,20 @@ public class ChatLogBehaviour : MonoBehaviour
         Player.OnMessage += OnPlayerMessage;
     }
 
+    /// <summary>
+    /// When a message is received, call the relevant method to display it at the appropriate location on the chat log.
+    /// </summary>
+    /// <param name="player"></param>
+    /// <param name="chatMessage"></param>
     void OnPlayerMessage(Player player, ChatMessage chatMessage)
     {
-        //player.isLocalPlayer
-        //player.isParticipant
         DisplayMessage(player.isLocalPlayer, player.isResearcher, chatMessage);
-
     }
 
+    /// <summary>
+    /// Have the Player object which is the parent of the canvas the message is originating from, to send the message over the network.
+    /// </summary>
+    /// <param name="chatMessage"></param>
     public void OnSend(ChatMessage chatMessage)
     {
         Player player = NetworkClient.connection.identity.GetComponent<Player>();
@@ -32,7 +42,13 @@ public class ChatLogBehaviour : MonoBehaviour
         player.CmdSend(chatMessage);
     }
 
-
+    /// <summary>
+    /// Create a chat log message object and display it in the appropriate position based on the sender.
+    /// If the message is sent from the researcher, the object created can also contain acceptable responses.
+    /// </summary>
+    /// <param name="ownMessage"></param>
+    /// <param name="sentFromResearcher"></param>
+    /// <param name="chatMessage"></param>
     public void DisplayMessage(bool ownMessage, bool sentFromResearcher, ChatMessage chatMessage)
     {
         GameObject newChatLogGameObject;
@@ -109,7 +125,6 @@ public class ChatLogBehaviour : MonoBehaviour
     void ProcessResponse(GameObject selectedResponseButton)
     {
         string response = selectedResponseButton.transform.GetChild(0).GetComponent<Text>().text;
-        DisplayMessage(true, false, new ChatMessage(response, null));
 
         GameObject parentChatObject = selectedResponseButton.transform.parent.transform.parent.transform.parent.gameObject;
 
@@ -119,7 +134,6 @@ public class ChatLogBehaviour : MonoBehaviour
         parentChatObject.transform.GetChild(0).GetComponent<RectTransform>().transform.localPosition = new Vector3(parentChatObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition.x, 0, 0f);
 
         ChatMessage chatMessage = new ChatMessage(response, null);
-        //this.transform.parent.GetComponent<ChatBehaviour>().Send(chatMessage);
         OnSend(chatMessage);
     }
 

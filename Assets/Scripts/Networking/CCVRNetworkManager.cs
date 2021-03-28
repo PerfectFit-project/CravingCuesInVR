@@ -3,47 +3,38 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
+/// <summary>
+/// 
+/// </summary>
 public class CCVRNetworkManager : NetworkManager
 {
+    public GameObject LogInCanvas;
+
     string PlayerName;
+    bool IsResearcher;
 
-    [SerializeField] private GameObject participantUIPrefab;
-    [SerializeField] private GameObject researcherUIPrefab;
+    GameObject playerObject;
 
-    private GameObject userInterfacePrefab;
-    private GameObject userInterface;
-
+    /// <summary>
+    /// If the user has logged in as researcher, connect as host. Otherwise, connect as client. Used to determine which UI to display for each user. 
+    /// </summary>
+    /// <param name="playerName"></param>
+    /// <param name="isResearcher"></param>
     public void ResolvePlayerLogIn(string playerName, bool isResearcher)
     {
         PlayerName = playerName;
-
-        //userInterfacePrefab = (isResearcher) ? researcherUIPrefab : participantUIPrefab;
+        IsResearcher = isResearcher;
 
         if (isResearcher)
         {
-            Debug.Log("IS RESEARCHER");
-            userInterfacePrefab = researcherUIPrefab;
             StartHost();
         }
         else
-        {
-            Debug.Log("IS PARTICIPANT");
-            userInterfacePrefab = participantUIPrefab;
+        {            
             StartClient();
         }
     }
 
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-        Debug.Log("STARTED CLIENT");
-    }
-
-    public override void OnStartHost()
-    {
-        base.OnStartHost();
-        Debug.Log("STARTED HOST");
-    }
 
     public void SetHostname(string hostname)
     {
@@ -61,33 +52,38 @@ public class CCVRNetworkManager : NetworkManager
         base.OnStartServer();
         NetworkServer.RegisterHandler<CreatePlayerMessage>(OnCreatePlayer);
     }
-    
-    //ISSUE HERE
-     //   Figure out how to instantiate the different UIs. Current way of calling start client and start host may not work properly. Investigate.
-
+   
     public override void OnClientConnect(NetworkConnection conn)
     {
         base.OnClientConnect(conn);
 
-        // tell the server to create a player with this name
-        conn.Send(new CreatePlayerMessage { name = PlayerName });
+        // Tell the server to create a player with these values
+        conn.Send(new CreatePlayerMessage { name = PlayerName, isResearcher = IsResearcher });
+    }
+
+    /// <summary>
+    /// TODO: Disconnect behavior needs fixing. If host is disconnected (by terminating the application), client can log back in, but if logging in as researcher (host), messages do not appear on that UI.
+    /// TODO: Maybe we don't need a way to reconnect, just a graceful way to disconnect and terminate the application.
+    /// </summary>
+    /// <param name="conn"></param>
+    public override void OnClientDisconnect(NetworkConnection conn)
+    {
+        base.OnClientDisconnect(conn);
+
+        LogInCanvas.SetActive(true);
     }
 
     void OnCreatePlayer(NetworkConnection connection, CreatePlayerMessage createPlayerMessage)
     {
-        // create a gameobject using the name supplied by client
-        GameObject playergo = Instantiate(playerPrefab);
-        playergo.GetComponent<Player>().playerName = createPlayerMessage.name;
-        playergo.GetComponent<Player>().isResearcher = createPlayerMessage.isResearcher;
+        // Create a Player gameobject using the name and isResearcher values supplied by client
+        playerObject = Instantiate(playerPrefab);
+        playerObject.GetComponent<Player>().playerName = createPlayerMessage.name;
+        playerObject.GetComponent<Player>().isResearcher = createPlayerMessage.isResearcher;
+                
+        // Set it as the player
+        NetworkServer.AddPlayerForConnection(connection, playerObject);
 
-        Debug.Log("Creating player");
-        userInterface = Instantiate(userInterfacePrefab, playergo.transform);
-
-        // set it as the player
-        NetworkServer.AddPlayerForConnection(connection, playergo);
-
-        userInterface.gameObject.SetActive(true);
+        playerObject.GetComponent<Player>().InstantiateUI();
     }
-
 
 }

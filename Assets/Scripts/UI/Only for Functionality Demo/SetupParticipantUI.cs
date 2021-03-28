@@ -7,6 +7,9 @@ using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
+/// DEPRECATED: Functionality abstracted and made redundant by the ChatLogBehavior script, which handles message creation and placement on chat log canvases. 
+/// For use in the local Participant_Canvas objects, which are only for basic functionality demonstration purposes.
+/// 
 /// Demonstrating functionality for adding objects on the chat log of the participant's UI. Some methods used only for demonstration purposes,
 /// redundancies with the researcher UI functionality, as well as some hard-coded variables will be refactored once networking is implemented. 
 /// </summary>
@@ -54,9 +57,6 @@ public class SetupParticipantUI : MonoBehaviour
 
         parentChatObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(parentChatObject.transform.GetComponent<RectTransform>().sizeDelta.x, parentChatObject.transform.GetChild(0).transform.GetChild(0).GetComponent<RectTransform>().sizeDelta.y + 10f);
         parentChatObject.transform.GetChild(0).GetComponent<RectTransform>().transform.localPosition = new Vector3(parentChatObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition.x, 0, 0f);
-
-        ChatMessage chatMessage = new ChatMessage(response, null);
-        this.transform.parent.GetComponent<ChatBehaviour>().Send(chatMessage);
     }
 
     /// <summary>

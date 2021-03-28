@@ -18,20 +18,14 @@ public class LogInManager : MonoBehaviour
     public GameObject UserNameWarningLabel;
     public GameObject PasswordWarningLabel;
 
+    // For simple checking so that participants can't log in as researchers. Shouldn't be an issue for the intended experiments, but probably replace with a more secure solution if wanting to implement a remote application.
     public string password;
 
-    private void Start()
-    {
-
-    }
-
+    /// <summary>
+    /// Enable the password field if the Researcher dropdown menu option is selected.
+    /// </summary>
     public void CheckDropDownSelection()
     {
-        Debug.Log("Checking Dropdown selection.");
-        Debug.Log("Current value: " + DropdownMenu.GetComponent<TMP_Dropdown>().value);
-
-        Debug.Log(DropdownMenu.transform.GetChild(0).GetComponent<TMP_Text>().text);
-
         if (DropdownMenu.transform.GetChild(0).GetComponent<TMP_Text>().text.Equals("Researcher")) 
         {
             PasswordLabel.SetActive(true);
@@ -45,6 +39,9 @@ public class LogInManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Perform form checking and if everything is in order, have the Network Manager initiate a Player object creation process.
+    /// </summary>
     public void LogInUser()
     {
         bool error = false;
@@ -82,26 +79,6 @@ public class LogInManager : MonoBehaviour
 
         transform.gameObject.SetActive(false);
     }
-
-    //public void ResolvePlayerLogIn(string playerName, bool isResearcher)
-    //{
-    //    PlayerName = playerName;
-
-    //    //userInterfacePrefab = (isResearcher) ? researcherUIPrefab : participantUIPrefab;
-
-    //    if (isResearcher)
-    //    {
-    //        Debug.Log("IS RESEARCHER");
-    //        userInterfacePrefab = researcherUIPrefab;
-    //        StartClient();
-    //    }
-    //    else
-    //    {
-    //        Debug.Log("IS PARTICIPANT");
-    //        userInterfacePrefab = participantUIPrefab;
-    //        StartHost();
-    //    }
-    //}
 
 
 }

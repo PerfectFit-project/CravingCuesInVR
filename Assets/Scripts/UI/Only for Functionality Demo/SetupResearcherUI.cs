@@ -5,11 +5,14 @@ using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
+/// DEPRECATED: Chat log functionality abstracted and made redundant by the ChatLogBehavior script, which handles message creation and placement on chat log canvases. 
+/// For use in the local Participant_Canvas objects, which are only for basic functionality demonstration purposes.
+/// 
 /// Implemented functionality for loading template messages and acceptable responses from a JSON file and presenting them in the UI.
 /// Demonstrating functionality for adding objects on the chat log of the participant's UI. Some methods used only for demonstration purposes,
 /// redundancies with the participant UI functionality, as well as some hard-coded variables will be refactored once networking is implemented. 
 /// </summary>
-public class SetupResearcherUI_New : MonoBehaviour
+public class SetupResearcherUI : MonoBehaviour
 {
     public GameObject TemplateMessageSVContent;
     public GameObject TemplateMessageButtonPrefab;
@@ -17,10 +20,15 @@ public class SetupResearcherUI_New : MonoBehaviour
     public GameObject MessageResponsesSVContent;
     public GameObject ResponseInputFieldPrefab;
 
+    public GameObject ChatScrollView;
+    public GameObject ChatLogSVContent;
+    public GameObject ParticipantChatObjectPrefab;
+    public GameObject ResearcherChatObjectPrefab;
+
 
     void Start()
     {
-        PopulateResearcherUI(RetrieveChatMessagesFromJSON());
+        PopulateResearcherUI(RetrieveChatMessagesFromJSON());      
     }
 
     /// <summary>
@@ -59,16 +67,16 @@ public class SetupResearcherUI_New : MonoBehaviour
     /// <param name="message"></param>
     /// <param name="responses"></param>
     void PopulateMessageEditFields(string message, string[] responses)
-    {
+    {       
         ResetMessageFields();
 
-        MessageInputField.GetComponent<InputField>().text = message;
+        MessageInputField.GetComponent<InputField>().text = message; 
 
         foreach (string response in responses)
         {
             AddResponseInputField(response);
         }
-    }
+    } 
 
     /// <summary>
     /// Add an empty response InputField + remove Button object in the list.
@@ -123,7 +131,7 @@ public class SetupResearcherUI_New : MonoBehaviour
         foreach (Transform inputFieldGameobject in MessageResponsesSVContent.transform)
         {
             if (String.IsNullOrWhiteSpace(inputFieldGameobject.transform.Find("InputField").GetComponent<InputField>().text)) return;
-
+            
         }
 
         int responsesCount = MessageResponsesSVContent.transform.childCount;
@@ -139,14 +147,77 @@ public class SetupResearcherUI_New : MonoBehaviour
 
         ResetMessageFields();
 
+        SendMessageToResearcherChatLog(true, message);
+    } 
 
-        //SendMessageToResearcherChatLog(true, message);
+    /// <summary>
+    /// Instantiate a GameObject to display a given message. The X position of the GameObject depends on who sent the message.
+    /// </summary>
+    /// <param name="researcherMessage"></param>
+    /// <param name="message"></param>
+    public void SendMessageToResearcherChatLog(bool sentFromResearcher, string message)
+    {
+        float padding = 5f;
 
-        ChatMessage chatMessage = new ChatMessage(message, responses);
-        //this.transform.parent.GetComponent<ChatBehaviour>().Send(chatMessage);
-        GetComponent<ChatLogBehaviour>().OnSend(chatMessage);
+        GameObject newChatLogGameObject;
+
+        RectTransform newChatLogGameObjectTransform = new RectTransform();
+        float xPos = 18;
+        float yPos = 0f;
+
+        TextAlignmentOptions textAlignment = TextAlignmentOptions.MidlineLeft;
+        Color backgroundColor;
+        float colorNormalizer = 255f;        
+        
+        if (sentFromResearcher)
+        {
+            newChatLogGameObject = Instantiate(ParticipantChatObjectPrefab, ChatLogSVContent.transform);
+            textAlignment = TextAlignmentOptions.MidlineRight;
+            backgroundColor = new Color(70f / colorNormalizer, 255f / colorNormalizer, 65f / colorNormalizer, 95f / colorNormalizer);
+        }
+        else
+        {
+            newChatLogGameObject = Instantiate(ResearcherChatObjectPrefab, ChatLogSVContent.transform);
+            xPos = -xPos;
+            backgroundColor = new Color(65f / colorNormalizer, 245f / colorNormalizer, 255f / colorNormalizer, 95f / colorNormalizer);
+        }
+
+        newChatLogGameObject.transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = message;
+        newChatLogGameObject.transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshProUGUI>().alignment = textAlignment;
+        newChatLogGameObject.transform.GetChild(0).GetComponent<Image>().color = backgroundColor;
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(newChatLogGameObject.transform.GetChild(0).transform.GetChild(0).GetComponent<RectTransform>());
+        LayoutRebuilder.ForceRebuildLayoutImmediate(newChatLogGameObject.transform.GetComponent<RectTransform>());
+
+        newChatLogGameObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(newChatLogGameObject.transform.GetComponent<RectTransform>().sizeDelta.x, newChatLogGameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta.y);
+        newChatLogGameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(newChatLogGameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta.x + padding, newChatLogGameObject.transform.GetChild(0).transform.GetChild(0).GetComponent<RectTransform>().sizeDelta.y + padding);
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(newChatLogGameObject.transform.GetChild(0).transform.GetChild(0).GetComponent<RectTransform>());
+        LayoutRebuilder.ForceRebuildLayoutImmediate(newChatLogGameObject.transform.GetComponent<RectTransform>());
+
+        if (ChatLogSVContent.transform.childCount > 1)
+        {
+            yPos = yPos - Math.Abs(ChatLogSVContent.transform.GetChild(ChatLogSVContent.transform.childCount - 2).GetChild(0).transform.GetChild(0).GetComponent<RectTransform>().localPosition.y) - Math.Abs(ChatLogSVContent.transform.GetChild(ChatLogSVContent.transform.childCount - 2).GetComponent<RectTransform>().sizeDelta.y / 2f);
+        }
+
+        newChatLogGameObject.transform.GetChild(0).transform.GetChild(0).GetComponent<RectTransform>().transform.localPosition = new Vector3(xPos, 0, 0f);
+        newChatLogGameObject.transform.GetChild(0).GetComponent<RectTransform>().transform.localPosition = new Vector3(xPos, 0, 0f);
+
+        Canvas.ForceUpdateCanvases();
+        ChatScrollView.GetComponent<ScrollRect>().verticalNormalizedPosition = 0;
+        Canvas.ForceUpdateCanvases();
+
     }
 
 
+    public void SendParticipantMessageToChatResearcherLog(string message)
+    {
+        SendMessageToResearcherChatLog(false, message);
+    }
+
+    public void HandleMessage(ChatMessage chatMessage)
+    {
+        SendParticipantMessageToChatResearcherLog(chatMessage.messageContent);
+    }
 
 }

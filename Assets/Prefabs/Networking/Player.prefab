@@ -61,3 +61,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6a33b0dc0efdf94492fb3a054b74b9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  playerName: 
+  isResearcher: 0
+  ResearcherUIPrefab: {fileID: 3833914823595026383, guid: 238e0f7d34825af409596273a9c318a5, type: 3}
+  ParticipantUIPrefab: {fileID: 7823906264632798586, guid: 33f9ffa90d0147f40a6f47fb24d22c25, type: 3}
