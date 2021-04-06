@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
 public class CameraMovement : MonoBehaviour
 {
@@ -17,7 +18,22 @@ public class CameraMovement : MonoBehaviour
         container = GetComponent<Transform>();
     }
 
-    void LateUpdate()
+
+    public void UpdateCameraRotationLimits(float textureDimensionRatio)
+    {
+        if (textureDimensionRatio > 4)
+        {
+            LowerHorizontalRotationLimit = 20f;
+            HigherHorizontalRotationLimit = 223.75f;
+        }
+        else
+        {
+            LowerHorizontalRotationLimit = 75.6f;
+            HigherHorizontalRotationLimit = 223.9f;
+        }        
+    }
+
+    public void MoveCamera()
     {
         // Using mouse
         horizontal = Input.GetAxis("Mouse X");
@@ -36,20 +52,8 @@ public class CameraMovement : MonoBehaviour
         // Might want to enable some Y and Z rotation to make viewing more realistic with a VR headset.
         //transform.Rotate(new Vector3(vertical, 0, 0) * Time.deltaTime * turnSpeedMouse);
 
-
-    }
-
-    public void UpdateCameraRotationLimits(float textureDimensionRatio)
-    {
-        if (textureDimensionRatio > 4)
-        {
-            LowerHorizontalRotationLimit = 20f;
-            HigherHorizontalRotationLimit = 223.75f;
-        }
-        else
-        {
-            LowerHorizontalRotationLimit = 75.6f;
-            HigherHorizontalRotationLimit = 223.9f;
-        }        
+        // Sending the camera rotation to all users.
+        Player player = NetworkClient.connection.identity.GetComponent<Player>();
+        player.RotateCamera(container.eulerAngles);
     }
 }
