@@ -9,6 +9,8 @@ using Mirror;
 public class CCVRNetworkManager : NetworkManager
 {
     public GameObject LogInCanvas;
+    public GameObject PanoramaSphere;
+    public GameObject MainCamera;
 
     string PlayerName;
     bool IsResearcher;
@@ -33,6 +35,8 @@ public class CCVRNetworkManager : NetworkManager
         {            
             StartClient();
         }
+        MainCamera.SetActive(false);
+        PanoramaSphere.SetActive(true);
     }
 
 
@@ -83,7 +87,12 @@ public class CCVRNetworkManager : NetworkManager
         // Set it as the player
         NetworkServer.AddPlayerForConnection(connection, playerObject);
 
+        //MainCamera.SetActive(false);
+        //PanoramaSphere.SetActive(true);
+
         playerObject.GetComponent<Player>().InstantiateUI();
     }
+
+
 
 }

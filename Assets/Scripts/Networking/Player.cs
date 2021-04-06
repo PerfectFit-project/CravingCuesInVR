@@ -14,9 +14,12 @@ public class Player : NetworkBehaviour
     public GameObject ResearcherUIPrefab; 
     public GameObject ParticipantUIPrefab;
 
+    GameObject PanoramaCamera;
+
     GameObject userInterface;
 
     public static event Action<Player, ChatMessage> OnMessage;
+
 
 
     /// <summary>
@@ -25,12 +28,14 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void InstantiateUI()
     {
+        PanoramaCamera = GameObject.Find("PanoramaCamera");
+
         if (isResearcher)
         {
             userInterface = Instantiate(ResearcherUIPrefab, transform);
         }
         else
-        {
+        {          
             userInterface = Instantiate(ParticipantUIPrefab, transform);
         }
         
@@ -52,4 +57,28 @@ public class Player : NetworkBehaviour
     {
         OnMessage?.Invoke(this, chatMessage);
     }
+
+
+    [Command]
+    public void RotateCamera(Vector3 rotation)
+    {
+        ReceiveCameraRotation(rotation);
+    }
+
+    [ClientRpc]
+    public void ReceiveCameraRotation(Vector3 rotation)
+    {
+        PanoramaCamera.transform.eulerAngles = rotation;
+    }
+
+
+    void LateUpdate()
+    {
+        if (isResearcher || !hasAuthority)
+            return;
+        else
+        {
+            PanoramaCamera.GetComponent<CameraMovement>().MoveCamera();
+        }
+    }        
 }
