@@ -78,7 +78,7 @@ public class Player : NetworkBehaviour
             return;
         else
         {
-            PanoramaCamera.GetComponent<CameraMovement>().MoveCamera();
+            PanoramaCamera.GetComponent<CameraMovementNTW>().MoveCamera();
         }
     }        
 }
