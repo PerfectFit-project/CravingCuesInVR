@@ -192,7 +192,7 @@ public class ExperimentRun : MonoBehaviour
         QuestionnaireCanvas.SetActive(false);
         transform.GetChild(0).GetComponent<EnvironmentManagerLC>().ShowEndingEnvironment();
 
-
+        transform.GetComponent<SaveCollectedDataLC>().SaveDataToFile(UserName);
     }
 
     public void LogUserIn(string userName)

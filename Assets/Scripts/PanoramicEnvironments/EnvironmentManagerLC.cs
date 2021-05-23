@@ -65,7 +65,7 @@ public class EnvironmentManagerLC : MonoBehaviour
             // Avoid .meta and .json files, and files containing "audio" to prevent double loading
             if (!file.Name.Contains("meta") && !file.Name.Contains("json") && !file.Name.Contains("audio"))
             {
-                //Debug.Log("TEXTURE FILE NAME: " + file.Name);
+                Debug.Log("TEXTURE FILE NAME: " + file.Name);
                 string fileNameToCheck = file.Name.Substring(0, file.Name.IndexOf("_image"));
 
                 foreach (var file2 in AllFilesInFolder)
@@ -205,6 +205,11 @@ public class EnvironmentManagerLC : MonoBehaviour
 
     }
 
+    public string GetCurrentEnvironmentName()
+    {
+        return EnvironmentsInDisplayOrder[CurrentEnvironmentIndex].envName;
+    }
+
     private void SetTexture(Texture2D texture)
     {
         Material material = GetComponent<Renderer>().material;
@@ -219,6 +224,9 @@ public class EnvironmentManagerLC : MonoBehaviour
             material.mainTextureScale = new Vector2(1.5f, 3f);
 
         transform.GetChild(0).GetComponent<CameraMovementLC>().UpdateCameraRotationLimits(dimensionRatio);
+
+        Debug.Log("CURRENTLY DISPLAYING: ");
+        Debug.Log(GetCurrentEnvironmentName());
     }
 
     private void SetAudioClip(AudioClip audioClip)
@@ -246,13 +254,15 @@ public class EnvironmentManagerLC : MonoBehaviour
         }
 
 
-        //Debug.Log("About to set environment: " + CurrentEnvironmentIndex);
+        Debug.Log("About to set environment: " + CurrentEnvironmentIndex);
+        Debug.Log(EnvironmentsInDisplayOrder);
         //Debug.Log("ABOUT TO PRINT ENV IN DISP ORD");
         //foreach (int i in EnvironmentsInDisplayOrder.Keys)
         //{
             //Debug.Log(EnvironmentsInDisplayOrder[i]);
         //}
         //Debug.Log("PRINTED");
+
         SetTexture(EnvironmentsInDisplayOrder[CurrentEnvironmentIndex].envTexture);
         EnvironmentDisplayTime = timeToDisplay;
         CurrentEnvironmentDisplayTime = 0f;

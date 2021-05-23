@@ -73,22 +73,31 @@ public class LocalExperimentUIBehavior : MonoBehaviour
     {
         // Adjusting the size to account for the submit button being a child of the panel too.
         int questionCount = ChatLogSVContent.transform.childCount - 1;
-        int[] qResponses = new int[questionCount];
+        //int[] qResponses = new int[questionCount];
+
+        // Seems a bit unnecessary to have an <int, int> dictionary here since a simple array or list would suffice, however, this makes it easier to add to the overall questionnare responses file later.
+        Dictionary<int, int> qResponses = new Dictionary<int, int>();
 
         Debug.Log(questionCount);
         for (int i = 0; i < questionCount; i++)
         {
             // Hardcoding that the Slider object is the second child of the composite slider object
-            qResponses[i] = (int)ChatLogSVContent.transform.GetChild(i).transform.GetChild(1).GetComponent<Slider>().value;
+            qResponses[i+1] = (int)ChatLogSVContent.transform.GetChild(i).transform.GetChild(1).GetComponent<Slider>().value;
+            // Resetting the Slider value
             ChatLogSVContent.transform.GetChild(i).transform.GetChild(1).GetComponent<Slider>().value = ChatLogSVContent.transform.GetChild(i).transform.GetChild(1).GetComponent<Slider>().minValue;
         }
 
-        foreach (int response in qResponses)
-        {
-            Debug.Log(response);
-        }
+        // Moving the page to the top
+        ChatScrollView.GetComponent<ScrollRect>().normalizedPosition = new Vector2(0, 1);
 
-        //PlayerObj.GetComponent<SaveCollectedDataLC>().StoreDataToCollection(string envId, Dictionary<int, int> responses);
+        //foreach (int response in qResponses.Keys)
+        //{
+        //    Debug.Log("Question: " + response + ", Response: " + qResponses[response]);
+        //}
+
+        string currentEnvironmentName = transform.parent.GetComponentInChildren<EnvironmentManagerLC>().GetCurrentEnvironmentName();
+
+        PlayerObj.GetComponent<SaveCollectedDataLC>().StoreDataToCollection(currentEnvironmentName, qResponses);
 
         PlayerObj.GetComponent<ExperimentRun>().UpdateExperimentState();
 
