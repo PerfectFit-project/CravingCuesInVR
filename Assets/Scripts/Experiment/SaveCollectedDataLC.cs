@@ -21,52 +21,39 @@ public class SaveCollectedDataLC : MonoBehaviour
 
     public void SaveDataToFile(string userName)
     {
-        string headerTextToWrite = "environment ID, ";
+        string headerTextToWrite = "env_ID, ";
         bool headerFinished = false;
         string contentTextToWrite = "";
-        int entriesCurrentlyInHeader = 0;
 
         foreach (string env in QuestionnaireResponses.Keys)
         {
+            int entriesRead = 0;
             contentTextToWrite = contentTextToWrite + env + ", ";
 
             foreach (int question in QuestionnaireResponses[env].Keys)
             {
                 // Construct the header based on question numbers, the first time we iterate inside the dictionary. Assuming that the same questions are asked in each environment. Will cause issues otherwise.
-                if (!headerFinished)
+                if (entriesRead < QuestionnaireResponses[env].Keys.Count - 1)
                 {
-                    //if (question != QuestionnaireResponses[env][QuestionnaireResponses[env].Keys.Count])
-                    //{
-                    //    headerTextToWrite = headerTextToWrite + "Q_" + question.ToString() + ", ";
-                    //}
-                    //else
-                    //{
-                    //    headerTextToWrite = headerTextToWrite + "Q_" + question.ToString() + "\n";
-                    //    headerFinished = true;
-                    //}
+                    contentTextToWrite = contentTextToWrite + QuestionnaireResponses[env][question].ToString() + ", ";
 
-                    if (entriesCurrentlyInHeader < QuestionnaireResponses[env].Keys.Count - 1)
+                    if (!headerFinished)
                     {
                         headerTextToWrite = headerTextToWrite + "Q_" + question.ToString() + ", ";
                     }
-                    else
+                }
+                else
+                {
+                    contentTextToWrite = contentTextToWrite + QuestionnaireResponses[env][question].ToString() + "\n";
+
+                    if (!headerFinished)
                     {
                         headerTextToWrite = headerTextToWrite + "Q_" + question.ToString() + "\n";
                         headerFinished = true;
                     }
-                    entriesCurrentlyInHeader++;
-
                 }
 
-                //if (question != QuestionnaireResponses[env][QuestionnaireResponses[env].Keys.Count])
-                //{
-                //    contentTextToWrite = contentTextToWrite + QuestionnaireResponses[env][question].ToString() + ", ";
-                //} 
-                //else
-                //{
-                //    contentTextToWrite = contentTextToWrite + QuestionnaireResponses[env][question].ToString() + "\n";
-                //}
-                contentTextToWrite = contentTextToWrite + QuestionnaireResponses[env][question].ToString() + ", ";
+                entriesRead++;
             }
         }
 
