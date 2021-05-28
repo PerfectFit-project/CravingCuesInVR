@@ -74,6 +74,12 @@ public class Player : NetworkBehaviour
 
     void LateUpdate()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            userInterface.GetComponent<Canvas>().enabled = !userInterface.GetComponent<Canvas>().enabled;
+        }
+
+
         if (isResearcher || !hasAuthority)
             return;
         else
