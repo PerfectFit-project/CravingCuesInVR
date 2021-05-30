@@ -17,6 +17,7 @@ enum ExperimentState: short
 
 public class ExperimentRun : MonoBehaviour
 {
+    public GameObject LoadingScreenCanvas;
     public GameObject LoginCanvas;
     public GameObject PanoramaCameraObj;
     public GameObject QuestionnaireCanvas;
@@ -36,7 +37,9 @@ public class ExperimentRun : MonoBehaviour
     {
         NoEnvironmentsLeft = false;
         CurrentExperimentState = (short)ExperimentState.StartExperiment;
-        UpdateState = true;
+        UpdateState = false; 
+        TakeAction();
+
         // 1. Present login screen: prompt user to enter name/identifier
         // 2. Present brief instructions screen
         // 3. Present environment for a few minutes
@@ -145,13 +148,15 @@ public class ExperimentRun : MonoBehaviour
     void StartExperiment()
     {
         Debug.Log("Triggered: StartExperiment");
+        // Wait for environments to be loaded.
         // Show instructions
-        CurrentExperimentState = (short)ExperimentState.ShowLogin;
+        //CurrentExperimentState = (short)ExperimentState.ShowLogin;
 
     }
 
     void ShowLogin()
     {
+        LoadingScreenCanvas.SetActive(false);
         Debug.Log("Triggered: ShowLogin");
         // Show login screen
         LoginCanvas.SetActive(true);
