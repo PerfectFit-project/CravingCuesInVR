@@ -84,7 +84,7 @@ public class ChangeImage : MonoBehaviour
         else
             material.mainTextureScale = new Vector2(1.5f, 3f);
 
-        transform.GetChild(0).GetComponent<CameraMovement>().UpdateCameraRotationLimits(dimensionRatio);
+        transform.GetChild(0).GetComponent<CameraMovementNTW>().UpdateCameraRotationLimits(dimensionRatio);
     }
         
 }

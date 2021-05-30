@@ -391,6 +391,26 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2601868124435707605, guid: 110e8872c871ca247835fdb4a5f4c873, type: 3}
   m_PrefabInstance: {fileID: 8332519508091606756}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &504573613 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7490771231744335668, guid: bca5997a4bb7de44a8794f2a743c6753, type: 3}
+  m_PrefabInstance: {fileID: 858747165}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &504573614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 504573613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8e4065e4fc44904a9de96bdb7a9363a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LowerHorizontalRotationLimit: 75.6
+  HigherHorizontalRotationLimit: 223.75
+  turnSpeedMouse: 200
 --- !u!1 &694273044
 GameObject:
   m_ObjectHideFlags: 0
@@ -491,6 +511,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1174743649070619257, guid: bca5997a4bb7de44a8794f2a743c6753, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7490771230748938056, guid: bca5997a4bb7de44a8794f2a743c6753, type: 3}
       propertyPath: m_Name
       value: PanoramaSphere
@@ -665,6 +689,10 @@ PrefabInstance:
     - target: {fileID: 5749284829004697076, guid: 3ff3403810f333240a0abf93b0dd5853, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6629918718961771374, guid: 3ff3403810f333240a0abf93b0dd5853, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3ff3403810f333240a0abf93b0dd5853, type: 3}
