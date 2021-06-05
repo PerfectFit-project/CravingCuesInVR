@@ -8,16 +8,15 @@ public class CameraMovementLC : MonoBehaviour
     public float HigherHorizontalRotationLimit;
     public float LowerVerticalRotationLimit;
     public float HigherVerticalRotationLimit;
-    public int turnSpeedMouse;
+    [SerializeField] private Vector2 RotationSensitivity;
+    [SerializeField] private Vector2 RotationAcceleration;
+    [SerializeField] private float InputLagPeriod;
+    [SerializeField] private bool LimitHorizontalRotation;
 
-    float horizontal;
-    float vertical;
-    Transform container;
-
-    void Start()
-    {
-        container = GetComponent<Transform>();
-    }
+    Vector2 velocity;
+    Vector2 rotation;
+    Vector2 lastInputEvent;
+    float inputLagTimer;
     
     private void Update()
     {
@@ -43,47 +42,92 @@ public class CameraMovementLC : MonoBehaviour
         }        
     }
 
+    private Vector2 GetInput()
+    {
+        inputLagTimer += Time.deltaTime;
+
+        Vector2 input = new Vector2(
+            Input.GetAxis("Mouse X"),
+            Input.GetAxis("Mouse Y")
+            );
+
+        if ((Mathf.Approximately(0, input.x) && Mathf.Approximately(0, input.y)) == false || inputLagTimer >= InputLagPeriod)
+        {
+            lastInputEvent = input;
+            inputLagTimer = 0;
+        }
+        return lastInputEvent;
+    }
+
     public void MoveCamera()
     {
         // Using mouse
-        horizontal = Input.GetAxis("Mouse X");
-        vertical = Input.GetAxis("Mouse Y");
 
-        container.Rotate(new Vector3(vertical, horizontal * (-1), 0f) * Time.deltaTime * turnSpeedMouse);
+        //Vector2 input = new Vector2(
+        //    Input.GetAxis("Mouse X"),
+        //    Input.GetAxis("Mouse Y")
+        //    );
 
-        Transform temp = container;
-        temp.Rotate(new Vector3(vertical, horizontal * (-1), 0f) * Time.deltaTime * turnSpeedMouse);
+        Vector2 rawVelocity = GetInput() * RotationSensitivity;
 
-        ConstrainCameraRotation(temp);
+        velocity = new Vector2(
+            Mathf.MoveTowards(velocity.x, rawVelocity.x, RotationAcceleration.x * Time.deltaTime),
+            Mathf.MoveTowards(velocity.y, rawVelocity.y, RotationAcceleration.y * Time.deltaTime)
+            );
 
-        container.eulerAngles = new Vector3(temp.rotation.eulerAngles.x, temp.rotation.eulerAngles.y, temp.rotation.eulerAngles.z);
+        rotation += velocity * Time.deltaTime;
+
+        transform.eulerAngles = new Vector3(rotation.y, rotation.x, 0f);
+
+        //Debug.Log("Vertical ROT: " + transform.rotation.eulerAngles.x);
+        //Debug.Log("Horizontal ROT: " + transform.rotation.eulerAngles.y);
+
+        //container.Rotate(new Vector3(vertical, horizontal * (-1), 0f) * Time.deltaTime * turnSpeedMouse);
+
+        //Transform temp = container;
+        //temp.Rotate(new Vector3(vertical, horizontal * (-1), 0f) * Time.deltaTime * turnSpeedMouse);
+
+        //ConstrainCameraRotation();
+
+        //container.eulerAngles = new Vector3(temp.rotation.eulerAngles.x, temp.rotation.eulerAngles.y, temp.rotation.eulerAngles.z);
 
         // Not rotating on X or Z, which the line below allows, to prevent looking outside the vertical bounds of the image.
         // Might want to enable some Y and Z rotation to make viewing more realistic with a VR headset.
         //transform.Rotate(new Vector3(vertical, 0, 0) * Time.deltaTime * turnSpeedMouse);        
     }
 
-    public void ConstrainCameraRotation(Transform transform)
-    {
-        float horizontalRotation = transform.rotation.eulerAngles.y;
-        float verticalRotation = transform.rotation.eulerAngles.x;
+    //public void ConstrainCameraRotation()
+    //{
+    //    float verticalRotation = transform.localRotation.x;
+    //    float horizontalRotation = transform.localRotation.eulerAngles.y;        
 
-        // Constraining horizontal rotation so it does not go outside the intended boundaries.
-        if (transform.rotation.eulerAngles.y < LowerHorizontalRotationLimit)
-            horizontalRotation = LowerHorizontalRotationLimit;
-        else if (transform.rotation.eulerAngles.y > HigherHorizontalRotationLimit)
-            horizontalRotation = HigherHorizontalRotationLimit;
+    //    if (LimitHorizontalRotation)
+    //    {
+    //        // Constraining horizontal rotation so it does not go outside the intended boundaries.
+    //        if (horizontalRotation < LowerHorizontalRotationLimit)
+    //            horizontalRotation = LowerHorizontalRotationLimit;
+    //        else if (horizontalRotation > HigherHorizontalRotationLimit)
+    //            horizontalRotation = HigherHorizontalRotationLimit;
+    //    }
 
-        // eulerAngles returns a positive number, so doing this to get a negative value to check whether the rotation falls within the vertical boundaries.
-        float angle = (transform.rotation.eulerAngles.x > 180) ? transform.rotation.eulerAngles.x - 360 : transform.rotation.eulerAngles.x;
+    //    Debug.Log("VERTICAL ROTATION: " + verticalRotation);
+    //    Debug.Log("HORIZONTAL ROTATION: " + horizontalRotation);
+    //    // eulerAngles returns a positive number, so doing this to get a negative value to check whether the rotation falls within the vertical boundaries.
+        
+    //    float angle = (transform.localRotation.eulerAngles.x > 180) ? transform.localRotation.eulerAngles.x - 360 : transform.localRotation.eulerAngles.x;
 
-        // Constraining vertical rotation so it does not go outside the intended boundaries. X-Rotation is reversed (Up is - angle and down is + angle)
-        if (angle > LowerVerticalRotationLimit)
-            verticalRotation = LowerVerticalRotationLimit;
-        else if (angle < HigherVerticalRotationLimit)
-            verticalRotation = HigherVerticalRotationLimit;
+    //    // Constraining vertical rotation so it does not go outside the intended boundaries. X-Rotation is reversed (Up is - angle and down is + angle)
+    //    if (angle > LowerVerticalRotationLimit)
+    //        verticalRotation = LowerVerticalRotationLimit;
+    //    else if (angle < HigherVerticalRotationLimit)
+    //        verticalRotation = HigherVerticalRotationLimit;
 
 
-        transform.eulerAngles = new Vector3(verticalRotation, horizontalRotation, 0f);
-    }
+    //    transform.localEulerAngles = new Vector3(verticalRotation, horizontalRotation, 0f);
+
+
+    //}
+
+
+
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 enum ExperimentState: short
 {
@@ -34,7 +35,7 @@ public class ExperimentRun : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
+    {        
         NoEnvironmentsLeft = false;
         CurrentExperimentState = (short)ExperimentState.StartExperiment;
         UpdateState = false; 
@@ -53,6 +54,8 @@ public class ExperimentRun : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        OVRInput.Update();
+
         if (UpdateState && CurrentExperimentState != (short)ExperimentState.EndExperiment)
         {
             UpdateState = false;
@@ -60,7 +63,31 @@ public class ExperimentRun : MonoBehaviour
             TakeAction();
         }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {           
+            QuestionnaireCanvas.SetActive(!QuestionnaireCanvas.activeSelf);
+        }
         
+        if (OVRInput.GetDown(OVRInput.Button.Any))
+        {
+            Debug.Log("PRESSED BABY");
+        }
+
+
+        var gamepad = Gamepad.current;
+        if (gamepad == null)
+        {
+            //Debug.Log("NO GAMEPAD");
+            return;
+        }
+
+        if (gamepad.leftTrigger.wasPressedThisFrame)
+        {
+            Debug.Log("LEFT TRIGGER PRESSED");
+            QuestionnaireCanvas.SetActive(!QuestionnaireCanvas.activeSelf);
+        }
+
+
     }
 
     void TakeAction()
@@ -68,31 +95,31 @@ public class ExperimentRun : MonoBehaviour
         switch (CurrentExperimentState)
         {
             case (short)ExperimentState.StartExperiment:
-                Debug.Log("Triggered: TakeAction: StartExperiment");
+                //Debug.Log("Triggered: TakeAction: StartExperiment");
                 StartExperiment();
                 break;
             case (short)ExperimentState.ShowLogin:
-                Debug.Log("Triggered: TakeAction: ShowLogin");
+                //Debug.Log("Triggered: TakeAction: ShowLogin");
                 ShowLogin();
                 break;
             case (short)ExperimentState.ShowInstructions:
-                Debug.Log("Triggered: TakeAction: ShowInstructions");
+                //Debug.Log("Triggered: TakeAction: ShowInstructions");
                 ShowInstructions();
                 break;
             case (short)ExperimentState.ShowEnvironment:
-                Debug.Log("Triggered: TakeAction: ShowEnvironment");
+                //Debug.Log("Triggered: TakeAction: ShowEnvironment");
                 ShowEnvironment();
                 break;
             case (short)ExperimentState.ShowQuestionnaire:
-                Debug.Log("Triggered: TakeAction: ShowQuestionnaire");
+                //Debug.Log("Triggered: TakeAction: ShowQuestionnaire");
                 ShowQuestionnaire();
                 break;
             case (short)ExperimentState.ShowTransitionalEnvironment:
-                Debug.Log("Triggered: TakeAction: ShowTransitionalEnvironment");
+                //Debug.Log("Triggered: TakeAction: ShowTransitionalEnvironment");
                 ShowTransitionalEnvironment();
                 break;
             case (short)ExperimentState.ShowEnding:
-                Debug.Log("Triggered: TakeAction: ShowEnding");
+                //Debug.Log("Triggered: TakeAction: ShowEnding");
                 ShowEnding();
                 break;
                 //case (short)ExperimentState.EndExperiment:
@@ -106,23 +133,23 @@ public class ExperimentRun : MonoBehaviour
         switch (CurrentExperimentState)
         {
             case (short)ExperimentState.StartExperiment:
-                Debug.Log("Triggered: NextExperimentState: StartExperiment");
+                //Debug.Log("Triggered: NextExperimentState: StartExperiment");
                 CurrentExperimentState = (short)ExperimentState.ShowLogin;
                 break;
             case (short)ExperimentState.ShowLogin:
-                Debug.Log("Triggered: NextExperimentState: ShowLogin");
+                //Debug.Log("Triggered: NextExperimentState: ShowLogin");
                 CurrentExperimentState = (short)ExperimentState.ShowInstructions;
                 break;
             case (short)ExperimentState.ShowInstructions:
-                Debug.Log("Triggered: NextExperimentState: ShowInstructions");
+                //Debug.Log("Triggered: NextExperimentState: ShowInstructions");
                 CurrentExperimentState = (short)ExperimentState.ShowEnvironment;
                 break;
             case (short)ExperimentState.ShowEnvironment:
-                Debug.Log("Triggered: NextExperimentState: ShowEnvironment");
+                //Debug.Log("Triggered: NextExperimentState: ShowEnvironment");
                 CurrentExperimentState = (short)ExperimentState.ShowQuestionnaire;
                 break;
             case (short)ExperimentState.ShowQuestionnaire:
-                Debug.Log("Triggered: NextExperimentState: ShowQuestionnaire");
+                //Debug.Log("Triggered: NextExperimentState: ShowQuestionnaire");
                 // If there are environments left to show, show transition, else show ending.
                 if (!NoEnvironmentsLeft)
                 {
@@ -134,11 +161,11 @@ public class ExperimentRun : MonoBehaviour
                 }
                 break;
             case (short)ExperimentState.ShowTransitionalEnvironment:
-                Debug.Log("Triggered: NextExperimentState: ShowTransitionalEnvironment");
+                //Debug.Log("Triggered: NextExperimentState: ShowTransitionalEnvironment");
                 CurrentExperimentState = (short)ExperimentState.ShowEnvironment;
                 break;
             case (short)ExperimentState.ShowEnding:
-                Debug.Log("Triggered: NextExperimentState: ShowEnding");
+                //Debug.Log("Triggered: NextExperimentState: ShowEnding");
                 CurrentExperimentState = (short)ExperimentState.EndExperiment;
                 break;                
         }
@@ -147,8 +174,9 @@ public class ExperimentRun : MonoBehaviour
 
     void StartExperiment()
     {
-        Debug.Log("Triggered: StartExperiment");
+        //Debug.Log("Triggered: StartExperiment");
         // Wait for environments to be loaded.
+        LoadingScreenCanvas.SetActive(true);
         // Show instructions
         //CurrentExperimentState = (short)ExperimentState.ShowLogin;
 
@@ -157,21 +185,21 @@ public class ExperimentRun : MonoBehaviour
     void ShowLogin()
     {
         LoadingScreenCanvas.SetActive(false);
-        Debug.Log("Triggered: ShowLogin");
+        //Debug.Log("Triggered: ShowLogin");
         // Show login screen
         LoginCanvas.SetActive(true);
     }
 
     void ShowEnvironment()
     {
-        Debug.Log("Triggered: ShowEnvironment");
+        //Debug.Log("Triggered: ShowEnvironment");
         // Show the appropriate environment
         transform.GetChild(0).GetComponent<EnvironmentManagerLC>().NextEnvironment(TimePerCueEnv);
     }
 
     void ShowQuestionnaire()
     {
-        Debug.Log("Triggered: ShowQuestionnaire");
+        //Debug.Log("Triggered: ShowQuestionnaire");
         QuestionnaireCanvas.SetActive(true);
         // Present the questionnaire
 
@@ -179,13 +207,13 @@ public class ExperimentRun : MonoBehaviour
 
     void ShowInstructions()
     {
-        Debug.Log("Triggered: ShowInstructions");
+        //Debug.Log("Triggered: ShowInstructions");
         transform.GetChild(0).GetComponent<EnvironmentManagerLC>().ShowInstructionsEnvironment();
     }
 
     void ShowTransitionalEnvironment()
     {
-        Debug.Log("Triggered: ShowTransitionalEnvironment");
+        //Debug.Log("Triggered: ShowTransitionalEnvironment");
         QuestionnaireCanvas.SetActive(false);
         transform.GetChild(0).GetComponent<EnvironmentManagerLC>().ShowTransitionalEnvironment(TimePerTransitionEnv);
 
@@ -193,7 +221,7 @@ public class ExperimentRun : MonoBehaviour
 
     void ShowEnding()
     {
-        Debug.Log("Triggered: ShowEnding");
+        //Debug.Log("Triggered: ShowEnding");
         QuestionnaireCanvas.SetActive(false);
         transform.GetChild(0).GetComponent<EnvironmentManagerLC>().ShowEndingEnvironment();
 
@@ -202,7 +230,7 @@ public class ExperimentRun : MonoBehaviour
 
     public void LogUserIn(string userName)
     {
-        Debug.Log("Triggered: LogUserIn");
+        //Debug.Log("Triggered: LogUserIn");
         LoginCanvas.SetActive(false);
         UserName = userName;
         //do relevant stuff with user name
@@ -212,13 +240,13 @@ public class ExperimentRun : MonoBehaviour
 
     public void UpdateExperimentState()
     {
-        Debug.Log("Triggered: UpdateExperimentState");
+        //Debug.Log("Triggered: UpdateExperimentState");
         UpdateState = !UpdateState;
     }
 
     public void NoMoreEnvironments()
     {
-        Debug.Log("Triggered: NoMoreEnvironments");
+        //Debug.Log("Triggered: NoMoreEnvironments");
         NoEnvironmentsLeft = true;
     }
 }

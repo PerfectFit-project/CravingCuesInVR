@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using UnityEngine.Networking;
-using UnityEngine.UI;
+//using UnityEngine.UI;
 using Newtonsoft.Json;
 
 public class EnvironmentManagerLC : MonoBehaviour
@@ -11,6 +11,9 @@ public class EnvironmentManagerLC : MonoBehaviour
     // Separating the two main materials.
     // For cues we want the custom material that correctly displays flat panoramic photos taken by a mainstream smartphone camera.
     // For the transitional environment we want a standard material that displays standard top-bottom-stretched 360 panoramic images correctly.
+
+    public Camera PanoramaCamera;
+
     public Material CueEnvironmentMaterial;
     public Material TransitionalMaterial;
 
@@ -55,7 +58,7 @@ public class EnvironmentManagerLC : MonoBehaviour
             // Avoid .meta and .json files, and also files containing "audio" to prevent double loading
             if (!file.Name.Contains("meta") && !file.Name.Contains("json") && !file.Name.Contains("audio"))
             {
-                Debug.Log("TEXTURE FILE NAME: " + file.Name);
+                //Debug.Log("TEXTURE FILE NAME: " + file.Name);
                 string fileNameToCheck = file.Name.Substring(0, file.Name.IndexOf("_image"));
 
                 foreach (var file2 in AllFilesInFolder)
@@ -117,7 +120,7 @@ public class EnvironmentManagerLC : MonoBehaviour
 
         LoadedEnvironmentsCount++;
 
-        Debug.Log("JUST LOADED: " + commonFileName);
+        //Debug.Log("JUST LOADED: " + commonFileName);
 
         if (LoadedEnvironmentsCount == EnvironmentsCount)
         {
@@ -133,7 +136,7 @@ public class EnvironmentManagerLC : MonoBehaviour
         foreach (EnvironmentData envData in LoadedEnvironments)
         {
             //Debug.Log("CAAT");
-            Debug.Log("ADDING " + envData.envName);
+            //Debug.Log("ADDING " + envData.envName);
             EnvironmentsInDisplayOrder.Add(LoadedEnvsOrder[envData.envName], envData);
         }
 
@@ -177,16 +180,16 @@ public class EnvironmentManagerLC : MonoBehaviour
         else
             material.mainTextureScale = new Vector2(1.5f, 3f);
 
-        transform.GetChild(0).GetComponent<CameraMovementLC>().UpdateCameraRotationLimits(dimensionRatio);
+        PanoramaCamera.GetComponent<CameraMovementLC>().UpdateCameraRotationLimits(dimensionRatio);
 
-        Debug.Log("CURRENTLY DISPLAYING: ");
-        Debug.Log(GetCurrentEnvironmentName());
+        //Debug.Log("CURRENTLY DISPLAYING: ");
+        //Debug.Log(GetCurrentEnvironmentName());
     }
 
 
     private void SetAudioClip(AudioClip audioClip)
     {
-        AudioSource audioSource = transform.GetChild(0).GetComponent<AudioSource>(); 
+        AudioSource audioSource = PanoramaCamera.GetComponent<AudioSource>(); 
         audioSource.clip = audioClip;
         //audioSource.clip.LoadAudioData();
         audioSource.Play();
@@ -203,7 +206,7 @@ public class EnvironmentManagerLC : MonoBehaviour
     {
         // TODO
         GetComponent<Renderer>().material = TransitionalMaterial;
-        AudioSource audioSource = transform.GetChild(0).GetComponent<AudioSource>();
+        AudioSource audioSource = PanoramaCamera.GetComponent<AudioSource>();
         audioSource.Stop();
 
         EnvironmentDisplayTime = timeToDisplay;

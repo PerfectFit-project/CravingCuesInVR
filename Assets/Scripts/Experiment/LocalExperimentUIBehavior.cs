@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class LocalExperimentUIBehavior : MonoBehaviour
 {
@@ -25,7 +26,6 @@ public class LocalExperimentUIBehavior : MonoBehaviour
     public GameObject ChatLogSVContent;
     public GameObject SliderObjPrefab;
     public GameObject SubmitButton;
-
 
 
     // Start is called before the first frame update
@@ -95,7 +95,7 @@ public class LocalExperimentUIBehavior : MonoBehaviour
         //    Debug.Log("Question: " + response + ", Response: " + qResponses[response]);
         //}
 
-        string currentEnvironmentName = transform.parent.GetComponentInChildren<EnvironmentManagerLC>().GetCurrentEnvironmentName();
+        string currentEnvironmentName = transform.parent.transform.parent.GetComponentInChildren<EnvironmentManagerLC>().GetCurrentEnvironmentName();
 
         PlayerObj.GetComponent<SaveCollectedDataLC>().StoreDataToCollection(currentEnvironmentName, qResponses);
 

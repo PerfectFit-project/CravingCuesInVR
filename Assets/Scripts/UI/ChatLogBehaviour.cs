@@ -77,7 +77,7 @@ public class ChatLogBehaviour : MonoBehaviour
                 foreach (string response in chatMessage.messageResponses)
                 {
                     GameObject newResponseButton = Instantiate(ResponseMessageButtonPrefab, newChatLogGameObject.transform.GetChild(0).transform.GetChild(1));
-                    newResponseButton.transform.GetChild(0).GetComponent<Text>().text = response;
+                    newResponseButton.transform.GetChild(0).GetComponent<TMP_Text>().text = response;
                     newResponseButton.GetComponent<Button>().onClick.AddListener(() => ProcessResponse(newResponseButton));
 
                     LayoutRebuilder.ForceRebuildLayoutImmediate(newChatLogGameObject.transform.GetComponent<RectTransform>());
@@ -124,7 +124,7 @@ public class ChatLogBehaviour : MonoBehaviour
     /// <param name="selectedResponseButton"></param>
     void ProcessResponse(GameObject selectedResponseButton)
     {
-        string response = selectedResponseButton.transform.GetChild(0).GetComponent<Text>().text;
+        string response = selectedResponseButton.transform.GetChild(0).GetComponent<TMP_Text>().text;
 
         GameObject parentChatObject = selectedResponseButton.transform.parent.transform.parent.transform.parent.gameObject;
 

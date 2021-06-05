@@ -14,7 +14,7 @@ public class Player : NetworkBehaviour
     public GameObject ResearcherUIPrefab; 
     public GameObject ParticipantUIPrefab;
 
-    GameObject PanoramaCamera;
+    public GameObject PanoramaCamera;
 
     GameObject userInterface;
 
@@ -35,8 +35,13 @@ public class Player : NetworkBehaviour
             userInterface = Instantiate(ResearcherUIPrefab, transform);
         }
         else
-        {          
-            userInterface = Instantiate(ParticipantUIPrefab, transform);
+        {
+            // Instantiate Participant UI in World Space overlaid on a 3D object, and attach it to the camera so that it moves with it.
+            userInterface = Instantiate(ParticipantUIPrefab);
+            userInterface.transform.parent = PanoramaCamera.transform;
+
+            // Instantiate Participant UI in Screen Space as a child of the Player object 
+            //userInterface = Instantiate(ParticipantUIPrefab, transform);
         }
         
 
@@ -76,7 +81,39 @@ public class Player : NetworkBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            userInterface.GetComponent<Canvas>().enabled = !userInterface.GetComponent<Canvas>().enabled;
+            if (hasAuthority || isLocalPlayer)
+            {
+                if (isResearcher)
+                {
+                    if (userInterface.GetComponent<Canvas>())
+                    {
+                        userInterface.GetComponent<Canvas>().enabled = !userInterface.GetComponent<Canvas>().enabled;
+                    }
+                    
+                }
+                else
+                {
+                    if (userInterface.GetComponent<MeshRenderer>())
+                    {
+                        userInterface.GetComponent<MeshRenderer>().enabled = !userInterface.GetComponent<MeshRenderer>().enabled;
+                    }
+                    if (userInterface.transform.GetChild(0).GetComponent<Canvas>())
+                    {
+                        userInterface.transform.GetChild(0).GetComponent<Canvas>().enabled = !userInterface.transform.GetChild(0).GetComponent<Canvas>().enabled;
+                    }
+                    
+                }
+                    
+            }
+
+            //if (isResearcher)
+            //{
+            //    userInterface.GetComponent<Canvas>().enabled = !userInterface.GetComponent<Canvas>().enabled;
+            //}
+            //else
+            //    //userInterface.GetComponent<Canvas>().enabled = !userInterface.GetComponent<Canvas>().enabled;
+            //    userInterface.SetActive(!userInterface.activeSelf);
+
         }
 
 
