@@ -22,8 +22,8 @@ public class CameraConstraint : MonoBehaviour
         
        
 
-        Debug.Log("VERTICAL ROTATION: " + verticalRotation);
-        Debug.Log("HORIZONTAL ROTATION: " + horizontalRotation);
+        //Debug.Log("VERTICAL ROTATION: " + verticalRotation);
+        //Debug.Log("HORIZONTAL ROTATION: " + horizontalRotation);
 
         float angle = (transform.localRotation.eulerAngles.x > 180) ? transform.localRotation.eulerAngles.x - 360 : transform.localRotation.eulerAngles.x;
 

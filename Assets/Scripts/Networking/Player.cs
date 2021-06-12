@@ -14,6 +14,9 @@ public class Player : NetworkBehaviour
     public GameObject ResearcherUIPrefab; 
     public GameObject ParticipantUIPrefab;
 
+    public Material TransitionalMaterial;
+    public Material CueEnvironmentMaterial;
+
     public GameObject PanoramaCamera;
 
     GameObject userInterface;
@@ -49,6 +52,12 @@ public class Player : NetworkBehaviour
         {
             userInterface.SetActive(true);
         }
+
+        if (!isResearcher)
+        {
+            // Presenting the environment when a client logs in.
+            PresentEnvironment();
+        }
     }
 
     [Command]
@@ -76,10 +85,17 @@ public class Player : NetworkBehaviour
         PanoramaCamera.transform.eulerAngles = rotation;
     }
 
+    public void PresentEnvironment()
+    {
+        // TODO: Implement Splash Screen where users log in, separate from the environments themselves. 
+        // For now, starting audio when both users are logged in.
+        PanoramaCamera.transform.parent.GetComponent<Renderer>().material = CueEnvironmentMaterial;
+        PanoramaCamera.GetComponent<AudioSource>().Play();
+    }
 
     void LateUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Space))
         {
             if (hasAuthority || isLocalPlayer)
             {
@@ -93,6 +109,8 @@ public class Player : NetworkBehaviour
                 }
                 else
                 {
+                    // Uncomment the line below if using Screen-Space UI
+                    //userInterface.GetComponent<Canvas>().enabled = !userInterface.GetComponent<Canvas>().enabled;
                     if (userInterface.GetComponent<MeshRenderer>())
                     {
                         userInterface.GetComponent<MeshRenderer>().enabled = !userInterface.GetComponent<MeshRenderer>().enabled;

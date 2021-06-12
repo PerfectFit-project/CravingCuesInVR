@@ -106,6 +106,7 @@ public class UIControllerInteraction : MonoBehaviour
             if (selectedObject.GetComponentInChildren<Button>())
             {
                 selectedObject.GetComponentInChildren<Button>().onClick.Invoke();
+                ResetView();
             }
         }
 

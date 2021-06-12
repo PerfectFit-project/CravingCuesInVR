@@ -147,7 +147,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 39486209}
   m_LocalRotation: {x: 0, y: 0.9702957, z: 0, w: 0.24192196}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.42, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4310070467522290853}
@@ -404,7 +404,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 69155278}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6803edce0201f574f923fd9d10e5b30a, type: 3}
   m_Name: 
@@ -901,7 +901,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 414951726}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6803edce0201f574f923fd9d10e5b30a, type: 3}
   m_Name: 
@@ -1422,7 +1422,7 @@ Transform:
   - {fileID: 444244425}
   - {fileID: 1871980978}
   m_Father: {fileID: 4310070468549211364}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &786354963
 PrefabInstance:
@@ -2081,7 +2081,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 4310070468549211364}
+    m_TransformParent: {fileID: 4310070467522290853}
     m_Modifications:
     - target: {fileID: 2154937512412528610, guid: 5734010e1a23187449f0859d28a0b6b9, type: 3}
       propertyPath: m_Camera
@@ -2095,45 +2095,61 @@ PrefabInstance:
       propertyPath: PlayerObj
       value: 
       objectReference: {fileID: 6639681331382693976}
+    - target: {fileID: 3971792919673153175, guid: 5734010e1a23187449f0859d28a0b6b9, type: 3}
+      propertyPath: SphereObj
+      value: 
+      objectReference: {fileID: 4310070468549211352}
     - target: {fileID: 4160567586309115552, guid: 5734010e1a23187449f0859d28a0b6b9, type: 3}
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4160567586309115552, guid: 5734010e1a23187449f0859d28a0b6b9, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4160567586309115552, guid: 5734010e1a23187449f0859d28a0b6b9, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4160567586309115552, guid: 5734010e1a23187449f0859d28a0b6b9, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4160567586309115552, guid: 5734010e1a23187449f0859d28a0b6b9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.009999998
+      value: -0.02
       objectReference: {fileID: 0}
     - target: {fileID: 4160567586309115552, guid: 5734010e1a23187449f0859d28a0b6b9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.102
+      value: -1.1
       objectReference: {fileID: 0}
     - target: {fileID: 4160567586309115552, guid: 5734010e1a23187449f0859d28a0b6b9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.18000007
+      value: 1.82
       objectReference: {fileID: 0}
     - target: {fileID: 4160567586309115552, guid: 5734010e1a23187449f0859d28a0b6b9, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.980747
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4160567586309115552, guid: 5734010e1a23187449f0859d28a0b6b9, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.19205941
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4160567586309115552, guid: 5734010e1a23187449f0859d28a0b6b9, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.03467697
+      value: 0.99539626
       objectReference: {fileID: 0}
     - target: {fileID: 4160567586309115552, guid: 5734010e1a23187449f0859d28a0b6b9, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.006790776
+      value: 0.095845714
       objectReference: {fileID: 0}
     - target: {fileID: 4160567586309115552, guid: 5734010e1a23187449f0859d28a0b6b9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -22.16
+      value: -11
       objectReference: {fileID: 0}
     - target: {fileID: 4160567586309115552, guid: 5734010e1a23187449f0859d28a0b6b9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -4.05
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 4160567586309115552, guid: 5734010e1a23187449f0859d28a0b6b9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -2154,6 +2170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerObj: {fileID: 6639681331382693976}
+  SphereObj: {fileID: 0}
   ChatScrollView: {fileID: 4264677238822486464}
   ChatLogSVContent: {fileID: 4264677238569296396}
   SliderObjPrefab: {fileID: 1950405834377179044, guid: a3d2127c33e1cd14c98fa0ba09fa52dd, type: 3}
@@ -3224,7 +3241,8 @@ Transform:
   m_LocalRotation: {x: 0, y: -0.015969051, z: 0, w: 0.9998725}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 3894655030162561361}
   m_Father: {fileID: 39486210}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -1.83, z: 0}
@@ -3261,7 +3279,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4310070467522290852}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c2fadf230d1919748a9aa21d40f74619, type: 3}
   m_Name: 
@@ -3307,7 +3325,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4310070467522290852}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 036d905995237ee44b0a0ed877c3eb5d, type: 3}
   m_Name: 
@@ -3407,7 +3425,6 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 10, y: 10, z: 10}
   m_Children:
-  - {fileID: 3894655030162561361}
   - {fileID: 757043388}
   m_Father: {fileID: 6639681331382693977}
   m_RootOrder: 0
@@ -3448,8 +3465,8 @@ MonoBehaviour:
   LoginCanvas: {fileID: 1683598862}
   PanoramaCameraObj: {fileID: 4310070467522290852}
   QuestionnaireCanvas: {fileID: 4415577888484967403}
-  TimePerCueEnv: 1
-  TimePerTransitionEnv: 1
+  TimePerCueEnv: 15
+  TimePerTransitionEnv: 3
 --- !u!114 &5124409528576604550
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -45,11 +45,12 @@ public class SetupResearcherUI_NTW : MonoBehaviour
         {
             GameObject newButtonGameObject = Instantiate(TemplateMessageButtonPrefab, TemplateMessageSVContent.transform);
             Button newButton = newButtonGameObject.GetComponent<Button>();
-            Text newButtonText = newButtonGameObject.GetComponentInChildren<Text>();
+            TMP_Text newButtonText = newButtonGameObject.GetComponentInChildren<TMP_Text>();
             newButtonText.text = chatMessage.MessageContent;
 
             newButton.onClick.AddListener(() => PopulateMessageEditFields(chatMessage.MessageContent, chatMessage.MessageResponses));
         }
+
     }
 
     /// <summary>
@@ -61,7 +62,7 @@ public class SetupResearcherUI_NTW : MonoBehaviour
     {
         ResetMessageFields();
 
-        MessageInputField.GetComponent<InputField>().text = message;
+        MessageInputField.GetComponent<TMP_InputField>().text = message;
 
         foreach (string response in responses)
         {
@@ -85,7 +86,7 @@ public class SetupResearcherUI_NTW : MonoBehaviour
     void AddResponseInputField(string responseText)
     {
         GameObject newInputFieldGameObject = Instantiate(ResponseInputFieldPrefab, MessageResponsesSVContent.transform);
-        newInputFieldGameObject.transform.Find("InputField").GetComponent<InputField>().text = responseText;
+        newInputFieldGameObject.transform.Find("InputField (TMP)").GetComponent<TMP_InputField>().text = responseText;
         newInputFieldGameObject.transform.Find("Button").GetComponent<Button>().onClick.AddListener(() => RemoveResponseInputField(newInputFieldGameObject));
     }
 
@@ -103,7 +104,7 @@ public class SetupResearcherUI_NTW : MonoBehaviour
     /// </summary>
     void ResetMessageFields()
     {
-        MessageInputField.GetComponent<InputField>().text = "";
+        MessageInputField.GetComponent<TMP_InputField>().text = "";
 
         foreach (Transform inputField in MessageResponsesSVContent.transform)
         {
@@ -117,12 +118,12 @@ public class SetupResearcherUI_NTW : MonoBehaviour
     /// </summary>
     public void SendResearcherMessage()
     {
-        string message = MessageInputField.GetComponent<InputField>().text;
+        string message = MessageInputField.GetComponent<TMP_InputField>().text;
         if (String.IsNullOrWhiteSpace(message)) return;
 
         foreach (Transform inputFieldGameobject in MessageResponsesSVContent.transform)
         {
-            if (String.IsNullOrWhiteSpace(inputFieldGameobject.transform.Find("InputField").GetComponent<InputField>().text)) return;
+            if (String.IsNullOrWhiteSpace(inputFieldGameobject.transform.Find("InputField (TMP)").GetComponent<TMP_InputField>().text)) return;
 
         }
 
@@ -133,7 +134,7 @@ public class SetupResearcherUI_NTW : MonoBehaviour
         int count = 0;
         foreach (Transform inputFieldGameobject in MessageResponsesSVContent.transform)
         {
-            responses[count] = inputFieldGameobject.transform.Find("InputField").GetComponent<InputField>().text;
+            responses[count] = inputFieldGameobject.transform.Find("InputField (TMP)").GetComponent<TMP_InputField>().text;
             count++;
         }
 

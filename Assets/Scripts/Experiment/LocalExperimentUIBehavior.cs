@@ -22,6 +22,8 @@ public class LocalExperimentUIBehavior : MonoBehaviour
     //      2. Different pages for each type of question (craving, SoP, or even different pages for each factor in those)
 
     public GameObject PlayerObj;
+    public GameObject SphereObj;
+
     public GameObject ChatScrollView;
     public GameObject ChatLogSVContent;
     public GameObject SliderObjPrefab;
@@ -95,7 +97,8 @@ public class LocalExperimentUIBehavior : MonoBehaviour
         //    Debug.Log("Question: " + response + ", Response: " + qResponses[response]);
         //}
 
-        string currentEnvironmentName = transform.parent.transform.parent.GetComponentInChildren<EnvironmentManagerLC>().GetCurrentEnvironmentName();
+        //string currentEnvironmentName = transform.parent.transform.parent.GetComponentInChildren<EnvironmentManagerLC>().GetCurrentEnvironmentName();
+        string currentEnvironmentName = SphereObj.GetComponent<EnvironmentManagerLC>().GetCurrentEnvironmentName();
 
         PlayerObj.GetComponent<SaveCollectedDataLC>().StoreDataToCollection(currentEnvironmentName, qResponses);
 

@@ -65,13 +65,17 @@ public class ChatLogBehaviour : MonoBehaviour
         {
             newChatLogGameObject = Instantiate(ChatObjPrefab, ChatLogSVContent.transform);
             backgroundColor = new Color(70f / colorNormalizer, 255f / colorNormalizer, 65f / colorNormalizer, 95f / colorNormalizer); // Hardcoding a green-ish color and normalizing each RBG value cause that's what Unity likes.
-
-
         }
         else
         {
             if (sentFromResearcher && chatMessage.messageResponses != null)
             {
+                if (!transform.GetComponent<Canvas>().enabled)
+                {
+                    Debug.Log("TRIGGERED");
+                    transform.GetComponent<AudioSource>().Play();
+                }                
+
                 newChatLogGameObject = Instantiate(ChatObjWResponsesPrefab, ChatLogSVContent.transform);
 
                 foreach (string response in chatMessage.messageResponses)

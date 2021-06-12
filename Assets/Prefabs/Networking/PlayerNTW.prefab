@@ -67,4 +67,6 @@ MonoBehaviour:
   isResearcher: 0
   ResearcherUIPrefab: {fileID: 3833914823595026383, guid: 238e0f7d34825af409596273a9c318a5, type: 3}
   ParticipantUIPrefab: {fileID: 3456713886255621188, guid: 44ad1c250608e7c42948d16864912a9c, type: 3}
+  TransitionalMaterial: {fileID: 2100000, guid: ae58efe9b74558a42aa31bde579546c3, type: 2}
+  CueEnvironmentMaterial: {fileID: 2100000, guid: 741ae9bc778bd654c89986f0ca2d2c7e, type: 2}
   PanoramaCamera: {fileID: 0}
