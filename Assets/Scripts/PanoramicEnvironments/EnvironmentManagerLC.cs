@@ -220,18 +220,15 @@ public class EnvironmentManagerLC : MonoBehaviour
     {
         Material material = GetComponent<Renderer>().material;
         material.mainTexture = texture;
-        
-        
-        // Deprecated. Originally meant as a way to distinguish 360 and <360 images and set the tiling so that images appear as intended, but the dimension cut-off ratio seems to have some issues.
 
 
-        //float dimensionRatio = material.mainTexture.width / material.mainTexture.height;
+        float dimensionRatio = material.mainTexture.width / material.mainTexture.height;
 
-        //// Adjusting the material vertical scaling to make the texture look as intended.
-        //if (dimensionRatio > 4)
-        //    material.mainTextureScale = new Vector2(1f, 3f);
-        //else
-        //    material.mainTextureScale = new Vector2(1f, 3f);
+        // Adjusting the material vertical scaling to make the texture look as intended.
+        if (dimensionRatio > 4)
+            material.mainTextureScale = new Vector2(1f, 3f);
+        else
+            material.mainTextureScale = new Vector2(1f, 3f);
 
         //PanoramaCamera.GetComponent<CameraMovementLC>().UpdateCameraRotationLimits(dimensionRatio);
     }

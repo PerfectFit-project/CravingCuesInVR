@@ -5202,7 +5202,7 @@ MonoBehaviour:
   PanoramaCameraObj: {fileID: 4310070467522290852}
   QuestionnaireCanvasParent: {fileID: 4415577888484967403}
   TimePerCueEnv: 180
-  TimePerTransitionEnv: 2
+  TimePerTransitionEnv: 35
 --- !u!114 &5124409528576604550
 MonoBehaviour:
   m_ObjectHideFlags: 0
