@@ -1314,6 +1314,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49c7a78f6d7957a4092bef60a4ccd889, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerObj: {fileID: 0}
   ChatScrollView: {fileID: 7823906264299105113}
   ChatLogSVContent: {fileID: 7823906264184710187}
   SliderObjPrefab: {fileID: 1950405834377179044, guid: a3d2127c33e1cd14c98fa0ba09fa52dd, type: 3}

@@ -65,24 +65,28 @@ public class ChatLogBehaviour : MonoBehaviour
         {
             newChatLogGameObject = Instantiate(ChatObjPrefab, ChatLogSVContent.transform);
             backgroundColor = new Color(70f / colorNormalizer, 255f / colorNormalizer, 65f / colorNormalizer, 95f / colorNormalizer); // Hardcoding a green-ish color and normalizing each RBG value cause that's what Unity likes.
-
-
         }
         else
         {
             if (sentFromResearcher && chatMessage.messageResponses != null)
             {
+                if (!transform.GetComponent<Canvas>().enabled)
+                {
+                    transform.GetComponent<AudioSource>().Play();
+                }                
+
                 newChatLogGameObject = Instantiate(ChatObjWResponsesPrefab, ChatLogSVContent.transform);
 
                 foreach (string response in chatMessage.messageResponses)
                 {
                     GameObject newResponseButton = Instantiate(ResponseMessageButtonPrefab, newChatLogGameObject.transform.GetChild(0).transform.GetChild(1));
-                    newResponseButton.transform.GetChild(0).GetComponent<Text>().text = response;
+                    newResponseButton.transform.GetChild(0).GetComponent<TMP_Text>().text = response;
                     newResponseButton.GetComponent<Button>().onClick.AddListener(() => ProcessResponse(newResponseButton));
 
                     LayoutRebuilder.ForceRebuildLayoutImmediate(newChatLogGameObject.transform.GetComponent<RectTransform>());
                     LayoutRebuilder.ForceRebuildLayoutImmediate(newChatLogGameObject.transform.GetChild(0).GetComponent<RectTransform>());
                 }
+                transform.GetComponent<ChatMessagesGamepadInteraction>().SetNewContainer(newChatLogGameObject);
             }
             else
             {
@@ -117,14 +121,13 @@ public class ChatLogBehaviour : MonoBehaviour
     }
 
 
-
     /// <summary>
     /// Displaying the selected response sent by the participant, and destroying the list of acceptable responses under the researcher message.
     /// </summary>
     /// <param name="selectedResponseButton"></param>
     void ProcessResponse(GameObject selectedResponseButton)
     {
-        string response = selectedResponseButton.transform.GetChild(0).GetComponent<Text>().text;
+        string response = selectedResponseButton.transform.GetChild(0).GetComponent<TMP_Text>().text;
 
         GameObject parentChatObject = selectedResponseButton.transform.parent.transform.parent.transform.parent.gameObject;
 

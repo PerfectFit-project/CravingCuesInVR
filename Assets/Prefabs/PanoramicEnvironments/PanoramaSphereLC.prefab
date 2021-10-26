@@ -106,8 +106,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7490771231744335669}
   - component: {fileID: 7490771231744335664}
-  - component: {fileID: 7490771231744335671}
   - component: {fileID: 1174743649070619257}
+  - component: {fileID: 504573614}
   m_Layer: 0
   m_Name: PanoramaCamera
   m_TagString: Untagged
@@ -122,13 +122,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7490771231744335668}
-  m_LocalRotation: {x: 0, y: 0.9281615, z: -0, w: -0.37217784}
+  m_LocalRotation: {x: 0, y: 0.9705065, z: 0, w: 0.24107501}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7490771230748938100}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 223.7, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 152.1, z: 0}
 --- !u!20 &7490771231744335664
 Camera:
   m_ObjectHideFlags: 0
@@ -172,15 +172,27 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &7490771231744335671
-AudioListener:
+--- !u!114 &1174743649070619257
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7490771231744335668}
-  m_Enabled: 1
---- !u!114 &1174743649070619257
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72ed07026dadcd74da9af4e0c4bf8463, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LowerHorizontalRotationLimit: 75.6
+  HigherHorizontalRotationLimit: 223.75
+  LowerVerticalRotationLimit: 0
+  HigherVerticalRotationLimit: 0
+  RotationSensitivity: {x: 0, y: 0}
+  RotationAcceleration: {x: 0, y: 0}
+  InputLagPeriod: 0
+  LimitHorizontalRotation: 0
+--- !u!114 &504573614
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -189,7 +201,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7490771231744335668}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72ed07026dadcd74da9af4e0c4bf8463, type: 3}
+  m_Script: {fileID: 11500000, guid: b8e4065e4fc44904a9de96bdb7a9363a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   LowerHorizontalRotationLimit: 75.6

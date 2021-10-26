@@ -5,22 +5,28 @@ using UnityEngine;
 [System.Serializable]
 public class QQuestion
 {
+    public string descriptionText;
     public string questionText;
-    public int[] acceptableResponseRange;
+    public string[] acceptableResponseRange;
+    public string[] extremeRangeLabels;
 
     /// <summary>
     /// Create a new empty QQuestion. 
     /// </summary>
     public QQuestion()
     {
+        descriptionText = "";
         questionText = "";
-        acceptableResponseRange = new int[2];
+        acceptableResponseRange = new string[2];
+        extremeRangeLabels = new string[2];
     }
 
-    public QQuestion(string text, int[] range)
+    public QQuestion(string dText, string qText, string[] range, string[] rangeLabels)
     {
-        questionText = text;
+        descriptionText = dText;
+        questionText = qText;
         acceptableResponseRange = range;
+        extremeRangeLabels = rangeLabels;
     }
 }
 
@@ -30,5 +36,6 @@ public class QQuestion
 [System.Serializable]
 public class Questionnaire
 {
+    public string qTitle;
     public QQuestion[] qQuestions;
 }

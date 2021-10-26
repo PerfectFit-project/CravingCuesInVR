@@ -1,8 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using Newtonsoft.Json;
+
 
 public class LocalExperimentUIBehavior : MonoBehaviour
 {
@@ -21,86 +25,415 @@ public class LocalExperimentUIBehavior : MonoBehaviour
     //      2. Different pages for each type of question (craving, SoP, or even different pages for each factor in those)
 
     public GameObject PlayerObj;
+    public GameObject SphereObj;
+
     public GameObject ChatScrollView;
     public GameObject ChatLogSVContent;
+    public GameObject QDescriptionText;
     public GameObject SliderObjPrefab;
     public GameObject SubmitButton;
 
+    public GameObject FlowingTextCanvas;
+    public GameObject FlowingTextText;
 
+    [SerializeField]
+    public bool PresentingQuestionnaire { get; set; }
+    
+    [SerializeField]
+    public bool TimerActive { get; set; }
 
-    // Start is called before the first frame update
+    Dictionary<string, string> qJsonFileData;
+    List<string> qOrderList;
+    string currentQId;
+    int questionnairesPresented;
+    float currentEnvironmentDisplayTime;
+    float timeToPresentEnvironment;
+
+    Dictionary<string, List<string>> NotificationTextDict;
+    private bool MoreNotificationsToDisplay;
+    private string NextNotificationKey;
+    private float NextNotificationTime;
+    private float NotificationDisplayStartTime;
+    private bool DisplayingNotification;
+
+    public int SecondsToDisplayNotification;
+
+    [SerializeField]
+    public bool LastEnvironment { get; set; }
+
     void Start()
     {
+        qOrderList = new List<string>();
+        qOrderList.Add("Craving");
+        //qOrderList.Add("SoP");
+        qJsonFileData = new Dictionary<string, string>();
+
+        //qJsonFiles.Add(Application.streamingAssetsPath + "/craving_questionnaire.json");
+        //qJsonFiles.Add(Application.streamingAssetsPath + "/sop_questionnaire.json");
+
         // Load questionnaires from file
+        qJsonFileData.Add(qOrderList[0], File.ReadAllText(Application.streamingAssetsPath + "/craving_questionnaire.json"));
+        //qJsonFileData.Add(qOrderList[1], File.ReadAllText(Application.streamingAssetsPath + "/sop_questionnaire.json"));
+  
+        questionnairesPresented = 0;
+        currentQId = qOrderList[questionnairesPresented];
+        Questionnaire firstQuestionnaire = JsonUtility.FromJson<Questionnaire>(qJsonFileData[currentQId]);
+        LoadQuestionnaireToUI(firstQuestionnaire);
 
+        transform.GetComponent<UIGamepadInteraction>().InitializeUI();
 
-        // Prentending as if we have questionnaires
-        Questionnaire questionnaire = new Questionnaire();
-        questionnaire.qQuestions = new QQuestion[8];
-        questionnaire.qQuestions[0] = new QQuestion("This is the first sample question", new int[] { 1, 7 });
-        questionnaire.qQuestions[1] = new QQuestion("This is the second sample question", new int[] { -5, 5 });
-        questionnaire.qQuestions[2] = new QQuestion("This is the third sample question", new int[] { 0, 10 });
-        questionnaire.qQuestions[3] = new QQuestion("This is the fourth sample question", new int[] { 1, 7 });
-        questionnaire.qQuestions[4] = new QQuestion("This is the fifth sample question", new int[] { 1, 7 });
-        questionnaire.qQuestions[5] = new QQuestion("This is the sixth sample question", new int[] { -5, 5 });
-        questionnaire.qQuestions[6] = new QQuestion("This is the seventh sample question", new int[] { 0, 10 });
-        questionnaire.qQuestions[7] = new QQuestion("This is the eighth sample question", new int[] { 1, 7 });
+        PresentingQuestionnaire = false;
+        TimerActive = false;
 
-        PresentQuestionnaire(questionnaire);
+        var notificationPromptsJsonString = File.ReadAllText(Application.streamingAssetsPath + "/notification_text.json");
+        NotificationTextDict = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(notificationPromptsJsonString);
+
+        NextNotificationKey = "1";
+        NextNotificationTime = float.Parse(NotificationTextDict[NextNotificationKey][1]);
+        MoreNotificationsToDisplay = true;
+
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
+    {        
+        if (TimerActive)
+        {
+            if (!PresentingQuestionnaire)
+            {
+                currentEnvironmentDisplayTime += Time.deltaTime;
+
+                float minutesLeft = Mathf.Floor((timeToPresentEnvironment - currentEnvironmentDisplayTime) / 60);
+                float secondsLeft = Mathf.RoundToInt((timeToPresentEnvironment - currentEnvironmentDisplayTime) % 60);
+
+                string timerText = "";
+
+                if (minutesLeft >= 1)
+                {
+                    timerText += minutesLeft + " minutes\n";
+                }
+
+                timerText += secondsLeft + " seconds";
+
+                transform.GetChild(1).transform.GetChild(1).GetComponent<TMP_Text>().text = timerText; // ((Mathf.RoundToInt(timeToPresentEnvironment - currentEnvironmentDisplayTime))).ToString();
+
+                if (currentEnvironmentDisplayTime >= timeToPresentEnvironment)
+                {
+                    if (transform.GetChild(1).gameObject.activeSelf)
+                    {
+                        ToggleTimer();
+                    }
+
+                    TimerActive = false;
+                }
+            }
+            else
+            {
+                TimerActive = false;
+            }            
+        }
+
+
+        if (MoreNotificationsToDisplay && !DisplayingNotification && !PresentingQuestionnaire)
+        {            
+            if (currentEnvironmentDisplayTime >= NextNotificationTime)
+            {
+                NotificationDisplayStartTime = currentEnvironmentDisplayTime;
+                DisplayingNotification = true;
+                //display notification
+                StartCoroutine(PresentNotification(1f, NotificationTextDict[NextNotificationKey][0]));
+            }
+        }
+
+        if (DisplayingNotification)
+        {
+            if (currentEnvironmentDisplayTime >= NotificationDisplayStartTime + SecondsToDisplayNotification)
+            {
+                // Hide Notification
+                transform.GetChild(1).GetChild(2).gameObject.SetActive(false);
+                if (transform.GetChild(1).gameObject.activeSelf)
+                {
+                    HandleUIToggle();
+                    //transform.GetChild(1).gameObject.SetActive(false);
+                }
+
+                // Advance Notification Key
+                NextNotificationKey = (int.Parse(NextNotificationKey) + 1).ToString();
+
+                // Check if more notifications
+                if (NotificationTextDict.ContainsKey(NextNotificationKey))
+                {
+                    NextNotificationTime = float.Parse(NotificationTextDict[NextNotificationKey][1]);
+                }
+                else
+                {
+                    MoreNotificationsToDisplay = false;
+                }
+
+                DisplayingNotification = false;
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q) && Input.GetKey(KeyCode.LeftShift))
+        {
+            StartCoroutine(FadeTextToFullAlpha(1f, FlowingTextText.GetComponent<TMP_Text>()));
+        }
+        if (Input.GetKeyDown(KeyCode.E) && Input.GetKey(KeyCode.LeftShift))
+        {
+            StartCoroutine(FadeTextToZeroAlpha(1f, FlowingTextText.GetComponent<TMP_Text>()));
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.T) && Input.GetKey(KeyCode.LeftShift))
+        {
+            StartCoroutine(PresentNotification(1f, "Text Text"));
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) && Input.GetKey(KeyCode.LeftShift))
+        {
+            HandleUIToggle();
+        }
+    }
+
+
+    public IEnumerator PresentNotification(float seconds, string text)
     {
+        transform.GetChild(1).GetChild(2).gameObject.SetActive(true);
+        transform.GetChild(1).GetChild(2).GetChild(0).GetComponent<TMP_Text>().text = text;
+
+        if (Gamepad.current != null)
+        {
+            Gamepad.current.SetMotorSpeeds(0.25f, 0.75f);
+        }
+        transform.parent.parent.parent.GetComponent<AudioSource>().Play();
+        yield return new WaitForSeconds(seconds);
+
+        if (Gamepad.current != null)
+        {
+            Gamepad.current.SetMotorSpeeds(0f, 0f);
+        }
+        if (!transform.GetChild(1).gameObject.activeSelf)
+        {
+            HandleUIToggle();
+        }
+    }
+
+
+    public IEnumerator FadeTextToFullAlpha(float t, TMP_Text i)
+    {
+        FlowingTextText.SetActive(true);
+        i.color = new Color(i.color.r, i.color.g, i.color.b, 0);
+        while (i.color.a < 1.0f)
+        {
+            i.color = new Color(i.color.r, i.color.g, i.color.b, i.color.a + (Time.deltaTime / t));
+            yield return null;
+        }
+
+        FlowingTextText.transform.parent.parent.parent.GetComponent<MeshRenderer>().enabled = true;
+
+    }
+
+    public IEnumerator FadeTextToZeroAlpha(float t, TMP_Text i)
+    {
+        i.color = new Color(i.color.r, i.color.g, i.color.b, 1);
+        while (i.color.a > 0.0f)
+        {
+            i.color = new Color(i.color.r, i.color.g, i.color.b, i.color.a - (Time.deltaTime / t));
+            yield return null;
+        }
+        FlowingTextText.transform.parent.parent.parent.GetComponent<MeshRenderer>().enabled = false;
+        FlowingTextText.SetActive(false);
+    }
+
+
+    public void HandleUIToggle()
+    {
+        if (SphereObj.GetComponent<EnvironmentManagerLC>().DisplayingEnvironment && !SphereObj.GetComponent<EnvironmentManagerLC>().DisplayingTransitionalEnvironment && !PresentingQuestionnaire)//!SphereObj.GetComponent<EnvironmentManagerLC>().DisplayingBaselineEnvironment)
+        {
+            ToggleUI();
+            if (TimerActive)
+            {
+                ToggleTimer();
+            }
+            else
+            {
+                ToggleQuestionnaire();
+            }
+        }
+    }
+
+    public void PresentRemainingTimer(float t)
+    {
+        currentEnvironmentDisplayTime = 0f;
+        timeToPresentEnvironment = t;
+        //ToggleTimerPresentation();
+        TimerActive = true;
+
+        NextNotificationKey = "1";
+        NextNotificationTime = float.Parse(NotificationTextDict[NextNotificationKey][1]);
+        MoreNotificationsToDisplay = true;
+    }
+
+    public void ToggleTimer()
+    {
+        transform.GetChild(1).gameObject.SetActive(!transform.GetChild(1).gameObject.activeSelf); // Notifications panel obj
         
     }
-
-    void PresentQuestionnaire(Questionnaire questionnaire)
+    public IEnumerator StartQuestionnairePresentation(float seconds)
     {
+        if (Gamepad.current != null)
+        {
+            Gamepad.current.SetMotorSpeeds(0.25f, 0.75f);
+        }
+        transform.parent.parent.parent.GetComponent<AudioSource>().Play();
+        yield return new WaitForSeconds(seconds);
+
+        if (Gamepad.current != null)
+        {
+            Gamepad.current.SetMotorSpeeds(0f, 0f);
+        }
+        ToggleQuestionnaire();
+    }
+
+
+
+    void ToggleQuestionnairePresentationSS()
+    {
+        // This gets called automatically at a set time, so we check whether the UI is enabled so that we don't disable it.
+        if (!transform.parent.GetComponent<MeshRenderer>().enabled)
+        {
+            ToggleUI();
+        }        
+
+        transform.GetChild(0).gameObject.SetActive(!transform.GetChild(0).gameObject.activeSelf); // Chat interface panel        
+
+    }
+
+    public void ToggleQuestionnaire()
+    {
+        // This gets called automatically at a set time, so we check whether the UI is enabled so that we don't disable it.
+        if (!transform.parent.GetComponent<MeshRenderer>().enabled && !PresentingQuestionnaire)
+        {
+            ToggleUI();
+        }
+
+        transform.GetChild(0).gameObject.SetActive(!transform.GetChild(0).gameObject.activeSelf); // Chat interface panel
+
+        transform.GetComponent<UIGamepadInteraction>().GamepadActive = !transform.GetComponent<UIGamepadInteraction>().GamepadActive;
+        PresentingQuestionnaire = !PresentingQuestionnaire;
+    }
+
+    public void ToggleUI()
+    {
+        transform.parent.GetComponent<MeshRenderer>().enabled = !transform.parent.GetComponent<MeshRenderer>().enabled; // Smartphone obj
+        transform.GetComponent<Canvas>().enabled = !transform.GetComponent<Canvas>().enabled; // Canvas
+        transform.parent.GetChild(1).GetComponent<MeshRenderer>().enabled = !transform.parent.GetChild(1).GetComponent<MeshRenderer>().enabled; // Background obj
+    }
+
+    void LoadQuestionnaireToUI(Questionnaire questionnaire)
+    {
+        QDescriptionText.GetComponent<TMP_Text>().text = questionnaire.qTitle;
+
         foreach (QQuestion question in questionnaire.qQuestions)
         {
             GameObject newQuestionObject = Instantiate(SliderObjPrefab, ChatLogSVContent.transform);
-            newQuestionObject.transform.GetChild(0).GetComponent<Text>().text = question.questionText;
-            Slider newQObjSLider = newQuestionObject.transform.GetChild(1).GetComponent<Slider>();
-            newQObjSLider.minValue = question.acceptableResponseRange[0];
-            newQObjSLider.maxValue = question.acceptableResponseRange[1];
+            newQuestionObject.transform.GetChild(0).GetComponent<TMP_Text>().text = question.descriptionText;
+            newQuestionObject.transform.GetChild(1).GetComponent<TMP_Text>().text = question.questionText;
+            //Slider newQObjSLider = newQuestionObject.transform.GetChild(1).GetComponent<Slider>();
+            Slider newQObjSLider = newQuestionObject.transform.GetChild(2).transform.GetChild(0).GetComponent<Slider>();
+            newQObjSLider.minValue = int.Parse(question.acceptableResponseRange[0]);
+            newQObjSLider.maxValue = int.Parse(question.acceptableResponseRange[1]);
+            newQuestionObject.transform.GetChild(2).transform.GetChild(1).transform.GetChild(0).GetComponent<TMP_Text>().text = question.extremeRangeLabels[0];
+            newQuestionObject.transform.GetChild(2).transform.GetChild(1).transform.GetChild(1).GetComponent<TMP_Text>().text = question.extremeRangeLabels[1];
+            newQuestionObject.transform.GetChild(2).transform.GetChild(1).transform.GetChild(2).GetComponent<TMP_Text>().text = question.extremeRangeLabels[2];
+
         }
 
         SubmitButton.transform.SetAsLastSibling();
     }
 
-    public void RecordQuestionnaireResponses()
+    public void TranslateSubmitButtonPress()
     {
+        questionnairesPresented++;
+
+        RecordQuestionnaireResponses(currentQId);
+    }
+
+    public void RecordQuestionnaireResponses(string qId)
+    {
+        //transform.GetComponent<UIGamepadInteraction>().DeselectObject();
+
         // Adjusting the size to account for the submit button being a child of the panel too.
         int questionCount = ChatLogSVContent.transform.childCount - 1;
         //int[] qResponses = new int[questionCount];
 
         // Seems a bit unnecessary to have an <int, int> dictionary here since a simple array or list would suffice, however, this makes it easier to add to the overall questionnare responses file later.
         Dictionary<int, int> qResponses = new Dictionary<int, int>();
+                
 
-        Debug.Log(questionCount);
-        for (int i = 0; i < questionCount; i++)
+        for (int i = 1; i < questionCount; i++)
         {
+            Slider selectedSlider = ChatLogSVContent.transform.GetChild(i).transform.GetChild(2).transform.GetChild(0).GetComponent<Slider>();
+
             // Hardcoding that the Slider object is the second child of the composite slider object
-            qResponses[i+1] = (int)ChatLogSVContent.transform.GetChild(i).transform.GetChild(1).GetComponent<Slider>().value;
+            qResponses[i] = (int)selectedSlider.value;
             // Resetting the Slider value
-            ChatLogSVContent.transform.GetChild(i).transform.GetChild(1).GetComponent<Slider>().value = ChatLogSVContent.transform.GetChild(i).transform.GetChild(1).GetComponent<Slider>().minValue;
+            selectedSlider.value = selectedSlider.minValue;
+
+            //Destroy(ChatLogSVContent.transform.GetChild(i).gameObject);
         }
 
         // Moving the page to the top
         ChatScrollView.GetComponent<ScrollRect>().normalizedPosition = new Vector2(0, 1);
 
-        //foreach (int response in qResponses.Keys)
-        //{
-        //    Debug.Log("Question: " + response + ", Response: " + qResponses[response]);
-        //}
+        //string currentEnvironmentName = transform.parent.transform.parent.GetComponentInChildren<EnvironmentManagerLC>().GetCurrentEnvironmentName();
+        string currentEnvironmentName = SphereObj.GetComponent<EnvironmentManagerLC>().GetCurrentEnvironmentName();
 
-        string currentEnvironmentName = transform.parent.GetComponentInChildren<EnvironmentManagerLC>().GetCurrentEnvironmentName();
+        PlayerObj.GetComponent<SaveCollectedDataLC>().StoreDataToCollection(currentEnvironmentName, qId, qResponses);
 
-        PlayerObj.GetComponent<SaveCollectedDataLC>().StoreDataToCollection(currentEnvironmentName, qResponses);
 
-        PlayerObj.GetComponent<ExperimentRun>().UpdateExperimentState();
 
+        if (LastEnvironment && questionnairesPresented < qOrderList.Count)
+        {
+            ClearAndRepopulateUI();
+            //transform.GetComponent<UIGamepadInteraction>().ClearUI();            
+        }
+        else
+        {
+            questionnairesPresented = 0;
+            ClearAndRepopulateUI();
+            ToggleQuestionnaire();
+            ToggleUI();
+            PlayerObj.GetComponent<ExperimentRun>().UpdateExperimentState();
+        }      
+
+    }
+
+
+    public void ClearAndRepopulateUI()
+    {
+        //transform.GetComponent<UIGamepadInteraction>().DeselectObject();
+
+        int questionCount = ChatLogSVContent.transform.childCount - 1;
+
+        while (ChatLogSVContent.transform.childCount > 2)
+        {
+            Destroy(ChatLogSVContent.transform.GetChild(1).gameObject);
+            ChatLogSVContent.transform.GetChild(1).transform.parent = null;
+        }
+
+        Canvas.ForceUpdateCanvases();
+
+        transform.GetComponent<UIGamepadInteraction>().ClearUI();
+
+        Canvas.ForceUpdateCanvases();
+
+        currentQId = qOrderList[questionnairesPresented];
+        Questionnaire nextQuestionnaire = JsonUtility.FromJson<Questionnaire>(qJsonFileData[currentQId]);
+
+        LoadQuestionnaireToUI(nextQuestionnaire);
+        transform.GetComponent<UIGamepadInteraction>().InitializeUI();
+
+        Canvas.ForceUpdateCanvases();
     }
     
 }

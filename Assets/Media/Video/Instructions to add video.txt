@@ -1,0 +1,7 @@
+//Step 1: Add Video Clip to assets
+//Step 2: Create "Render Texture" in assets (Create-Render Texture)
+//Step 3: create "Video Player" in hierarchy (Video-Video Player)
+//Step 4: Create "Raw Image" as a child to your canvas (UI - Raw Image)
+//Step 5: Drag your Render Texture to the "texture" of your Raw Image
+//Step 6: Drag your Video Clip to the "video clip" of the video player
+//Step 7: Drag your Render Texture to the "target texture" of the Video Player

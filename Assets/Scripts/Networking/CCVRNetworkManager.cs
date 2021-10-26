@@ -4,7 +4,7 @@ using UnityEngine;
 using Mirror;
 
 /// <summary>
-/// 
+/// Class using the Mirror package to connect users, instantiate PlayerNTW prefabs, and initialize the UI instantiation process. 
 /// </summary>
 public class CCVRNetworkManager : NetworkManager
 {

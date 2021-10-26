@@ -5,6 +5,9 @@ using System.IO;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
+/// <summary>
+/// Manually load and assign texture to the sphere material.
+/// </summary>
 public class ChangeImage : MonoBehaviour
 {
     public bool LoadFromSA;

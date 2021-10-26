@@ -6,7 +6,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-
+/// <summary>
+/// Performs form-checking and initializes the network user login process.
+/// </summary>
 public class LogInManager : MonoBehaviour
 {
     public GameObject NetworkManager;

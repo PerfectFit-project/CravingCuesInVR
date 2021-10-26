@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 
 /// Class holding a message and its acceptable responses.
-/// 
 /// </summary>
 [System.Serializable]
 public class ChatMessage

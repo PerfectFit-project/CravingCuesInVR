@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR;
+using UnityEngine.SpatialTracking;
 
 enum ExperimentState: short
 {
@@ -14,13 +17,16 @@ enum ExperimentState: short
     EndExperiment
 }
 
-
+/// <summary>
+/// Class housing the FSM that controls running our local experiment.
+/// </summary>
 public class ExperimentRun : MonoBehaviour
 {
+    //public GameObject Camera;
     public GameObject LoadingScreenCanvas;
     public GameObject LoginCanvas;
     public GameObject PanoramaCameraObj;
-    public GameObject QuestionnaireCanvas;
+    public GameObject QuestionnaireCanvasParent;
 
     // In seconds
     public float TimePerCueEnv;
@@ -30,11 +36,13 @@ public class ExperimentRun : MonoBehaviour
     bool UpdateState;
     bool NoEnvironmentsLeft;
 
-    private string UserName;
-
-    // Start is called before the first frame update
-    void Start()
+    public string UserName
     {
+        get; private set;
+    }
+
+    void Start()
+    {        
         NoEnvironmentsLeft = false;
         CurrentExperimentState = (short)ExperimentState.StartExperiment;
         UpdateState = false; 
@@ -47,12 +55,13 @@ public class ExperimentRun : MonoBehaviour
         // 5. Upon submitting the questionnaire, present user with transitional environment for a few seconds
         // 6. Repeat from 3. until there are no more environments to present.
         // 7. Present ending environment (Maybe a thank you screen?)
-
+        Camera.main.stereoTargetEye = StereoTargetEyeMask.None;
     }
 
-    // Update is called once per frame
     void Update()
     {
+        OVRInput.Update();
+
         if (UpdateState && CurrentExperimentState != (short)ExperimentState.EndExperiment)
         {
             UpdateState = false;
@@ -60,7 +69,24 @@ public class ExperimentRun : MonoBehaviour
             TakeAction();
         }
 
-        
+
+        //OVRManager.HMDMounted += HandleHMDMounted;
+        //OVRManager.HMDUnmounted += HandleHMDUnmounted;
+    }
+
+   
+    
+ 
+    void HandleHMDMounted()
+    {
+        // Do stuff
+        Debug.Log("HMD MOUNTED");
+    }
+
+    void HandleHMDUnmounted()
+    {
+        // Do stuff
+        Debug.Log("HMD UNMOUNTED");
     }
 
     void TakeAction()
@@ -149,6 +175,8 @@ public class ExperimentRun : MonoBehaviour
     {
         Debug.Log("Triggered: StartExperiment");
         // Wait for environments to be loaded.
+        
+        LoadingScreenCanvas.SetActive(true);
         // Show instructions
         //CurrentExperimentState = (short)ExperimentState.ShowLogin;
 
@@ -167,26 +195,62 @@ public class ExperimentRun : MonoBehaviour
         Debug.Log("Triggered: ShowEnvironment");
         // Show the appropriate environment
         transform.GetChild(0).GetComponent<EnvironmentManagerLC>().NextEnvironment(TimePerCueEnv);
+        QuestionnaireCanvasParent.transform.GetChild(0).GetComponent<LocalExperimentUIBehavior>().PresentRemainingTimer(TimePerCueEnv);
     }
 
     void ShowQuestionnaire()
     {
         Debug.Log("Triggered: ShowQuestionnaire");
-        QuestionnaireCanvas.SetActive(true);
-        // Present the questionnaire
+        //QuestionnaireCanvasParent.SetActive(true);
+
+        if (NoEnvironmentsLeft)
+        {
+            QuestionnaireCanvasParent.transform.GetChild(0).GetComponent<LocalExperimentUIBehavior>().LastEnvironment = true;
+        }
+
+        //StartCoroutine(StartQuestionnairePresentation(1f));
+
+        StartCoroutine(QuestionnaireCanvasParent.transform.GetChild(0).GetComponent<LocalExperimentUIBehavior>().StartQuestionnairePresentation(1f));
+
+        //QuestionnaireCanvasParent.transform.GetChild(0).GetComponent<LocalExperimentUIBehavior>().ToggleQuestionnaire();
+
+        //QuestionnaireCanvasParent.transform.GetComponent<MeshRenderer>().enabled = !QuestionnaireCanvasParent.transform.GetComponent<MeshRenderer>().enabled;
+        //QuestionnaireCanvasParent.transform.GetChild(0).GetComponent<Canvas>().enabled = !QuestionnaireCanvasParent.transform.GetChild(0).GetComponent<Canvas>().enabled;
+        
 
     }
+
+    //public IEnumerator StartQuestionnairePresentation(float seconds)
+    //{        
+    //    if (Gamepad.current != null)
+    //    {
+    //        Gamepad.current.SetMotorSpeeds(0.25f, 0.75f);
+    //    }
+    //    PanoramaCameraObj.transform.parent.GetComponent<AudioSource>().Play();
+    //    yield return new WaitForSeconds(seconds);
+
+    //    if (Gamepad.current != null)
+    //    {
+    //        Gamepad.current.SetMotorSpeeds(0f, 0f);
+    //    }
+    //    QuestionnaireCanvasParent.transform.GetChild(0).GetComponent<LocalExperimentUIBehavior>().ToggleQuestionnaire();
+
+    //}
 
     void ShowInstructions()
     {
         Debug.Log("Triggered: ShowInstructions");
+        Camera.main.stereoTargetEye = StereoTargetEyeMask.Both;
+        PanoramaCameraObj.GetComponent<UnityEngine.SpatialTracking.TrackedPoseDriver>().enabled = true;
+        PanoramaCameraObj.GetComponent<UnityEngine.InputSystem.XR.TrackedPoseDriver>().enabled = true;
         transform.GetChild(0).GetComponent<EnvironmentManagerLC>().ShowInstructionsEnvironment();
     }
 
     void ShowTransitionalEnvironment()
     {
         Debug.Log("Triggered: ShowTransitionalEnvironment");
-        QuestionnaireCanvas.SetActive(false);
+        //QuestionnaireCanvasParent.SetActive(false);
+        //QuestionnaireCanvasParent.transform.GetChild(0).GetComponent<LocalExperimentUIBehavior>().ToggleQuestionnaire();
         transform.GetChild(0).GetComponent<EnvironmentManagerLC>().ShowTransitionalEnvironment(TimePerTransitionEnv);
 
     }
@@ -194,11 +258,21 @@ public class ExperimentRun : MonoBehaviour
     void ShowEnding()
     {
         Debug.Log("Triggered: ShowEnding");
-        QuestionnaireCanvas.SetActive(false);
+        //QuestionnaireCanvasParent.SetActive(false);
+        QuestionnaireCanvasParent.transform.GetChild(0).GetComponent<LocalExperimentUIBehavior>().ToggleQuestionnaire();
         transform.GetChild(0).GetComponent<EnvironmentManagerLC>().ShowEndingEnvironment();
 
-        transform.GetComponent<SaveCollectedDataLC>().SaveDataToFile(UserName);
+        //transform.GetComponent<SaveCollectedDataLC>().SaveDataToFile(UserName);
     }
+
+
+    /*
+     * Pseudo-Observers
+     * 
+     * Unity allows objects to interact with each other by providing references via the GUI. 
+     * So instead of manually defining observers for when different things happen in other objects,
+     * we can simply have the object in question call the relevant method when the appropriate event is triggered.
+     */
 
     public void LogUserIn(string userName)
     {
