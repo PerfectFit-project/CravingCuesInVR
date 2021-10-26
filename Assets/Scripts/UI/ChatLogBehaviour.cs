@@ -72,7 +72,6 @@ public class ChatLogBehaviour : MonoBehaviour
             {
                 if (!transform.GetComponent<Canvas>().enabled)
                 {
-                    Debug.Log("TRIGGERED");
                     transform.GetComponent<AudioSource>().Play();
                 }                
 
@@ -87,6 +86,7 @@ public class ChatLogBehaviour : MonoBehaviour
                     LayoutRebuilder.ForceRebuildLayoutImmediate(newChatLogGameObject.transform.GetComponent<RectTransform>());
                     LayoutRebuilder.ForceRebuildLayoutImmediate(newChatLogGameObject.transform.GetChild(0).GetComponent<RectTransform>());
                 }
+                transform.GetComponent<ChatMessagesGamepadInteraction>().SetNewContainer(newChatLogGameObject);
             }
             else
             {
@@ -119,7 +119,6 @@ public class ChatLogBehaviour : MonoBehaviour
         ChatScrollView.GetComponent<ScrollRect>().verticalNormalizedPosition = 0;
         Canvas.ForceUpdateCanvases();
     }
-
 
 
     /// <summary>

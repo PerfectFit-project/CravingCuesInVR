@@ -706,6 +706,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 852007516, guid: 3ff3403810f333240a0abf93b0dd5853, type: 3}
+      propertyPath: m_Name
+      value: Role_Label
+      objectReference: {fileID: 0}
+    - target: {fileID: 852007518, guid: 3ff3403810f333240a0abf93b0dd5853, type: 3}
+      propertyPath: m_text
+      value: 'Role:'
+      objectReference: {fileID: 0}
     - target: {fileID: 1080539307, guid: 3ff3403810f333240a0abf93b0dd5853, type: 3}
       propertyPath: password
       value: a
@@ -714,6 +722,10 @@ PrefabInstance:
       propertyPath: NetworkManager
       value: 
       objectReference: {fileID: 492296268}
+    - target: {fileID: 1131903277, guid: 3ff3403810f333240a0abf93b0dd5853, type: 3}
+      propertyPath: m_Name
+      value: Role_Dropdown
+      objectReference: {fileID: 0}
     - target: {fileID: 5367136627433690433, guid: 3ff3403810f333240a0abf93b0dd5853, type: 3}
       propertyPath: m_Name
       value: LogInCanvas

@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Local camera movement using mouse.
+/// </summary>
 public class CameraMovementLC : MonoBehaviour
 {
     public float LowerHorizontalRotationLimit;
@@ -12,6 +15,8 @@ public class CameraMovementLC : MonoBehaviour
     [SerializeField] private Vector2 RotationAcceleration;
     [SerializeField] private float InputLagPeriod;
     [SerializeField] private bool LimitHorizontalRotation;
+
+    public float MouseTurnSpeed;
 
     Vector2 velocity;
     Vector2 rotation;
@@ -68,16 +73,27 @@ public class CameraMovementLC : MonoBehaviour
         //    Input.GetAxis("Mouse Y")
         //    );
 
-        Vector2 rawVelocity = GetInput() * RotationSensitivity;
+        float horizontal = Input.GetAxis("Mouse X");
+        float vertical = Input.GetAxis("Mouse Y");
 
-        velocity = new Vector2(
-            Mathf.MoveTowards(velocity.x, rawVelocity.x, RotationAcceleration.x * Time.deltaTime),
-            Mathf.MoveTowards(velocity.y, rawVelocity.y, RotationAcceleration.y * Time.deltaTime)
-            );
+        transform.Rotate(new Vector3(0, horizontal * (-1), 0f) * Time.deltaTime * MouseTurnSpeed);
 
-        rotation += velocity * Time.deltaTime;
 
-        transform.eulerAngles = new Vector3(rotation.y, rotation.x, 0f);
+
+        //Vector2 rawVelocity = GetInput() * RotationSensitivity;
+
+        //velocity = new Vector2(
+        //    Mathf.MoveTowards(velocity.x, rawVelocity.x, RotationAcceleration.x * Time.deltaTime),
+        //    Mathf.MoveTowards(velocity.y, rawVelocity.y, RotationAcceleration.y * Time.deltaTime)
+        //    );
+
+        //rotation += velocity * Time.deltaTime;
+
+        //transform.eulerAngles = new Vector3(rotation.y, rotation.x, 0f);
+
+
+
+
 
         //Debug.Log("Vertical ROT: " + transform.rotation.eulerAngles.x);
         //Debug.Log("Horizontal ROT: " + transform.rotation.eulerAngles.y);

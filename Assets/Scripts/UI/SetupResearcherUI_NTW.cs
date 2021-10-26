@@ -119,12 +119,13 @@ public class SetupResearcherUI_NTW : MonoBehaviour
     public void SendResearcherMessage()
     {
         string message = MessageInputField.GetComponent<TMP_InputField>().text;
-        if (String.IsNullOrWhiteSpace(message)) return;
+        if (String.IsNullOrWhiteSpace(message)) 
+            return;
 
         foreach (Transform inputFieldGameobject in MessageResponsesSVContent.transform)
         {
-            if (String.IsNullOrWhiteSpace(inputFieldGameobject.transform.Find("InputField (TMP)").GetComponent<TMP_InputField>().text)) return;
-
+            if (String.IsNullOrWhiteSpace(inputFieldGameobject.transform.Find("InputField (TMP)").GetComponent<TMP_InputField>().text)) 
+                return;
         }
 
         int responsesCount = MessageResponsesSVContent.transform.childCount;
@@ -143,7 +144,5 @@ public class SetupResearcherUI_NTW : MonoBehaviour
         ChatMessage chatMessage = new ChatMessage(message, responses);
         GetComponent<ChatLogBehaviour>().OnSend(chatMessage);
     }
-
-
 
 }

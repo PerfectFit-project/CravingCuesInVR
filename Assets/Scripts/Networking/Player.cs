@@ -3,7 +3,12 @@ using System.Collections.Generic;
 using Mirror;
 using System;
 using UnityEngine;
+using UnityEngine.XR.LegacyInputHelpers;
+using UnityEngine.SpatialTracking;
 
+/// <summary>
+/// Holds player information, and instantiates the correct UI based on user type, and handles network interaction. 
+/// </summary>
 public class Player : NetworkBehaviour
 {
     [SyncVar]
@@ -17,7 +22,13 @@ public class Player : NetworkBehaviour
     public Material TransitionalMaterial;
     public Material CueEnvironmentMaterial;
 
-    public GameObject PanoramaCamera;
+    //GameObject XRRig;
+    //GameObject ParticipantCamera;
+    //GameObject ResearcherCamera;
+
+    GameObject PanoramaCamera;
+    
+    GameObject PanoramaSphere;
 
     GameObject userInterface;
 
@@ -31,20 +42,38 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void InstantiateUI()
     {
-        PanoramaCamera = GameObject.Find("PanoramaCamera");
+        PanoramaSphere = GameObject.Find("PanoramaSphere");
+        GameObject researcherCamera = GameObject.Find("ResearcherCamera");
+        GameObject participantCamera = GameObject.Find("ParticipantCamera");
 
-        if (isResearcher)
+
+        if (isResearcher && hasAuthority && isLocalPlayer)
         {
+            PanoramaCamera = researcherCamera;
             userInterface = Instantiate(ResearcherUIPrefab, transform);
+            participantCamera.SetActive(false);
         }
-        else
+        else if (hasAuthority && isLocalPlayer)
         {
+            PanoramaCamera = participantCamera;
             // Instantiate Participant UI in World Space overlaid on a 3D object, and attach it to the camera so that it moves with it.
             userInterface = Instantiate(ParticipantUIPrefab);
             userInterface.transform.parent = PanoramaCamera.transform;
 
+            PanoramaCamera.GetComponent<Camera>().enabled = true;
+            PanoramaCamera.GetComponent<TrackedPoseDriver>().enabled = true;
+            PanoramaCamera.GetComponent<TrackCameraMovement>().enabled = true;
+
+            researcherCamera.SetActive(false);
+
+            //ResearcherCamera.GetComponent<Camera>().enabled = false;
+            
             // Instantiate Participant UI in Screen Space as a child of the Player object 
             //userInterface = Instantiate(ParticipantUIPrefab, transform);
+        }
+        else
+        {
+            PanoramaCamera = Camera.main.gameObject;
         }
         
 
@@ -81,16 +110,21 @@ public class Player : NetworkBehaviour
 
     [ClientRpc]
     public void ReceiveCameraRotation(Vector3 rotation)
-    {
+    {        
         PanoramaCamera.transform.eulerAngles = rotation;
+        if (isResearcher)
+        {
+            PanoramaCamera.transform.eulerAngles = rotation;
+        }
+        
     }
 
     public void PresentEnvironment()
     {
-        // TODO: Implement Splash Screen where users log in, separate from the environments themselves. 
+        // TODO: Maybe implement Splash Screen where users log in, separate from the environments themselves. 
         // For now, starting audio when both users are logged in.
-        PanoramaCamera.transform.parent.GetComponent<Renderer>().material = CueEnvironmentMaterial;
-        PanoramaCamera.GetComponent<AudioSource>().Play();
+        PanoramaSphere.GetComponent<Renderer>().material = CueEnvironmentMaterial;
+        //PanoramaCamera.GetComponent<AudioSource>().Play();
     }
 
     void LateUpdate()
@@ -124,22 +158,11 @@ public class Player : NetworkBehaviour
                     
             }
 
-            //if (isResearcher)
-            //{
-            //    userInterface.GetComponent<Canvas>().enabled = !userInterface.GetComponent<Canvas>().enabled;
-            //}
-            //else
-            //    //userInterface.GetComponent<Canvas>().enabled = !userInterface.GetComponent<Canvas>().enabled;
-            //    userInterface.SetActive(!userInterface.activeSelf);
-
         }
 
 
         if (isResearcher || !hasAuthority)
             return;
-        else
-        {
-            PanoramaCamera.GetComponent<CameraMovementNTW>().MoveCamera();
-        }
+
     }        
 }

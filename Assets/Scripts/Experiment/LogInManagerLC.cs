@@ -6,7 +6,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-
+/// <summary>
+/// Collects username and initiates the local experiment login process.
+/// </summary>
 public class LogInManagerLC : MonoBehaviour
 {
     public GameObject UserNameInputField;
@@ -34,8 +36,6 @@ public class LogInManagerLC : MonoBehaviour
 
         PlayerLC.GetComponent<ExperimentRun>().LogUserIn(userName);
 
-
-        //transform.gameObject.SetActive(false);
     }
 
 
