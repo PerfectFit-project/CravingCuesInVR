@@ -124,12 +124,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void ReceiveCameraRotation(Vector3 rotation)
     {        
-        PanoramaCamera.transform.eulerAngles = rotation;
-        if (isResearcher)
-        {
-            PanoramaCamera.transform.eulerAngles = rotation;
-        }
-        
+        PanoramaCamera.transform.eulerAngles = rotation;        
     }
 
     public void LoadEnvironmentFromJSON()
@@ -247,7 +242,5 @@ public class Player : NetworkBehaviour
         AudioClip importedAudioClip = DownloadHandlerAudioClip.GetContent(webRequest);
 
         PresentEnvironment(importedTexture, importedAudioClip);
-
-        Debug.Log("DING4");
     }
 }
