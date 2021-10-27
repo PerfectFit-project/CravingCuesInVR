@@ -13,9 +13,8 @@
 	2. The client (participant) can look around in the environments using an HMD, while the host (researcher) can only view what the participant is viewing.
 
 ### (Rough) Plan
-1. Add top-bottom blocking planes to hide texture repetition from being visible.
-2. Finish testing networking functionality on different computers and networks.
-3. Perform final tests.
+1. Finish testing networking functionality on different computers and networks.
+2. Perform final tests.
 
 ### Use
 Open as Unity project, open the "PanoramicEnvsNetworkingVR" Scene, build the project for PC Standalone with Windows as the target platform, and run. 
