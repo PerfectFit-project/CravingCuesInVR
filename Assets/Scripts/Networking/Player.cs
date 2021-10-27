@@ -2,9 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using Mirror;
 using System;
+using System.IO;
 using UnityEngine;
 using UnityEngine.XR.LegacyInputHelpers;
 using UnityEngine.SpatialTracking;
+using UnityEngine.Networking;
+using Newtonsoft.Json;
+
 
 /// <summary>
 /// Holds player information, and instantiates the correct UI based on user type, and handles network interaction. 
@@ -26,6 +30,8 @@ public class Player : NetworkBehaviour
     //GameObject ParticipantCamera;
     //GameObject ResearcherCamera;
 
+    GameObject LoadingScreen;
+
     GameObject PanoramaCamera;
     
     GameObject PanoramaSphere;
@@ -34,6 +40,11 @@ public class Player : NetworkBehaviour
 
     public static event Action<Player, ChatMessage> OnMessage;
 
+    private void Awake()
+    {
+        LoadingScreen = GameObject.Find("LoadingScreenCanvas");
+
+    }
 
 
     /// <summary>
@@ -42,6 +53,8 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void InstantiateUI()
     {
+        LoadingScreen.GetComponent<Canvas>().enabled = true;
+
         PanoramaSphere = GameObject.Find("PanoramaSphere");
         GameObject researcherCamera = GameObject.Find("ResearcherCamera");
         GameObject participantCamera = GameObject.Find("ParticipantCamera");
@@ -85,7 +98,7 @@ public class Player : NetworkBehaviour
         if (!isResearcher)
         {
             // Presenting the environment when a client logs in.
-            PresentEnvironment();
+            LoadEnvironmentFromJSON();
         }
     }
 
@@ -119,12 +132,61 @@ public class Player : NetworkBehaviour
         
     }
 
-    public void PresentEnvironment()
+    public void LoadEnvironmentFromJSON()
     {
-        // TODO: Maybe implement Splash Screen where users log in, separate from the environments themselves. 
-        // For now, starting audio when both users are logged in.
+        string filePathAddition = "/Environments";
+
+        string filePath = Application.streamingAssetsPath + filePathAddition;
+
+        // Loading files from StreamingAssets folder
+        DirectoryInfo directoryInfo = new DirectoryInfo(filePath);
+        FileInfo[] AllFilesInFolder = directoryInfo.GetFiles("*.*");
+
+        var jsonString = File.ReadAllText(Application.streamingAssetsPath + "/EnvironmentToPresent.json");
+        //string environmentToPresentName = JsonReader.
+        //string environmentToPresentName = JsonConvert.DeserializeObject<string>(jsonString);
+
+        string environmentToPresentName = jsonString.Substring(jsonString.IndexOf("{ \"") + 3);
+        environmentToPresentName = environmentToPresentName.Substring(0, jsonString.IndexOf("\" }") - 3);
+        //string environmentToPresentName = jsonString;
+
+
+        foreach (var file in AllFilesInFolder)
+        {
+            //Debug.Log(file.Name);
+            // Avoid .meta and .json files, and also files containing "audio" to prevent double loading
+            if (file.Name.Contains(environmentToPresentName + "_image") && !file.Name.Contains("meta") && !file.Name.Contains("audio"))
+            {
+                foreach (var file2 in AllFilesInFolder)
+                {
+                    // Once a texture file has been found, locate the appropriate audio file for that environment, and send both to the coroutine to be loaded.
+                    // Using the String Contains method, which will return true if the name of a file is a subset of another. Make sure that file names are distinct enough.
+                    // Mandatory for texture and audio files to have the same name, followed by either "_image" or "_audio", followed by the file extension.
+                    if (!file2.Name.Contains("meta") && !file2.Name.Contains("json") && !file2.Name.Contains("image"))
+                    {
+                        if (file2.Name.Contains(environmentToPresentName))
+                        {
+                            StartCoroutine(LoadEnvironmentFiles(file.FullName, file2.FullName));
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    public void PresentEnvironment(Texture2D texture, AudioClip audioClip) 
+    {
         PanoramaSphere.GetComponent<Renderer>().material = CueEnvironmentMaterial;
+        PanoramaSphere.GetComponent<Renderer>().material.mainTexture = texture;
+
+        AudioSource audioSource = PanoramaSphere.GetComponent<AudioSource>();
+        audioSource.clip = audioClip;
+        audioSource.Play();
+
         //PanoramaCamera.GetComponent<AudioSource>().Play();
+
+        LoadingScreen.SetActive(false);
     }
 
     void LateUpdate()
@@ -164,5 +226,28 @@ public class Player : NetworkBehaviour
         if (isResearcher || !hasAuthority)
             return;
 
-    }        
+    }
+
+
+    /// <summary>
+    /// Load the texture and audio, and add them to the EnvironmentData object list
+    /// </summary>
+    /// <param name="textureFile"></param>
+    /// <returns></returns>
+    IEnumerator LoadEnvironmentFiles(string textureFileName, string audioClipFileName)
+    {
+        string wwwTextureFilePath = "file://" + textureFileName;
+        UnityWebRequest webRequest = UnityWebRequestTexture.GetTexture(wwwTextureFilePath);
+        yield return webRequest.SendWebRequest();
+        Texture2D importedTexture = DownloadHandlerTexture.GetContent(webRequest);
+
+        string wwwAudioFilePath = "file://" + audioClipFileName;
+        webRequest = UnityWebRequestMultimedia.GetAudioClip(wwwAudioFilePath, AudioType.WAV);
+        yield return webRequest.SendWebRequest();
+        AudioClip importedAudioClip = DownloadHandlerAudioClip.GetContent(webRequest);
+
+        PresentEnvironment(importedTexture, importedAudioClip);
+
+        Debug.Log("DING4");
+    }
 }
