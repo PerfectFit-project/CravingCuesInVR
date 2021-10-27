@@ -22,6 +22,7 @@ Open as Unity project, open the "PanoramicEnvsNetworkingVR" Scene, build the pro
 Need two instances running to test the communication functionality, i.e. editor and an instance from the build executable, or two instances of the built executable, one being the researcher (host) and the other being the participant (client). Host password is "a". Sets up a server and connects on the localhost network address.
 Camera movement only works with HDM in this version, but if using the editor as one running instance, the camera can be manually rotated through the object in the hierarchy.
 By default the UI is not visible. In both Researcher and UI instances, the key combination Left-Control + Space will open / close the UI. UI interaction works with a mouse.
+Need to specify which environment to load in the EnvironmentToPresent.json file. The JSON file specifies the bar scene by default. 
 
 -------
 
