@@ -137,6 +137,7 @@ PlayerSettings:
   bundleVersion: 0.1
   preloadedAssets:
   - {fileID: 11400000, guid: bf7d897bcbea1304d9f18a64d4bd4780, type: 2}
+  - {fileID: 6036044585270027444, guid: 226d92abe1a04fc4f8cbc99953074b32, type: 2}
   - {fileID: 11400000, guid: 0fc2a1a6d5e77b64e8fe8f12fd574908, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -669,7 +670,14 @@ PlayerSettings:
   XboxOneOverrideIdentityPublisher: 
   vrEditorSettings: {}
   cloudServicesEnabled:
+    Analytics: 0
+    Build: 0
+    Collab: 0
+    Game Performance: 0
+    Purchasing: 0
+    UDP: 0
     UNet: 1
+    Unity Ads: 0
   luminIcon:
     m_Name: 
     m_ModelFolderPath: 
@@ -683,11 +691,11 @@ PlayerSettings:
     m_VersionName: 
   apiCompatibilityLevel: 6
   activeInputHandler: 2
-  cloudProjectId: 
+  cloudProjectId: a56e94e2-42e7-48d1-b796-0371a9bdf40b
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: 
-  organizationId: 
+  projectName: Craving Cues in VR
+  organizationId: deathex565
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   virtualTexturingSupportEnabled: 0

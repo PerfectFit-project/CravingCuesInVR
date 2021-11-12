@@ -17,7 +17,12 @@ public class SetupResearcherUI_NTW : MonoBehaviour
     public GameObject ResponseInputFieldPrefab;
 
 
-    void Start()
+    //void Start()
+    //{
+    //    PopulateResearcherUI(RetrieveChatMessagesFromJSON());
+    //}
+
+    public void InitializeResearcherUI()
     {
         PopulateResearcherUI(RetrieveChatMessagesFromJSON());
     }
@@ -29,7 +34,6 @@ public class SetupResearcherUI_NTW : MonoBehaviour
     ChatMessages RetrieveChatMessagesFromJSON()
     {
         var jsonString = File.ReadAllText(Application.streamingAssetsPath + "/messages.json");
-
         ChatMessages chatMessagesInJson = JsonUtility.FromJson<ChatMessages>(jsonString);
 
         return chatMessagesInJson;
@@ -41,6 +45,7 @@ public class SetupResearcherUI_NTW : MonoBehaviour
     /// <param name="chatMessages"></param>
     void PopulateResearcherUI(ChatMessages chatMessages)
     {
+        //Debug.Log(chatMessages.chatMessages.Length);
         foreach (ChatMessage chatMessage in chatMessages.chatMessages)
         {
             GameObject newButtonGameObject = Instantiate(TemplateMessageButtonPrefab, TemplateMessageSVContent.transform);
@@ -119,12 +124,12 @@ public class SetupResearcherUI_NTW : MonoBehaviour
     public void SendResearcherMessage()
     {
         string message = MessageInputField.GetComponent<TMP_InputField>().text;
-        if (String.IsNullOrWhiteSpace(message)) 
+        if (String.IsNullOrWhiteSpace(message))
             return;
 
         foreach (Transform inputFieldGameobject in MessageResponsesSVContent.transform)
         {
-            if (String.IsNullOrWhiteSpace(inputFieldGameobject.transform.Find("InputField (TMP)").GetComponent<TMP_InputField>().text)) 
+            if (String.IsNullOrWhiteSpace(inputFieldGameobject.transform.Find("InputField (TMP)").GetComponent<TMP_InputField>().text))
                 return;
         }
 

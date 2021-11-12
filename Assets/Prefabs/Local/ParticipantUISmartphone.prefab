@@ -510,7 +510,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5237583276350049355}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1270,7 +1270,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7475655410391312304}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 2
   m_Camera: {fileID: 0}
@@ -1345,6 +1345,7 @@ MonoBehaviour:
   SubmitButton: {fileID: 804672876580230518}
   FlowingTextCanvas: {fileID: 0}
   FlowingTextText: {fileID: 0}
+  SecondsToDisplayNotification: 0
 --- !u!114 &7475655410391312309
 MonoBehaviour:
   m_ObjectHideFlags: 0

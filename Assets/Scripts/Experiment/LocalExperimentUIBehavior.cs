@@ -342,6 +342,7 @@ public class LocalExperimentUIBehavior : MonoBehaviour
             Slider newQObjSLider = newQuestionObject.transform.GetChild(2).transform.GetChild(0).GetComponent<Slider>();
             newQObjSLider.minValue = int.Parse(question.acceptableResponseRange[0]);
             newQObjSLider.maxValue = int.Parse(question.acceptableResponseRange[1]);
+            newQObjSLider.value = Mathf.RoundToInt(((newQObjSLider.maxValue + newQObjSLider.minValue) / 2));
             newQuestionObject.transform.GetChild(2).transform.GetChild(1).transform.GetChild(0).GetComponent<TMP_Text>().text = question.extremeRangeLabels[0];
             newQuestionObject.transform.GetChild(2).transform.GetChild(1).transform.GetChild(1).GetComponent<TMP_Text>().text = question.extremeRangeLabels[1];
             newQuestionObject.transform.GetChild(2).transform.GetChild(1).transform.GetChild(2).GetComponent<TMP_Text>().text = question.extremeRangeLabels[2];

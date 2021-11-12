@@ -52,6 +52,13 @@ public class ChatMessagesGamepadInteraction : MonoBehaviour
     public void InitializeUI()
     {
         int childrenCount = ContentContainer.transform.childCount;
+        if (childrenCount < 1)
+        {
+            WaitingForMessageResponse = false;
+            GamepadActive = true;
+            return;
+        }
+
         gameObjectsToTraverse = new List<GameObject>();
         gameObjectsToTraverse.Clear();
 

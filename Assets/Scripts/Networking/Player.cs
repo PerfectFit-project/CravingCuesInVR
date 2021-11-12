@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Mirror;
 using System;
 using System.IO;
 using UnityEngine;
@@ -8,6 +7,8 @@ using UnityEngine.XR.LegacyInputHelpers;
 using UnityEngine.SpatialTracking;
 using UnityEngine.Networking;
 using Newtonsoft.Json;
+using Unity.Netcode;
+using Unity.Collections;
 
 
 /// <summary>
@@ -15,16 +16,26 @@ using Newtonsoft.Json;
 /// </summary>
 public class Player : NetworkBehaviour
 {
-    [SyncVar]
-    public string playerName;
-    [SyncVar]
-    public bool isResearcher;
+    NetworkManager NetManager;
 
-    public GameObject ResearcherUIPrefab; 
+    public NetworkVariable<FixedString64Bytes> playerName = new NetworkVariable<FixedString64Bytes>();
+    public NetworkVariable<bool> IsResearcher = new NetworkVariable<bool>();
+
+    public string UserName;
+
+    //public bool IsResearcher;
+
+    bool EnvironmentLoaded;
+    bool EnvironmentPresented;
+
+    public GameObject ResearcherUIPrefab;
     public GameObject ParticipantUIPrefab;
 
     public Material TransitionalMaterial;
     public Material CueEnvironmentMaterial;
+
+    Texture2D textureToPresent;
+    AudioClip audioClipToPlay;
 
     //GameObject XRRig;
     //GameObject ParticipantCamera;
@@ -33,7 +44,7 @@ public class Player : NetworkBehaviour
     GameObject LoadingScreen;
 
     GameObject PanoramaCamera;
-    
+
     GameObject PanoramaSphere;
 
     GameObject userInterface;
@@ -42,17 +53,57 @@ public class Player : NetworkBehaviour
 
     private void Awake()
     {
+        Debug.Log("AWAKE HAPPENS");
         LoadingScreen = GameObject.Find("LoadingScreenCanvas");
+    }
+
+    private void Start()
+    {
+        //Debug.Log("START HAPPENS");
+        //NetManager = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
+
+
+        ////isResearcher = IsResearcher.Value;
+        //EnvironmentLoaded = false;
+        //EnvironmentPresented = false;
+
+        //isResearcher = IsHost && IsOwner && IsLocalPlayer;
+
+        //Debug.Log("IS RESEARCHER: " + isResearcher);
+
+        //InstantiateUIClientRpc();
 
     }
 
+    [ServerRpc]
+    public void InitPlayerServerRpc(string userName, bool isResearcher)
+    {
+        Debug.Log("CUSTOM START HAPPENS");
+        NetManager = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
+
+
+        //isResearcher = IsResearcher.Value;
+        EnvironmentLoaded = false;
+        EnvironmentPresented = false;
+
+        //isResearcher = IsHost && IsOwner && IsLocalPlayer;
+        IsResearcher = new NetworkVariable<bool>(isResearcher);
+
+        UserName = userName;
+
+        Debug.Log("IS RESEARCHER: " + isResearcher);
+
+        InstantiateUIClientRpc();
+    }
 
     /// <summary>
     /// Instantiate the appropriate UI depending on whether the user has logged in as Researcher or Participant. Activate the UI only on the client that has ownership of it, so as to not display every UI on every client.
     /// </summary>
     [ClientRpc]
-    public void InstantiateUI()
+    public void InstantiateUIClientRpc()
     {
+        Debug.Log("INSTANTIATE UI HAPPENS");
+
         LoadingScreen.GetComponent<Canvas>().enabled = true;
 
         PanoramaSphere = GameObject.Find("PanoramaSphere");
@@ -60,18 +111,24 @@ public class Player : NetworkBehaviour
         GameObject participantCamera = GameObject.Find("ParticipantCamera");
 
 
-        if (isResearcher && hasAuthority && isLocalPlayer)
+        if (IsResearcher.Value && IsOwner)
         {
+            Debug.Log("IS RESEARCHER AND OWNER ");
             PanoramaCamera = researcherCamera;
             userInterface = Instantiate(ResearcherUIPrefab, transform);
+            userInterface.GetComponent<SetupResearcherUI_NTW>().InitializeResearcherUI();
             participantCamera.SetActive(false);
         }
-        else if (hasAuthority && isLocalPlayer)
+        else if (IsOwner)
         {
+            Debug.Log("IS NOT RESEARCHER BUT IS OWNER");
             PanoramaCamera = participantCamera;
             // Instantiate Participant UI in World Space overlaid on a 3D object, and attach it to the camera so that it moves with it.
             userInterface = Instantiate(ParticipantUIPrefab);
             userInterface.transform.parent = PanoramaCamera.transform;
+
+            userInterface.transform.localPosition = new Vector3(0f, -0.8f, 1.4f);
+            userInterface.transform.localEulerAngles = new Vector3(-10f, 180f, 0f);
 
             PanoramaCamera.GetComponent<Camera>().enabled = true;
             PanoramaCamera.GetComponent<TrackedPoseDriver>().enabled = true;
@@ -80,7 +137,7 @@ public class Player : NetworkBehaviour
             researcherCamera.SetActive(false);
 
             //ResearcherCamera.GetComponent<Camera>().enabled = false;
-            
+
             // Instantiate Participant UI in Screen Space as a child of the Player object 
             //userInterface = Instantiate(ParticipantUIPrefab, transform);
         }
@@ -88,47 +145,65 @@ public class Player : NetworkBehaviour
         {
             PanoramaCamera = Camera.main.gameObject;
         }
-        
 
-        if (hasAuthority || isLocalPlayer)
+        if (IsOwner)
         {
             userInterface.SetActive(true);
-        }
-
-        if (!isResearcher)
-        {
-            // Presenting the environment when a client logs in.
             LoadEnvironmentFromJSON();
         }
+
+
+        //if (IsOwner && IsLocalPlayer)
+        //{
+        //    Debug.Log("IS OWNER AND LOCAL PLAYER SO LOAD ENVIRONMENT FROM JSON");
+        //    userInterface.SetActive(true);
+        //    LoadEnvironmentFromJSON();
+        //}
+
+        //if (!isResearcher)
+        //{
+        //    // Presenting the environment when a client logs in.
+        //    LoadEnvironmentFromJSON();
+        //}
     }
 
-    [Command]
-    public void CmdSend(ChatMessage chatMessage)
+    [ServerRpc]
+    public void CmdSendServerRpc(ChatMessage chatMessage)
     {
-        RpcReceive(chatMessage);
+        Debug.Log("CMDSENDSERVERRPC");
+        RpcReceiveClientRpc(chatMessage);
     }
 
     [ClientRpc]
-    public void RpcReceive(ChatMessage chatMessage)
+    public void RpcReceiveClientRpc(ChatMessage chatMessage)
     {
+        Debug.Log("RPCRECEIVECLIENTRPC");
         OnMessage?.Invoke(this, chatMessage);
     }
 
 
-    [Command]
-    public void RotateCamera(Vector3 rotation)
+    [ServerRpc]
+    public void RotateCameraServerRpc(Vector3 rotation)
     {
-        ReceiveCameraRotation(rotation);
+        Debug.Log("RECEIVECAMERAROTATIONCLIENTRPC");
+        ReceiveCameraRotationClientRpc(rotation);
     }
 
     [ClientRpc]
-    public void ReceiveCameraRotation(Vector3 rotation)
-    {        
-        PanoramaCamera.transform.eulerAngles = rotation;        
+    public void ReceiveCameraRotationClientRpc(Vector3 rotation)
+    {
+        Debug.Log("RECEIVECAMERAROTATIONCLIENTRPC");
+
+        if (IsHost)
+        {
+            PanoramaCamera.transform.eulerAngles = rotation;
+        }
+
     }
 
     public void LoadEnvironmentFromJSON()
     {
+        Debug.Log("LOADENVIRONMENTFROMJSON");
         string filePathAddition = "/Environments";
 
         string filePath = Application.streamingAssetsPath + filePathAddition;
@@ -170,8 +245,33 @@ public class Player : NetworkBehaviour
 
     }
 
-    public void PresentEnvironment(Texture2D texture, AudioClip audioClip) 
+    [ClientRpc]
+    public void ShowEnvironmentClientRpc()
     {
+        Debug.Log("SHOWENVIRONMENTSSERVERRPC");
+        StartEnvironmentPresentation();
+    }
+
+    public void StartEnvironmentPresentation()
+    {
+        Debug.Log("STARTENVIRONMENTPRESENTATION");
+        PanoramaSphere.GetComponent<Renderer>().material = CueEnvironmentMaterial;
+        PanoramaSphere.GetComponent<Renderer>().material.mainTexture = textureToPresent;
+
+        AudioSource audioSource = PanoramaSphere.GetComponent<AudioSource>();
+        audioSource.clip = audioClipToPlay;
+        audioSource.Play();
+
+        //PanoramaCamera.GetComponent<AudioSource>().Play();
+
+        LoadingScreen.SetActive(false);
+
+        EnvironmentPresented = true;
+    }
+
+    public void PresentEnvironment(Texture2D texture, AudioClip audioClip)
+    {
+        Debug.Log("PRESENTENVIRONMENT");
         PanoramaSphere.GetComponent<Renderer>().material = CueEnvironmentMaterial;
         PanoramaSphere.GetComponent<Renderer>().material.mainTexture = texture;
 
@@ -188,15 +288,15 @@ public class Player : NetworkBehaviour
     {
         if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Space))
         {
-            if (hasAuthority || isLocalPlayer)
+            if (IsOwner)
             {
-                if (isResearcher)
+                if (IsResearcher.Value)
                 {
                     if (userInterface.GetComponent<Canvas>())
                     {
                         userInterface.GetComponent<Canvas>().enabled = !userInterface.GetComponent<Canvas>().enabled;
                     }
-                    
+
                 }
                 else
                 {
@@ -210,16 +310,18 @@ public class Player : NetworkBehaviour
                     {
                         userInterface.transform.GetChild(0).GetComponent<Canvas>().enabled = !userInterface.transform.GetChild(0).GetComponent<Canvas>().enabled;
                     }
-                    
+                    userInterface.transform.GetChild(1).GetComponent<MeshRenderer>().enabled = !userInterface.transform.GetChild(1).GetComponent<MeshRenderer>().enabled;
+
+
                 }
-                    
+
             }
 
         }
 
 
-        if (isResearcher || !hasAuthority)
-            return;
+        //if (isResearcher || !IsOwner)
+        //    return;
 
     }
 
@@ -231,6 +333,7 @@ public class Player : NetworkBehaviour
     /// <returns></returns>
     IEnumerator LoadEnvironmentFiles(string textureFileName, string audioClipFileName)
     {
+        Debug.Log("LOADENVIRONMENTFILES");
         string wwwTextureFilePath = "file://" + textureFileName;
         UnityWebRequest webRequest = UnityWebRequestTexture.GetTexture(wwwTextureFilePath);
         yield return webRequest.SendWebRequest();
@@ -241,6 +344,75 @@ public class Player : NetworkBehaviour
         yield return webRequest.SendWebRequest();
         AudioClip importedAudioClip = DownloadHandlerAudioClip.GetContent(webRequest);
 
-        PresentEnvironment(importedTexture, importedAudioClip);
+        //if (IsHost)
+        //{
+        //    textureToPresent = importedTexture;
+        //    audioClipToPlay = importedAudioClip;
+        //}
+        //else
+        //{
+
+        //}
+        //PresentEnvironment(importedTexture, importedAudioClip);
+
+        textureToPresent = importedTexture;
+        audioClipToPlay = importedAudioClip;
+        EnvironmentLoaded = true;
+
+        //if (isResearcher)
+        //{
+        //    if (NetManager.ConnectedClients.Count > 1)
+        //    {
+        //        Debug.Log("MORE THAN 1 CLIENTS");
+        //    }
+        //    else
+        //    {
+        //        Debug.Log("NOT MORE THAN 1 CLIENTS");
+        //    }
+
+
+        //    //StartEnvironmentPresentationClientRPC();
+        //    ShowEnvironmentServerRpc();
+        //}
+    }
+
+
+
+    private void Update()
+    {
+        if (IsOwner && IsLocalPlayer)
+        {
+            if (!EnvironmentPresented && EnvironmentLoaded)
+            {
+                //Debug.Log("ENVIRONMENT NOT PRESENTED AND ENVIRONMENT LOADED");
+                if (IsResearcher.Value)
+                {
+                    //Debug.Log("IS HOST");
+                    if (NetManager.ConnectedClients.Count > 1)
+                    {
+                        Debug.Log("MORE THAN ONE CLIENTS CONNECTED");
+                        StartEnvironmentPresentation();
+                    }
+                    else if (NetManager.ConnectedClients.Count < 1)
+                    {
+                        Debug.Log("NOT MORE THAN ONE CLIENTS CONNECTED");
+                    }
+                    else
+                    {
+                        //Debug.Log("ONLY ONE CLIENT CONNECTED");
+                    }
+
+                }
+                else
+                {
+                    Debug.Log("ISNOTHOST");
+                    //PresentEnvironment(textureToPresent, audioClipToPlay);
+                    StartEnvironmentPresentation();
+                }
+
+            }
+        }
+
+
     }
 }

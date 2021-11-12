@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Mirror;
+using Unity.Netcode;
 
 /// <summary>
 /// Move camera given mouse movement.
@@ -44,8 +44,6 @@ public class CameraMovementNTW : MonoBehaviour
 
         container.Rotate(new Vector3(0, horizontal * (-1), 0f) * Time.deltaTime * turnSpeedMouse);
 
-        // Sending the camera rotation to all users.
-        Player player = NetworkClient.connection.identity.GetComponent<Player>();
-        player.RotateCamera(container.eulerAngles);
+        NetworkManager.Singleton.LocalClient.PlayerObject.gameObject.GetComponent<Player>().RotateCameraServerRpc(container.eulerAngles);
     }
 }

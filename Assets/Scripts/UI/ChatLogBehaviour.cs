@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using Mirror;
+using Unity.Netcode;
 
 /// <summary>
 /// Handle creationing and positioning of messages on a Canvas chat log.
@@ -21,6 +21,7 @@ public class ChatLogBehaviour : MonoBehaviour
         Player.OnMessage += OnPlayerMessage;
     }
 
+
     /// <summary>
     /// When a message is received, call the relevant method to display it at the appropriate location on the chat log.
     /// </summary>
@@ -28,7 +29,8 @@ public class ChatLogBehaviour : MonoBehaviour
     /// <param name="chatMessage"></param>
     void OnPlayerMessage(Player player, ChatMessage chatMessage)
     {
-        DisplayMessage(player.isLocalPlayer, player.isResearcher, chatMessage);
+        //Debug.Log("ONPLAYERMESSAGE: " + "ISLOCAL: " + player.IsLocalPlayer + " ISRESEARCHER: " + player.IsResearcher.Value + " ISOWNEDBYSERVER: " + player.IsOwnedByServer);
+        DisplayMessage(player.IsLocalPlayer, player.IsOwnedByServer, chatMessage);
     }
 
     /// <summary>
@@ -37,9 +39,32 @@ public class ChatLogBehaviour : MonoBehaviour
     /// <param name="chatMessage"></param>
     public void OnSend(ChatMessage chatMessage)
     {
-        Player player = NetworkClient.connection.identity.GetComponent<Player>();
+        //NewPlayer player;
 
-        player.CmdSend(chatMessage);
+        //if (NetManager.LocalClient != null)
+        //{
+        //    player = NetManager.LocalClient.PlayerObject.gameObject.GetComponent<NewPlayer>();
+        //}
+        //else
+        //{
+        //    player = NetManager.ConnectedClients[0].PlayerObject.gameObject.GetComponent<NewPlayer>();
+        //}
+
+        Player player;
+
+        if (NetworkManager.Singleton.LocalClient != null)
+        {
+            player = NetworkManager.Singleton.LocalClient.PlayerObject.gameObject.GetComponent<Player>();
+        }
+        else
+        {
+            player = NetworkManager.Singleton.ConnectedClients[NetworkManager.Singleton.LocalClientId].PlayerObject.gameObject.GetComponent<Player>();
+        }
+
+
+
+        player.CmdSendServerRpc(chatMessage);
+
     }
 
     /// <summary>
@@ -60,7 +85,7 @@ public class ChatLogBehaviour : MonoBehaviour
         TextAlignmentOptions textAlignment = TextAlignmentOptions.MidlineRight;
         float colorNormalizer = 255f;
         Color backgroundColor;
-        
+
         if (ownMessage)
         {
             newChatLogGameObject = Instantiate(ChatObjPrefab, ChatLogSVContent.transform);
@@ -73,7 +98,7 @@ public class ChatLogBehaviour : MonoBehaviour
                 if (!transform.GetComponent<Canvas>().enabled)
                 {
                     transform.GetComponent<AudioSource>().Play();
-                }                
+                }
 
                 newChatLogGameObject = Instantiate(ChatObjWResponsesPrefab, ChatLogSVContent.transform);
 
@@ -91,7 +116,7 @@ public class ChatLogBehaviour : MonoBehaviour
             else
             {
                 newChatLogGameObject = Instantiate(ChatObjPrefab, ChatLogSVContent.transform);
-            }            
+            }
 
             xPos = -xPos;
             textAlignment = TextAlignmentOptions.MidlineLeft;
@@ -136,12 +161,13 @@ public class ChatLogBehaviour : MonoBehaviour
         parentChatObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(parentChatObject.transform.GetComponent<RectTransform>().sizeDelta.x, parentChatObject.transform.GetChild(0).transform.GetChild(0).GetComponent<RectTransform>().sizeDelta.y + 10f);
         parentChatObject.transform.GetChild(0).GetComponent<RectTransform>().transform.localPosition = new Vector3(parentChatObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition.x, 0, 0f);
 
-        ChatMessage chatMessage = new ChatMessage(response, null);
+        string[] dummyResponses = new string[0];
+        ChatMessage chatMessage = new ChatMessage(response, dummyResponses);
         OnSend(chatMessage);
     }
 
 
-  
+
 
 
 
