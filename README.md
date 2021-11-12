@@ -13,14 +13,13 @@
 	2. The client (participant) can look around in the environments using an HMD, while the host (researcher) can only view what the participant is viewing.
 
 ### (Rough) Plan
-1. Finish testing networking functionality on different computers and networks.
-2. Perform final tests.
+1. Perform final tests.
 
 ### Use
 Open as Unity project, open the "PanoramicEnvsNetworkingVR" Scene, build the project for PC Standalone with Windows as the target platform, and run. 
 Need two instances running to test the communication functionality, i.e. editor and an instance from the build executable, or two instances of the built executable, one being the researcher (host) and the other being the participant (client). Host password is "a". Sets up a server and connects on the localhost network address.
 Camera movement only works with HDM in this version, but if using the editor as one running instance, the camera can be manually rotated through the object in the hierarchy.
-By default the UI is not visible. In both Researcher and UI instances, the key combination Left-Control + Space will open / close the UI. UI interaction works with a mouse.
+By default the UI is not visible. In both Researcher and UI instances, the key combination Left-Control + Space will open / close the UI. Researcher UI interaction works with a mouse. Participant UI also works with a gamepad controller (XBOX One controller confirmed).
 Need to specify which environment to load in the EnvironmentToPresent.json file. The JSON file specifies the bar scene by default. 
 
 -------
@@ -42,4 +41,4 @@ Need to specify which environment to load in the EnvironmentToPresent.json file.
 ### Use
 Open as Unity project, open the "PanoramicEnvsNetworkingVR" Scene, build the project for PC Standalone with Windows as the target platform, and run. 
 Currently each environment is presented for 180 seconds, and transitional environments for 35 seconds. This can be changed through the PlayerLC object via the Unity editor.
-Camera movement is controlled via an HMD, and UI navigation using a gamepad controller. UI interaction also works with a mouse.
+Camera movement is controlled via an HMD, and UI navigation using a gamepad controller (XBOX One controller confirmed). UI interaction also works with a mouse.
