@@ -25,6 +25,8 @@ public class SetupResearcherUI_NTW : MonoBehaviour
     public void InitializeResearcherUI()
     {
         PopulateResearcherUI(RetrieveChatMessagesFromJSON());
+        Canvas.ForceUpdateCanvases();
+
     }
 
     /// <summary>
