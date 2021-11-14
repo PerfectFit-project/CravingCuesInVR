@@ -1,0 +1,15 @@
+{
+    "Baseline_Env":1,
+    "NOPSC_BusStop":2,
+    "PENSC_Entrance":3,
+    "NOPSC_Bar":4,
+    "NOPNSC_Church":5,
+    "PESC_Kitchen":6,
+    "PENSC_Hallway":7,
+    "NOPSC_Lunch":8,
+    "NOPNSC_Gym":9,
+    "PESC_Balcony":10,
+    "NOPNSC_Shower":11,
+    "PESC_LivingRoom":12,
+    "PENSC_Office":13
+}

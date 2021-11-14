@@ -4,5 +4,23 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
-  m_configObjects: {}
+  m_Scenes:
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: Assets/Scenes/PanoramicEnvsNetworking.unity
+    guid: 9797f4ba2125f2f4582bb14eeb9ed41e
+  - enabled: 0
+    path: Assets/Scenes/LocalExperimentScene.unity
+    guid: 02b856ee843e929428de832fe827809f
+  - enabled: 0
+    path: Assets/Scenes/InstructionsScene.unity
+    guid: e1892336230afc741a4a1e40d380b082
+  - enabled: 1
+    path: Assets/Scenes/PanoramicEnvsNetworkingVR.unity
+    guid: 174433f23f5635f4a901e1d9d5345eab
+  m_configObjects:
+    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 0fc2a1a6d5e77b64e8fe8f12fd574908, type: 2}
+    com.unity.input.settings: {fileID: 11400000, guid: bf7d897bcbea1304d9f18a64d4bd4780, type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 226d92abe1a04fc4f8cbc99953074b32, type: 2}

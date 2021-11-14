@@ -1,18 +1,46 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
 /// <summary>
-/// 
 /// Class holding a message and its acceptable responses.
-/// 
 /// </summary>
 [System.Serializable]
-public class ChatMessage
+public class ChatMessage : INetworkSerializable
 {
     // Would rather have these private and accessible via the methods below, but as far as I've found, it interferes with loading message templates from the JSON file.
+    public int senderID;
     public string messageContent;
     public string[] messageResponses;
+
+    // INetworkSerializable
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref messageContent);
+        //serializer.SerializeValue(ref messageResponses);
+
+        // Length
+        int responsesLength = 0;
+        if (!serializer.IsReader)
+        {
+            responsesLength = messageResponses.Length;
+        }
+
+        serializer.SerializeValue(ref responsesLength);
+
+        // Array
+        if (serializer.IsReader)
+        {
+            messageResponses = new string[responsesLength];
+        }
+
+        for (int n = 0; n < responsesLength; ++n)
+        {
+            serializer.SerializeValue(ref messageResponses[n]);
+        }
+    }
+    // ~INetworkSerializable
 
     /// <summary>
     /// Create a new empty ChatMessage. Default number of responses is 4.
@@ -43,6 +71,7 @@ public class ChatMessage
         messageContent = mContent;
         messageResponses = mRresponses;
     }
+
 
     public string MessageContent
     {

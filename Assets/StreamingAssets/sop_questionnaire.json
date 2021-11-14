@@ -1,0 +1,91 @@
+{
+    "qTitle": "Please answer the following questions regarding your overall experience with our VR environments today.",
+
+    "qQuestions": 
+    [
+        {
+            "descriptionText": "",
+            "questionText": "How aware were you of the real world surrounding while navigating in the virtual worlds? (i.e. sounds, room temperature, other people, etc.)?",
+            "acceptableResponseRange": ["-3", "3"],
+            "extremeRangeLabels": ["Extremely aware", "Not aware at all"]
+        },
+        {
+            "descriptionText": "",
+            "questionText": "How real did the virtual worlds seem to you?",
+            "acceptableResponseRange": ["-3", "3"],
+            "extremeRangeLabels": ["Completely real", "Not real at all"]                    
+        },
+        {
+            "descriptionText": "",
+            "questionText": "I had a sense of acting in the virtual spaces, rather than operating something from outside.",
+            "acceptableResponseRange": ["-3", "3"],
+            "extremeRangeLabels": ["Fully disagree", "Fully agree"]                    
+        },
+        {
+            "descriptionText": "",
+            "questionText": "How much did your experience in the virtual environment seem consistent with your real world experience?",
+            "acceptableResponseRange": ["-3", "3"],
+            "extremeRangeLabels": ["Not consistent", "Very consistent"]                  
+        },
+        {
+            "descriptionText": "",
+            "questionText": "How real did the virtual worlds seem to you?",
+            "acceptableResponseRange": ["-3", "3"],
+            "extremeRangeLabels": ["About as real as an imagined world", "Indistinguishable from the real world"]                   
+        },
+        {
+            "descriptionText": "",
+            "questionText": "I did not feel present in the virtual spaces.",
+            "acceptableResponseRange": ["-3", "3"],
+            "extremeRangeLabels": ["Did not feel", "Felt present"]                   
+        },
+        {
+            "descriptionText": "",
+            "questionText": "I was not aware of my real environment.",
+            "acceptableResponseRange": ["-3", "3"],
+            "extremeRangeLabels": ["Fully disagree", "Fully agree"]                   
+        },
+        {
+            "descriptionText": "",
+            "questionText": "In the computer generated worlds I had a sense of \"being there\".",
+            "acceptableResponseRange": ["-3", "3"],
+            "extremeRangeLabels": ["Not at all", "Very much"]                   
+        },
+        {
+            "descriptionText": "",
+            "questionText": "Somehow I felt that the virtual worlds surrounded me.",
+            "acceptableResponseRange": ["-3", "3"],
+            "extremeRangeLabels": ["Fully disagree", "Fully agree"]                   
+        },
+        {
+            "descriptionText": "",
+            "questionText": "I felt present in the virtual spaces.",
+            "acceptableResponseRange": ["-3", "3"],
+            "extremeRangeLabels": ["Fully disagree", "Fully agree"]                   
+        },
+        {
+            "descriptionText": "",
+            "questionText": "I still paid attention to the real environment.",
+            "acceptableResponseRange": ["-3", "3"],
+            "extremeRangeLabels": ["Fully disagree", "Fully agree"]                   
+        },
+        {
+            "descriptionText": "",
+            "questionText": "The virtual worlds seemed more realistic than the real world.",
+            "acceptableResponseRange": ["-3", "3"],
+            "extremeRangeLabels": ["Fully disagree", "Fully agree"]                   
+        },
+        {
+            "descriptionText": "",
+            "questionText": "I felt like I was just perceiving pictures.",
+            "acceptableResponseRange": ["-3", "3"],
+            "extremeRangeLabels": ["Fully disagree", "Fully agree"]                   
+        },
+        {
+            "descriptionText": "",
+            "questionText": "I was completely captivated by the virtual worlds.",
+            "acceptableResponseRange": ["-3", "3"],
+            "extremeRangeLabels": ["Fully disagree", "Fully agree"]                   
+        }        
+    ] 
+}
