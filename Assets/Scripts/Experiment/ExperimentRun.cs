@@ -259,7 +259,7 @@ public class ExperimentRun : MonoBehaviour
     {
         Debug.Log("Triggered: ShowEnding");
         //QuestionnaireCanvasParent.SetActive(false);
-        QuestionnaireCanvasParent.transform.GetChild(0).GetComponent<LocalExperimentUIBehavior>().ToggleQuestionnaire();
+        //QuestionnaireCanvasParent.transform.GetChild(0).GetComponent<LocalExperimentUIBehavior>().ToggleQuestionnaire();
         transform.GetChild(0).GetComponent<EnvironmentManagerLC>().ShowEndingEnvironment();
 
         //transform.GetComponent<SaveCollectedDataLC>().SaveDataToFile(UserName);

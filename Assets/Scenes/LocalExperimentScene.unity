@@ -3963,7 +3963,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4310070467522290852}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 5c794dcc025644645946cf9d2ff2efac, type: 3}
@@ -4370,6 +4370,10 @@ PrefabInstance:
       propertyPath: FlowingTextText
       value: 
       objectReference: {fileID: 40211491}
+    - target: {fileID: 5568586732063784646, guid: c504ec42af30f1e4fb8e5342f196a326, type: 3}
+      propertyPath: SliderObjPrefab
+      value: 
+      objectReference: {fileID: 1950405834377179044, guid: a3d2127c33e1cd14c98fa0ba09fa52dd, type: 3}
     - target: {fileID: 5568586732063784646, guid: c504ec42af30f1e4fb8e5342f196a326, type: 3}
       propertyPath: FlowingTextCanvas
       value: 

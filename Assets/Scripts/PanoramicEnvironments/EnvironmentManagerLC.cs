@@ -42,9 +42,18 @@ public class EnvironmentManagerLC : MonoBehaviour
     void Awake()
     {        
         var jsonString = File.ReadAllText(Application.streamingAssetsPath + "/Environments/EnvironmentOrder.json");        
-        LoadedEnvsOrder = JsonConvert.DeserializeObject<Dictionary<string, int>>(jsonString);       
+        LoadedEnvsOrder = JsonConvert.DeserializeObject<Dictionary<string, int>>(jsonString);
+
+        Debug.Log("ENV ORDER");
+        foreach (string key in LoadedEnvsOrder.Keys)
+        {
+            Debug.Log(key);
+        }
 
         EnvironmentsCount = LoadedEnvsOrder.Count;
+
+        Debug.Log("ENVS COUNT: " + EnvironmentsCount);
+
         LoadedEnvironmentsCount = 0;
 
         string filePathAddition = "/Environments";
@@ -63,6 +72,12 @@ public class EnvironmentManagerLC : MonoBehaviour
             if (!file.Name.Contains("meta") && !file.Name.Contains("json") && !file.Name.Contains("audio"))
             {
                 string fileNameToCheck = file.Name.Substring(0, file.Name.IndexOf("_image"));
+                Debug.Log("FILE NAME TO CHECK: " + fileNameToCheck);
+
+                if (!LoadedEnvsOrder.ContainsKey(fileNameToCheck))
+                {
+                    continue;
+                }
 
                 foreach (var file2 in AllFilesInFolder)
                 {
@@ -119,6 +134,7 @@ public class EnvironmentManagerLC : MonoBehaviour
     /// <returns></returns>
     IEnumerator LoadEnvironmentFiles(string textureFileName, string audioClipFileName)
     {
+        Debug.Log("LOAD ENVIRONMENT FILES COROUTINE");
         string wwwTextureFilePath = "file://" + textureFileName;
         UnityWebRequest webRequest = UnityWebRequestTexture.GetTexture(wwwTextureFilePath);
         yield return webRequest.SendWebRequest();
@@ -171,11 +187,16 @@ public class EnvironmentManagerLC : MonoBehaviour
     /// </summary>
     void SetupEnvDict()
     {
+        Debug.Log("SETUP ENV DICT");
         EnvironmentsInDisplayOrder = new Dictionary<int, EnvironmentData>();
 
         foreach (EnvironmentData envData in LoadedEnvironments)
         {
-            EnvironmentsInDisplayOrder.Add(LoadedEnvsOrder[envData.envName], envData);
+            if (LoadedEnvsOrder.ContainsKey(envData.envName))
+            {
+                EnvironmentsInDisplayOrder.Add(LoadedEnvsOrder[envData.envName], envData);
+            }
+            
         }
 
         CurrentEnvironmentIndex = 0;
