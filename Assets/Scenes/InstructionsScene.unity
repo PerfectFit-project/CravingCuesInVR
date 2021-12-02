@@ -8961,7 +8961,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InstructionsUI: {fileID: 2044289342}
   ChatLogSVContent: {fileID: 8209718460677587596}
-  SliderObjPrefab: {fileID: 1950405834377179044, guid: cc9141449f2b601458936406f6cae393, type: 3}
+  SliderObjPrefab: {fileID: 1950405834377179044, guid: a3d2127c33e1cd14c98fa0ba09fa52dd, type: 3}
   ResponseMessageButtonPrefab: {fileID: 2619027684773502530, guid: 03ed0ccf097071740a180c4f6ee2c7db, type: 3}
 --- !u!1 &8209718460804469858
 GameObject:

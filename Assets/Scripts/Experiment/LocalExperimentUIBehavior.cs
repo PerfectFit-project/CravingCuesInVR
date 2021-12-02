@@ -419,7 +419,8 @@ public class LocalExperimentUIBehavior : MonoBehaviour
         while (ChatLogSVContent.transform.childCount > 2)
         {
             Destroy(ChatLogSVContent.transform.GetChild(1).gameObject);
-            ChatLogSVContent.transform.GetChild(1).transform.parent = null;
+            //ChatLogSVContent.transform.GetChild(1).transform.parent = null;
+            ChatLogSVContent.transform.GetChild(1).SetParent(null);
         }
 
         Canvas.ForceUpdateCanvases();

@@ -147,7 +147,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 39486209}
-  m_LocalRotation: {x: 0, y: 0.656059, z: 0, w: 0.75470966}
+  m_LocalRotation: {x: 0, y: 0.5, z: 0, w: 0.8660254}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -156,7 +156,7 @@ Transform:
   - {fileID: 414951727}
   m_Father: {fileID: 1236969714}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 82, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 60, z: 0}
 --- !u!82 &39486211
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2317,8 +2317,8 @@ MonoBehaviour:
     gamepad or Space key on your keyboard to continue.
 
 
-    *You can press the left
-    trigger on your gamepad controller to pull up the phone and see how much time
+    *You can press the Y
+    button on your gamepad controller to pull up the phone and see how much time
     is left.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3452,7 +3452,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: Please take off the Head-Mounted Display and sit back in the chair to relax
-    for 30 seconds while watching TV in the room.
+    for 30 seconds.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3923,7 +3923,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PanoramaCamera: {fileID: 4310070467522290848}
   ManuallyAdvanceEnvObj: {fileID: 1411526858}
-  BlockingPlanes: {fileID: 757043387}
   CueEnvironmentMaterial: {fileID: 2100000, guid: 741ae9bc778bd654c89986f0ca2d2c7e, type: 2}
   TransitionalMaterial: {fileID: 2100000, guid: ae58efe9b74558a42aa31bde579546c3, type: 2}
 --- !u!114 &5124409528576604549
@@ -3942,8 +3941,8 @@ MonoBehaviour:
   LoginCanvas: {fileID: 1683598862}
   PanoramaCameraObj: {fileID: 4310070467522290852}
   QuestionnaireCanvasParent: {fileID: 4415577888484967403}
-  TimePerCueEnv: 5
-  TimePerTransitionEnv: 2
+  TimePerCueEnv: 180
+  TimePerTransitionEnv: 35
 --- !u!114 &5124409528576604550
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4320,7 +4319,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4892161066469906161, guid: c504ec42af30f1e4fb8e5342f196a326, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.9
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 4892161066469906161, guid: c504ec42af30f1e4fb8e5342f196a326, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4371,53 +4370,13 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 40211491}
     - target: {fileID: 5568586732063784646, guid: c504ec42af30f1e4fb8e5342f196a326, type: 3}
-      propertyPath: SliderObjPrefab
-      value: 
-      objectReference: {fileID: 1950405834377179044, guid: a3d2127c33e1cd14c98fa0ba09fa52dd, type: 3}
-    - target: {fileID: 5568586732063784646, guid: c504ec42af30f1e4fb8e5342f196a326, type: 3}
       propertyPath: FlowingTextCanvas
       value: 
       objectReference: {fileID: 726320836}
-    - target: {fileID: 5568586732063784646, guid: c504ec42af30f1e4fb8e5342f196a326, type: 3}
-      propertyPath: SecondsToDisplayNotification
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 6030142112403598750, guid: c504ec42af30f1e4fb8e5342f196a326, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6367032339418431521, guid: c504ec42af30f1e4fb8e5342f196a326, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7475655410391312307, guid: c504ec42af30f1e4fb8e5342f196a326, type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 4310070467522290848}
-    - target: {fileID: 7475655410391312307, guid: c504ec42af30f1e4fb8e5342f196a326, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8496298587355500091, guid: c504ec42af30f1e4fb8e5342f196a326, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8496298587355500091, guid: c504ec42af30f1e4fb8e5342f196a326, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8496298587355500091, guid: c504ec42af30f1e4fb8e5342f196a326, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8496298587355500091, guid: c504ec42af30f1e4fb8e5342f196a326, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 110
-      objectReference: {fileID: 0}
-    - target: {fileID: 8496298587355500091, guid: c504ec42af30f1e4fb8e5342f196a326, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c504ec42af30f1e4fb8e5342f196a326, type: 3}
 --- !u!223 &9189492341411608786

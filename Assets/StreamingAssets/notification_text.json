@@ -1,5 +1,5 @@
 { // index: Message Content, time in seconds since environment start.
-    "1":["First message", "15"],
-    "2":["Second message", "30"],
-    "3":["Third message", "45"]
+    "1":["Focus on the things in the environment which are closest to you.", "45"],
+    "2":["Focus on the things in the environment which are the furthest from you.", "90"],
+    "3":["Take in the entire environment, both things close to you and far away from you.", "135"]
 }

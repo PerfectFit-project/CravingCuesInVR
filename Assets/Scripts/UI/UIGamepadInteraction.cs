@@ -18,6 +18,7 @@ public class UIGamepadInteraction : MonoBehaviour
     [SerializeField]
     public bool GamepadActive { get; set; }
     private bool GamepadDetected;
+    bool Experiment = true;
 
     static List<GameObject> gameObjectsToTraverse;
     int selectedObjIndex;
@@ -26,6 +27,7 @@ public class UIGamepadInteraction : MonoBehaviour
 
     private void Start()
     {
+
         var gamepad = Gamepad.current;
         if (gamepad == null)
         {
@@ -68,10 +70,20 @@ public class UIGamepadInteraction : MonoBehaviour
         else
             return;        
 
-        // Left Trigger on the Gamepad makes the UI appear / disappear.
-        if (gamepad.leftTrigger.wasPressedThisFrame)
+        // Left
+        // on the Gamepad makes the UI appear / disappear.
+        if (gamepad.yButton.wasPressedThisFrame)
         {
-            transform.GetComponent<LocalExperimentUIBehavior>().HandleUIToggle();
+            if (transform.GetComponent<LocalExperimentUIBehavior>())
+            {
+                transform.GetComponent<LocalExperimentUIBehavior>().HandleUIToggle();
+            }                
+            else
+            {
+                //transform.parent.GetComponent<MeshRenderer>().enabled = !transform.parent.GetComponent<MeshRenderer>().enabled;
+                //transform.GetComponent<Canvas>().enabled = !transform.GetComponent<Canvas>().enabled;
+                //transform.parent.parent.GetComponent<InstructionsController>().SmartphoneUIObject.GetComponent<MeshRenderer>().enabled = !transform.parent.parent.GetComponent<InstructionsController>().SmartphoneUIObject.GetComponent<MeshRenderer>().enabled;
+            }
         }
       
         if (!GamepadActive || !GamepadDetected)        

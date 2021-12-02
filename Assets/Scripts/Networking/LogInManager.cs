@@ -50,6 +50,10 @@ public class LogInManager : MonoBehaviour
     // For simple checking so that participants can't log in as researchers. Shouldn't be an issue for the intended experiments, but probably replace with a more secure solution if wanting to implement a remote application.
     public string password;
 
+    bool calledStartClient = false;
+    bool calledPlayerInit = false;
+    string userNameToPass;
+
     private void Start()
     {
         NetManager = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
@@ -325,9 +329,7 @@ public class LogInManager : MonoBehaviour
         
     }
 
-    bool calledStartClient = false;
-    bool calledPlayerInit = false;
-    string userNameToPass;
+   
 
     private void Update()
     {

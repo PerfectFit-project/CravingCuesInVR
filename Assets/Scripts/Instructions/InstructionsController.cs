@@ -132,8 +132,8 @@ public class InstructionsController : MonoBehaviour
 
 
             if (Gamepad.buttonNorth.wasPressedThisFrame)
-            {
-                SmartphoneUIObject.GetComponent<Renderer>().enabled = !SmartphoneUIObject.GetComponent<Renderer>().enabled;
+            {              
+                SmartphoneUIObject.GetComponent<MeshRenderer>().enabled = !SmartphoneUIObject.GetComponent<MeshRenderer>().enabled;
                 SmartphoneUICanvas.GetComponent<Canvas>().enabled = !SmartphoneUICanvas.GetComponent<Canvas>().enabled;
             }
 

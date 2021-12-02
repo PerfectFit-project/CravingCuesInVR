@@ -95,7 +95,7 @@ public class ChatMessagesGamepadInteraction : MonoBehaviour
             return;
 
         // Left Trigger on the Gamepad makes the UI appear / disappear.
-        if (gamepad.leftTrigger.wasPressedThisFrame)
+        if (gamepad.yButton.wasPressedThisFrame)
         {
             // Making the relevant objects invisible instead of disabling them, so that the attached scripts, this one included, continue to work even when the objects aren't visible.
             transform.parent.transform.GetComponent<MeshRenderer>().enabled = !transform.parent.transform.GetComponent<MeshRenderer>().enabled;
