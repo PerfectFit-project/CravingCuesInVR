@@ -19,7 +19,7 @@
 Open as Unity project, open the "PanoramicEnvsNetworkingVR" Scene, build the project for PC Standalone with Windows as the target platform, and run. 
 Need two instances running to test the communication functionality, i.e. editor and an instance from the build executable, or two instances of the built executable, one being the researcher (host) and the other being the participant (client). Host password is "a". 
 
-Either (via a ticking the relevant checkmark on the UI): 
+Either (via a ticking the relevant checkbox on the UI): 
 1. Host sets up a server and connects on the localhost network address. Waits for client to connect through the localhost network address as well.
 2. Host sets up Unity Relay server, which produces a Relay ID key. This key needs to be passed to the participant who has to enter it at login, so that they can connect to the server created by the host. 
 
@@ -27,7 +27,7 @@ Camera movement only works with HDM in this version, but if using the editor as 
 
 By default the UI is not visible. In both Researcher and UI instances, the key combination Left-Control + Space will open / close the UI. Researcher UI interaction works with a mouse. Participant UI also works with a gamepad controller (XBOX One controller confirmed).
 
-Need to specify which environment to load in the EnvironmentToPresent.json file. The JSON file specifies the bar scene by default. The naming scheme is as follows: "environmentname"\_image.png, "environmentname"\_audio.wav. Here the "environmentname" is the name of the environment (EN), and the "\_image" and "\_audio" are the file descriptors (FD). The EN needs to be specified in the JSON file, and not the FD or file extensions. Make sure that each image file has a corresponding audio file, and both need to share exactly the EN.
+Need to specify which environment to load in the EnvironmentToPresent.json file. The JSON file specifies the bar scene by default. The naming scheme is as follows: environmentname\_image.png, environmentname\_audio.wav. Here the "environmentname" is the name of the environment (EN), and the "\_image" and "\_audio" are the file descriptors (FD). The EN needs to be specified in the JSON file, and not the FD or file extensions. Make sure that each image file has a corresponding audio file, and both need to share exactly the EN.
 
 -------
 
@@ -46,6 +46,6 @@ Need to specify which environment to load in the EnvironmentToPresent.json file.
 1. Perform final tests.
 
 ### Use
-Open as Unity project, open the "PanoramicEnvsNetworkingVR" Scene, build the project for PC Standalone with Windows as the target platform, and run. 
-Currently each environment is presented for 180 seconds, and transitional environments for 35 seconds. This can be changed through the PlayerLC object via the Unity editor.
+Open as Unity project, open the "LocalExperimentScene" Scene, build the project for PC Standalone with Windows as the target platform, and run. 
+Currently each environment is presented for 180 seconds, and transitional environments for 35 seconds. This can be changed through the PlayerLC object in the project hierarchy, via the Unity editor.
 Camera movement is controlled via an HMD, and UI navigation using a gamepad controller (XBOX One controller confirmed). UI interaction also works with a mouse.
