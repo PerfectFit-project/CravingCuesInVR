@@ -1,0 +1,14 @@
+{
+    "qTitle": "Please answer the following questions regarding how you feel right now.",
+    
+    "qQuestions": 
+    [        
+        {
+            "descriptionText": "",
+            "questionText": "How familiar to your experiences in the real world does your experience in this current virtual environment feel?",
+            "acceptableResponseRange": ["-5", "5"],
+            "extremeRangeLabels": ["Completely Unfamiliar", "Neutral", "Completely Familiar"]                    
+        }
+
+    ] 
+}

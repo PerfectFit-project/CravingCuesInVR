@@ -2,11 +2,83 @@
     "qTitle": "Please answer the following questions regarding how you feel right now.",
     
     "qQuestions": 
-    [        
+    [
+        {
+            "descriptionText": "",
+            "questionText": "I would be less irritable now if I could smoke.",
+            "acceptableResponseRange": ["1", "7"],
+            "extremeRangeLabels": ["Strongly Disagree", "", "Strongly Agree"]                    
+        },
+        {
+            "descriptionText": "",
+            "questionText": "If I were smoking now I could think more clearly.",
+            "acceptableResponseRange": ["1", "7"],
+            "extremeRangeLabels": ["Strongly Disagree", "", "Strongly Agree"]                    
+        },
+        {
+            "descriptionText": "",
+            "questionText": "I could control things better right now if I could smoke.",
+            "acceptableResponseRange": ["1", "7"],
+            "extremeRangeLabels": ["Strongly Disagree", "", "Strongly Agree"]                    
+        },
+        {
+            "descriptionText": "",
+            "questionText": "I would enjoy a cigarette right now.",
+            "acceptableResponseRange": ["1", "7"],
+            "extremeRangeLabels": ["Strongly Disagree", "", "Strongly Agree"]                  
+        },
+        {
+            "descriptionText": "",
+            "questionText": "A cigarette would taste good right now.",
+            "acceptableResponseRange": ["1", "7"],
+            "extremeRangeLabels": ["Strongly Disagree", "", "Strongly Agree"]                   
+        },
+        {
+            "descriptionText": "",
+            "questionText": "Smoking a cigarette would be pleasant.",
+            "acceptableResponseRange": ["1", "7"],
+            "extremeRangeLabels": ["Strongly Disagree", "", "Strongly Agree"]                   
+        },
+        {
+            "descriptionText": "",
+            "questionText": "If I smoked right now, I would not be able to stop.",
+            "acceptableResponseRange": ["1", "7"],
+            "extremeRangeLabels": ["Strongly Disagree", "", "Strongly Agree"]                    
+        },
+        {
+            "descriptionText": "",
+            "questionText": "I could not stop myself from smoking if I had some cigarettes here.",
+            "acceptableResponseRange": ["1", "7"],
+            "extremeRangeLabels": ["Strongly Disagree", "", "Strongly Agree"]                   
+        },
+        {
+            "descriptionText": "",
+            "questionText": "I would not be able to control how much I smoked if I had some cigarettes here.",
+            "acceptableResponseRange": ["1", "7"],
+            "extremeRangeLabels": ["Strongly Disagree", "", "Strongly Agree"]                    
+        },
+        {
+            "descriptionText": "",
+            "questionText": "If I had a lit cigarette in my hand, I probably would smoke it.",
+            "acceptableResponseRange": ["1", "7"],
+            "extremeRangeLabels": ["Strongly Disagree", "", "Strongly Agree"]                    
+        },
+        {
+            "descriptionText": "",
+            "questionText": "It would be hard to pass up the chance to smoke.",
+            "acceptableResponseRange": ["1", "7"],
+            "extremeRangeLabels": ["Strongly Disagree", "", "Strongly Agree"]                    
+        },
+        {
+            "descriptionText": "",
+            "questionText": "I could not easily limit how much I smoked right now.",
+            "acceptableResponseRange": ["1", "7"],
+            "extremeRangeLabels": ["Strongly Disagree", "", "Strongly Agree"]                    
+        },
         {
             "descriptionText": "",
             "questionText": "How familiar to your experiences in the real world does your experience in this current virtual environment feel?",
-            "acceptableResponseRange": ["-5", "5"],
+            "acceptableResponseRange": ["-3", "3"],
             "extremeRangeLabels": ["Completely Unfamiliar", "Neutral", "Completely Familiar"]                    
         }
 

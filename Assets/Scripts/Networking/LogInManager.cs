@@ -77,42 +77,44 @@ public class LogInManager : MonoBehaviour
             PasswordLabel.SetActive(true);
             PasswordInputField.SetActive(true);
 
-            RelayIDLabel.SetActive(false);
-            RelayIDInputField.SetActive(false);
-            RelayIDWarningLabel.SetActive(false);
+            //RelayIDLabel.SetActive(false);
+            //RelayIDInputField.SetActive(false);
+            //RelayIDWarningLabel.SetActive(false);
         }
         else if (DropdownMenu.transform.GetChild(0).GetComponent<TMP_Text>().text.Equals("Participant"))
         {
-            RelayIDLabel.SetActive(true);
-            RelayIDInputField.SetActive(true);
+           
+            //RelayIDLabel.SetActive(true);
+            //RelayIDInputField.SetActive(true);
 
 
             PasswordLabel.SetActive(false);
             PasswordInputField.SetActive(false);
             PasswordWarningLabel.SetActive(false);
         }
+        CheckLHToggle();
     }
 
     public void CheckLHToggle()
     {
         if (LocalHostToggle.GetComponent<Toggle>().isOn)
         {
-            if (RelayIDInputField.activeSelf)
-            {
-                RelayIDInputField.SetActive(false);
-                RelayIDLabel.SetActive(false);
-                RelayIDWarningLabel.SetActive(false);
-                RelayIDDisplayText.SetActive(false);
-            }
+            RelayIDInputField.SetActive(false);
+            RelayIDLabel.SetActive(false);
+            RelayIDWarningLabel.SetActive(false);
+            RelayIDDisplayText.SetActive(false);
         }
         else
         {
             if (DropdownMenu.transform.GetChild(0).GetComponent<TMP_Text>().text.Equals("Researcher"))
             {
                 RelayIDDisplayText.SetActive(true);
+                RelayIDInputField.SetActive(false);
+                RelayIDLabel.SetActive(false);
             }
             else
             {
+                RelayIDDisplayText.SetActive(false);
                 RelayIDInputField.SetActive(true);
                 RelayIDLabel.SetActive(true);
             }
