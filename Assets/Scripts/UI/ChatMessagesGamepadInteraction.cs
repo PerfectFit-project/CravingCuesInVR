@@ -13,6 +13,8 @@ public class ChatMessagesGamepadInteraction : MonoBehaviour
     public GameObject ContainerScrollView;
     public GameObject ContainerScrollBar;
 
+    GameObject ResponsesContainerScrollBar;
+
     public List<GameObject> ListObjectsToIgnore;
     
     [SerializeField]
@@ -44,7 +46,13 @@ public class ChatMessagesGamepadInteraction : MonoBehaviour
     /// <param name="newMessageWithResponses"></param>
     public void SetNewContainer(GameObject newMessageWithResponses)
     {
-        ContentContainer = newMessageWithResponses.transform.GetChild(0).GetChild(1).gameObject;
+        ResponsesContainerScrollBar = newMessageWithResponses.transform.GetChild(0).GetChild(1).GetChild(1).gameObject;
+        //ContentContainer = newMessageWithResponses.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(0).gameObject;
+
+        //ContentContainer = newMessageWithResponses.transform.GetChild(0).GetChild(1).gameObject;
+
+        ContentContainer = newMessageWithResponses.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).gameObject;
+
         InitializeUI();
     }
 
@@ -80,9 +88,10 @@ public class ChatMessagesGamepadInteraction : MonoBehaviour
     private void Update()
     {
         // A bit of a hacky solution to have the scrollbar as the selected object through Unity, so that it works correctly. 
-        if (WaitingForMessageResponse)
+        if (WaitingForMessageResponse && ResponsesContainerScrollBar)
         {
-            ContainerScrollBar.GetComponent<Scrollbar>().Select();
+            //ContainerScrollBar.GetComponent<Scrollbar>().Select();
+            ResponsesContainerScrollBar.GetComponent<Scrollbar>().Select();
         }
 
         var gamepad = Gamepad.current;
@@ -103,11 +112,11 @@ public class ChatMessagesGamepadInteraction : MonoBehaviour
         }
 
         // Navigate up or down on the ScrollRect without changing object selection
-        if (gamepad.leftStick.up.wasPressedThisFrame)
+        if (gamepad.leftStick.up.wasPressedThisFrame && !gamepad.dpad.up.wasPressedThisFrame)
         {
             ContainerScrollView.GetComponent<ScrollRect>().verticalNormalizedPosition += 0.5f * Time.deltaTime;
         }
-        else if (gamepad.leftStick.down.wasPressedThisFrame)
+        else if (gamepad.leftStick.down.wasPressedThisFrame && !gamepad.dpad.down.wasPressedThisFrame)
         {
             ContainerScrollView.GetComponent<ScrollRect>().verticalNormalizedPosition -= 0.5f * Time.deltaTime;
         }
@@ -156,8 +165,9 @@ public class ChatMessagesGamepadInteraction : MonoBehaviour
         {
             if (selectedObject.GetComponentInChildren<Button>())
             {
-                selectedObject.GetComponentInChildren<Button>().onClick.Invoke();
                 WaitingForMessageResponse = false;
+                ResponsesContainerScrollBar = null;
+                selectedObject.GetComponentInChildren<Button>().onClick.Invoke();                
                 GamepadActive = false;
             }
         }       
@@ -174,6 +184,55 @@ public class ChatMessagesGamepadInteraction : MonoBehaviour
         gameObjectsToTraverse.Clear();
     }
 
+    /// <summary>
+    /// Counts the bounding box corners of the given RectTransform that are visible from the given Camera in screen space.
+    /// </summary>
+    /// <returns>The amount of bounding box corners that are visible from the Camera.</returns>
+    /// <param name="rectTransform">Rect transform.</param>
+    /// <param name="camera">Camera.</param>
+    private int CountCornersVisibleFrom(RectTransform rectTransform, Camera camera)
+    {
+        Rect screenBounds = new Rect(0f, 0f, Screen.width, Screen.height); // Screen space bounds (assumes camera renders across the entire screen)
+        Vector3[] objectCorners = new Vector3[4];
+        rectTransform.GetWorldCorners(objectCorners);
+
+        int visibleCorners = 0;
+        Vector3 tempScreenSpaceCorner; // Cached
+        for (var i = 0; i < objectCorners.Length; i++) // For each corner in rectTransform
+        {
+            tempScreenSpaceCorner = camera.WorldToScreenPoint(objectCorners[i]); // Transform world space position of corner to screen space
+            if (screenBounds.Contains(tempScreenSpaceCorner)) // If the corner is inside the screen
+            {
+                visibleCorners++;
+            }
+        }
+        return visibleCorners;
+    }
+
+    /// <summary>
+    /// Determines if this RectTransform is fully visible from the specified camera.
+    /// Works by checking if each bounding box corner of this RectTransform is inside the cameras screen space view frustrum.
+    /// </summary>
+    /// <returns><c>true</c> if is fully visible from the specified camera; otherwise, <c>false</c>.</returns>
+    /// <param name="rectTransform">Rect transform.</param>
+    /// <param name="camera">Camera.</param>
+    public bool IsFullyVisibleFrom(RectTransform rectTransform, Camera camera)
+    {
+        return CountCornersVisibleFrom(rectTransform, camera) == 4; // True if all 4 corners are visible
+    }
+
+    /// <summary>
+    /// Determines if this RectTransform is at least partially visible from the specified camera.
+    /// Works by checking if any bounding box corner of this RectTransform is inside the cameras screen space view frustrum.
+    /// </summary>
+    /// <returns><c>true</c> if is at least partially visible from the specified camera; otherwise, <c>false</c>.</returns>
+    /// <param name="rectTransform">Rect transform.</param>
+    /// <param name="camera">Camera.</param>
+    public bool IsVisibleFrom(RectTransform rectTransform, Camera camera)
+    {
+        return CountCornersVisibleFrom(rectTransform, camera) > 0; // True if any corners are visible
+    }
+
 
     /// <summary>
     /// Adjusts the position of the scrollbar so that the currently selected Gameobject is visible.
@@ -182,12 +241,20 @@ public class ChatMessagesGamepadInteraction : MonoBehaviour
     {
         Canvas.ForceUpdateCanvases();
 
+        //if (IsFullyVisibleFrom(selectedObject.GetComponent<RectTransform>(), Camera.current))
+        // return;
 
         RectTransform contentContainer = ContentContainer.GetComponent<RectTransform>();
 
+        //RectTransform contentContainer = ContentContainer.transform.parent.parent.parent.GetComponent<RectTransform>();
+
         RectTransform selectedRectTransform = selectedObject.GetComponent<RectTransform>();
-        ScrollRect scrollRect = ContainerScrollView.GetComponent<ScrollRect>();
+       // ScrollRect scrollRect = ContainerScrollView.GetComponent<ScrollRect>();
+       // RectTransform scrollWindow = scrollRect.GetComponent<RectTransform>();
+
+        ScrollRect scrollRect = ContentContainer.transform.parent.parent.GetComponent<ScrollRect>();
         RectTransform scrollWindow = scrollRect.GetComponent<RectTransform>();
+        //RectTransform scrollWindow = ContentContainer.transform.parent.parent.GetComponent<RectTransform>();
 
         float scrollPadding = 75f;
 
@@ -302,14 +369,14 @@ public class ChatMessagesGamepadInteraction : MonoBehaviour
     }
 
 
-    public IEnumerator WaitForSeconds(float seconds)
-    {
-        yield return new WaitForSeconds(seconds);
+    //public IEnumerator WaitForSeconds(float seconds)
+    //{
+    //    yield return new WaitForSeconds(seconds);
 
-        ContainerScrollView.GetComponent<ScrollRect>().verticalScrollbar.value = 1;
-        ContainerScrollView.transform.GetChild(2).GetComponent<Scrollbar>().value = 1;
+    //    ContainerScrollView.GetComponent<ScrollRect>().verticalScrollbar.value = 1;
+    //    ContainerScrollView.transform.GetChild(2).GetComponent<Scrollbar>().value = 1;
 
-        ContainerScrollView.GetComponent<ScrollRect>().verticalNormalizedPosition = 1;
-    }
+    //    ContainerScrollView.GetComponent<ScrollRect>().verticalNormalizedPosition = 1;
+    //}
 
 }

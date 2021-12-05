@@ -102,10 +102,24 @@ public class ChatLogBehaviour : MonoBehaviour
 
                 newChatLogGameObject = Instantiate(ChatObjWResponsesPrefab, ChatLogSVContent.transform);
 
+                if (chatMessage.messageResponses.Length < 1)
+                    Destroy(newChatLogGameObject.transform.GetChild(0).GetChild(1).gameObject);
+                else
+                {
+                    newChatLogGameObject.transform.GetChild(0).GetChild(1).GetComponent<RectTransform>().sizeDelta = new Vector2(150f, 110f);
+                }
+
+                LayoutRebuilder.ForceRebuildLayoutImmediate(newChatLogGameObject.transform.GetComponent<RectTransform>());
+
+
                 foreach (string response in chatMessage.messageResponses)
                 {
-                    GameObject newResponseButton = Instantiate(ResponseMessageButtonPrefab, newChatLogGameObject.transform.GetChild(0).transform.GetChild(1));
+                    GameObject newResponseButton = Instantiate(ResponseMessageButtonPrefab, newChatLogGameObject.transform.GetChild(0).transform.GetChild(1).GetChild(0).GetChild(0));
+                    //GameObject newResponseButton = Instantiate(ResponseMessageButtonPrefab, newChatLogGameObject.transform.GetChild(0).transform.GetChild(1).GetChild(0).GetChild(0).GetChild(0)); // THIS HERE
+                    //GameObject newResponseButton = Instantiate(ResponseMessageButtonPrefab, newChatLogGameObject.transform.GetChild(0).transform.GetChild(1));
+
                     newResponseButton.transform.GetChild(0).GetComponent<TMP_Text>().text = response;
+
                     newResponseButton.GetComponent<Button>().onClick.AddListener(() => ProcessResponse(newResponseButton));
 
                     LayoutRebuilder.ForceRebuildLayoutImmediate(newChatLogGameObject.transform.GetComponent<RectTransform>());
@@ -154,9 +168,15 @@ public class ChatLogBehaviour : MonoBehaviour
     {
         string response = selectedResponseButton.transform.GetChild(0).GetComponent<TMP_Text>().text;
 
-        GameObject parentChatObject = selectedResponseButton.transform.parent.transform.parent.transform.parent.gameObject;
+        //GameObject parentChatObject = selectedResponseButton.transform.parent.transform.parent.transform.parent.parent.parent.parent.gameObject;
+        //GameObject parentChatObject = selectedResponseButton.transform.parent.transform.parent.transform.parent.gameObject;
+        GameObject parentChatObject = selectedResponseButton.transform.parent.transform.parent.transform.parent.parent.parent.gameObject;
 
-        Destroy(selectedResponseButton.transform.parent.gameObject);
+        //Destroy(selectedResponseButton.transform.parent.parent.parent.parent.gameObject); //THIS HERE
+        //Destroy(selectedResponseButton.transform.parent.gameObject);
+        Destroy(selectedResponseButton.transform.parent.parent.parent.gameObject);
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(parentChatObject.transform.GetComponent<RectTransform>());
 
         parentChatObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(parentChatObject.transform.GetComponent<RectTransform>().sizeDelta.x, parentChatObject.transform.GetChild(0).transform.GetChild(0).GetComponent<RectTransform>().sizeDelta.y + 10f);
         parentChatObject.transform.GetChild(0).GetComponent<RectTransform>().transform.localPosition = new Vector3(parentChatObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition.x, 0, 0f);

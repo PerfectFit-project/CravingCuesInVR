@@ -466,7 +466,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1804333023312869685}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 2
   m_Camera: {fileID: 0}
@@ -535,7 +535,7 @@ MonoBehaviour:
   ChatScrollView: {fileID: 1804333023193437096}
   ChatLogSVContent: {fileID: 1804333023409942628}
   ChatObjPrefab: {fileID: 6922985040104806556, guid: e6b814deea36d6048aa1699a4b34e63b, type: 3}
-  ChatObjWResponsesPrefab: {fileID: 6922985040104806556, guid: 8a320138fce2297428b898fc3c3df7e3, type: 3}
+  ChatObjWResponsesPrefab: {fileID: 6922985040104806556, guid: 75a4a822aa939b147ba3348be9b1e28f, type: 3}
   ResponseMessageButtonPrefab: {fileID: 2619027684773502530, guid: 03ed0ccf097071740a180c4f6ee2c7db, type: 3}
 --- !u!82 &2053800193851814085
 AudioSource:
@@ -952,7 +952,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3456713886255621188}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1130,7 +1130,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8209266697058283134}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
