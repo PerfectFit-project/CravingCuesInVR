@@ -13,7 +13,6 @@ public class EnvironmentManagerLC : MonoBehaviour
 {
     public Camera PanoramaCamera;
     public GameObject ManuallyAdvanceEnvObj;
-    //public GameObject BlockingPlanes;
 
     public Material CueEnvironmentMaterial;
     public Material TransitionalMaterial;
@@ -125,7 +124,6 @@ public class EnvironmentManagerLC : MonoBehaviour
     /// <returns></returns>
     IEnumerator LoadEnvironmentFiles(string textureFileName, string audioClipFileName)
     {
-        //Debug.Log("LOAD ENVIRONMENT FILES COROUTINE");
         string wwwTextureFilePath = "file://" + textureFileName;
         UnityWebRequest webRequest = UnityWebRequestTexture.GetTexture(wwwTextureFilePath);
         yield return webRequest.SendWebRequest();
@@ -151,34 +149,11 @@ public class EnvironmentManagerLC : MonoBehaviour
     }
 
 
-    // Returns a texture resized to the given dimensions
-    public Texture2D Resize(Texture2D source, int width, int height)
-    {
-        // Initialize render texture with target width and height
-        RenderTexture rt = new RenderTexture(width, height, 32);
-        // Set as the active render texture
-        RenderTexture.active = rt;
-        // Render source texture to the render texture
-        GL.PushMatrix();
-        GL.LoadPixelMatrix(0, width, height, 0);
-        Graphics.DrawTexture(new Rect(0, 0, width, height), source);
-        GL.PopMatrix();
-        // Initialize destination texture with target width and height
-        Texture2D dest = new Texture2D(width, height);
-        // Copy render texture to the destination texture
-        dest.ReadPixels(new Rect(0, 0, width, height), 0, 0);
-        dest.Apply();
-        // Resume rendering to the main window
-        RenderTexture.active = null;
-        return dest;
-    }
-
     /// <summary>
     /// Sets up the dictionary holding loaded environments along with their order to be presented.
     /// </summary>
     void SetupEnvDict()
     {
-        //Debug.Log("SETUP ENV DICT");
         EnvironmentsInDisplayOrder = new Dictionary<int, EnvironmentData>();
 
         foreach (EnvironmentData envData in LoadedEnvironments)
@@ -191,8 +166,6 @@ public class EnvironmentManagerLC : MonoBehaviour
         }
 
         CurrentEnvironmentIndex = 0;
-
-        //Debug.Log("FINISHED SETTING UP ENVIRONMENTS");
 
         // Informing the Player object that environments files have been loaded
         transform.parent.GetComponent<ExperimentRun>().UpdateExperimentState();
@@ -214,7 +187,6 @@ public class EnvironmentManagerLC : MonoBehaviour
         SetTexture(EnvironmentsInDisplayOrder[CurrentEnvironmentIndex].envTexture);
         SetAudioClip(EnvironmentsInDisplayOrder[CurrentEnvironmentIndex].envAudioClip);
 
-        //BlockingPlanes.SetActive(true);
 
         EnvironmentDisplayTime = timeToDisplay;
         // Slightly hacky implementation of having the baseline measurements environment have the questionnaire pop-up immediately, rather than implementing a special type of environment and FMS state just for that.
@@ -227,22 +199,14 @@ public class EnvironmentManagerLC : MonoBehaviour
 
     }
 
-
+    /// <summary>
+    /// Sets the given texture on the material used by the Renderer of the Gameobject this script is attached to.
+    /// </summary>
+    /// <param name="texture"></param>
     private void SetTexture(Texture2D texture)
     {
         Material material = GetComponent<Renderer>().material;
         material.mainTexture = texture;
-
-
-       // float dimensionRatio = material.mainTexture.width / material.mainTexture.height;
-
-        // Adjusting the material vertical scaling to make the texture look as intended.
-      //  if (dimensionRatio > 4)
-      //      material.mainTextureScale = new Vector2(1f, 3f);
-      //  else
-      //      material.mainTextureScale = new Vector2(1f, 3f);
-
-        //PanoramaCamera.GetComponent<CameraMovementLC>().UpdateCameraRotationLimits(dimensionRatio);
     }
 
     /// <summary>
@@ -274,8 +238,6 @@ public class EnvironmentManagerLC : MonoBehaviour
         GetComponent<Renderer>().material = TransitionalMaterial;
         AudioSource audioSource = PanoramaCamera.GetComponent<AudioSource>();
         audioSource.Stop();
-
-        //BlockingPlanes.SetActive(false);
 
         EnvironmentDisplayTime = timeToDisplay;
         CurrentEnvironmentDisplayTime = 0f;
@@ -325,8 +287,6 @@ public class EnvironmentManagerLC : MonoBehaviour
         GetComponent<Renderer>().material = TransitionalMaterial;
         AudioSource audioSource = PanoramaCamera.GetComponent<AudioSource>();
         audioSource.Stop();
-
-        //BlockingPlanes.SetActive(false);
 
         ManuallyAdvanceEnvObj.SetActive(true);
         ManuallyAdvanceEnvObj.transform.GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(false);

@@ -8,8 +8,6 @@ using System.IO;
 /// </summary>
 public class SaveCollectedDataLC : MonoBehaviour
 {
-    string UserName;
-    // < Environemnt identifier, < Questionnaire ID < Question number, Question response >>> 
     Dictionary<string, Dictionary<string, Dictionary<int, int>>> QuestionnaireResponses;
 
     private void Start()
@@ -106,7 +104,6 @@ public class SaveCollectedDataLC : MonoBehaviour
         Debug.Log(headerTextToWrite);
         Debug.Log(contentTextToWrite);
 
-        //string filePath = Application.dataPath + "/SavedData/" + userName + "_responses.csv";
         string filePath = Application.streamingAssetsPath + "/SavedData/" + userName + "_responses" + ".csv";
 
         FileInfo fileToWrite = new FileInfo(filePath);

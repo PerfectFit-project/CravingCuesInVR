@@ -10,20 +10,6 @@ using Newtonsoft.Json;
 
 public class LocalExperimentUIBehavior : MonoBehaviour
 {
-    // Present questionnaire
-    // Deternube how to prompt the user to fill the questionnaire:
-    //      1. Give them a notification and let them access the simulated smartphone of their own volition
-    //      2. End the current environment interaction and present them with the simulated smartphone to use.
-    //  Probably 2. since we want this to be a controlled experiment, and as such, we want to have control over how much exposure to the environment participants have.
-    // 
-    // Determine whether we want to present the questionnaires:
-    //      1. In a neutral (transitive) environment between environments.
-    //      2. Disable camera controls and focus the simulated smartphone in the same environment.
-    //
-    // Determine how to ask questions:    
-    //      1. All questions on a continuous scrolling panel
-    //      2. Different pages for each type of question (craving, SoP, or even different pages for each factor in those)
-
     public GameObject PlayerObj;
     public GameObject SphereObj;
 
@@ -65,15 +51,10 @@ public class LocalExperimentUIBehavior : MonoBehaviour
     {
         qOrderList = new List<string>();
         qOrderList.Add("Craving");
-        //qOrderList.Add("SoP");
         qJsonFileData = new Dictionary<string, string>();
-
-        //qJsonFiles.Add(Application.streamingAssetsPath + "/craving_questionnaire.json");
-        //qJsonFiles.Add(Application.streamingAssetsPath + "/sop_questionnaire.json");
 
         // Load questionnaires from file
         qJsonFileData.Add(qOrderList[0], File.ReadAllText(Application.streamingAssetsPath + "/craving_questionnaire.json"));
-        //qJsonFileData.Add(qOrderList[1], File.ReadAllText(Application.streamingAssetsPath + "/sop_questionnaire.json"));
   
         questionnairesPresented = 0;
         currentQId = qOrderList[questionnairesPresented];
@@ -114,7 +95,7 @@ public class LocalExperimentUIBehavior : MonoBehaviour
 
                 timerText += secondsLeft + " seconds";
 
-                transform.GetChild(1).transform.GetChild(1).GetComponent<TMP_Text>().text = timerText; // ((Mathf.RoundToInt(timeToPresentEnvironment - currentEnvironmentDisplayTime))).ToString();
+                transform.GetChild(1).transform.GetChild(1).GetComponent<TMP_Text>().text = timerText; 
 
                 if (currentEnvironmentDisplayTime >= timeToPresentEnvironment)
                 {
@@ -139,7 +120,7 @@ public class LocalExperimentUIBehavior : MonoBehaviour
             {
                 NotificationDisplayStartTime = currentEnvironmentDisplayTime;
                 DisplayingNotification = true;
-                //display notification
+                //Display notification
                 StartCoroutine(PresentNotification(1f, NotificationTextDict[NextNotificationKey][0]));
             }
         }
@@ -153,7 +134,6 @@ public class LocalExperimentUIBehavior : MonoBehaviour
                 if (transform.GetChild(1).gameObject.activeSelf)
                 {
                     HandleUIToggle();
-                    //transform.GetChild(1).gameObject.SetActive(false);
                 }
 
                 // Advance Notification Key
@@ -265,7 +245,6 @@ public class LocalExperimentUIBehavior : MonoBehaviour
     {
         currentEnvironmentDisplayTime = 0f;
         timeToPresentEnvironment = t;
-        //ToggleTimerPresentation();
         TimerActive = true;
 
         NextNotificationKey = "1";
@@ -338,11 +317,12 @@ public class LocalExperimentUIBehavior : MonoBehaviour
             GameObject newQuestionObject = Instantiate(SliderObjPrefab, ChatLogSVContent.transform);
             newQuestionObject.transform.GetChild(0).GetComponent<TMP_Text>().text = question.descriptionText;
             newQuestionObject.transform.GetChild(1).GetComponent<TMP_Text>().text = question.questionText;
-            //Slider newQObjSLider = newQuestionObject.transform.GetChild(1).GetComponent<Slider>();
+
             Slider newQObjSLider = newQuestionObject.transform.GetChild(2).transform.GetChild(0).GetComponent<Slider>();
             newQObjSLider.minValue = int.Parse(question.acceptableResponseRange[0]);
             newQObjSLider.maxValue = int.Parse(question.acceptableResponseRange[1]);
             newQObjSLider.value = Mathf.RoundToInt(((newQObjSLider.maxValue + newQObjSLider.minValue) / 2));
+            
             newQuestionObject.transform.GetChild(2).transform.GetChild(1).transform.GetChild(0).GetComponent<TMP_Text>().text = question.extremeRangeLabels[0];
             newQuestionObject.transform.GetChild(2).transform.GetChild(1).transform.GetChild(1).GetComponent<TMP_Text>().text = question.extremeRangeLabels[1];
             newQuestionObject.transform.GetChild(2).transform.GetChild(1).transform.GetChild(2).GetComponent<TMP_Text>().text = question.extremeRangeLabels[2];
@@ -361,13 +341,10 @@ public class LocalExperimentUIBehavior : MonoBehaviour
 
     public void RecordQuestionnaireResponses(string qId)
     {
-        //transform.GetComponent<UIGamepadInteraction>().DeselectObject();
-
         // Adjusting the size to account for the submit button being a child of the panel too.
         int questionCount = ChatLogSVContent.transform.childCount - 1;
-        //int[] qResponses = new int[questionCount];
 
-        // Seems a bit unnecessary to have an <int, int> dictionary here since a simple array or list would suffice, however, this makes it easier to add to the overall questionnare responses file later.
+        // Seems a bit unnecessary to have an <int, int> dictionary here since a simple array or list would suffice, but this makes it easier to add to the overall questionnare responses file later.
         Dictionary<int, int> qResponses = new Dictionary<int, int>();
                 
 
@@ -379,24 +356,18 @@ public class LocalExperimentUIBehavior : MonoBehaviour
             qResponses[i] = (int)selectedSlider.value;
             // Resetting the Slider value
             selectedSlider.value = selectedSlider.minValue;
-
-            //Destroy(ChatLogSVContent.transform.GetChild(i).gameObject);
         }
 
         // Moving the page to the top
         ChatScrollView.GetComponent<ScrollRect>().normalizedPosition = new Vector2(0, 1);
 
-        //string currentEnvironmentName = transform.parent.transform.parent.GetComponentInChildren<EnvironmentManagerLC>().GetCurrentEnvironmentName();
         string currentEnvironmentName = SphereObj.GetComponent<EnvironmentManagerLC>().GetCurrentEnvironmentName();
 
         PlayerObj.GetComponent<SaveCollectedDataLC>().StoreDataToCollection(currentEnvironmentName, qId, qResponses);
 
-
-
         if (LastEnvironment && questionnairesPresented < qOrderList.Count)
         {
             ClearAndRepopulateUI();
-            //transform.GetComponent<UIGamepadInteraction>().ClearUI();            
         }
         else
         {
@@ -412,14 +383,11 @@ public class LocalExperimentUIBehavior : MonoBehaviour
 
     public void ClearAndRepopulateUI()
     {
-        //transform.GetComponent<UIGamepadInteraction>().DeselectObject();
-
         int questionCount = ChatLogSVContent.transform.childCount - 1;
 
         while (ChatLogSVContent.transform.childCount > 2)
         {
             Destroy(ChatLogSVContent.transform.GetChild(1).gameObject);
-            //ChatLogSVContent.transform.GetChild(1).transform.parent = null;
             ChatLogSVContent.transform.GetChild(1).SetParent(null);
         }
 

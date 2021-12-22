@@ -14,13 +14,10 @@ public class ChatMessage : INetworkSerializable
     public string messageContent;
     public string[] messageResponses;
 
-    // INetworkSerializable
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref messageContent);
-        //serializer.SerializeValue(ref messageResponses);
 
-        // Length
         int responsesLength = 0;
         if (!serializer.IsReader)
         {
@@ -29,7 +26,6 @@ public class ChatMessage : INetworkSerializable
 
         serializer.SerializeValue(ref responsesLength);
 
-        // Array
         if (serializer.IsReader)
         {
             messageResponses = new string[responsesLength];
@@ -40,7 +36,6 @@ public class ChatMessage : INetworkSerializable
             serializer.SerializeValue(ref messageResponses[n]);
         }
     }
-    // ~INetworkSerializable
 
     /// <summary>
     /// Create a new empty ChatMessage. Default number of responses is 4.

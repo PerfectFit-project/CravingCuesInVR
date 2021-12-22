@@ -32,8 +32,6 @@ public class LogInManager : MonoBehaviour
     /// </summary>
     public NetworkTransport UnityRelayTransport => m_UnityRelayTransport;
 
-    //NetworkTransport Unity_Relay_Transport;
-
     public GameObject DropdownMenu;
     public GameObject UserNameInputField;
     public GameObject PasswordLabel;
@@ -57,14 +55,6 @@ public class LogInManager : MonoBehaviour
     private void Start()
     {
         NetManager = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
-        
-
-        //Ask Unity Services to allocate a Relay server that will handle eight players
-        //Allocation allocation = await Unity.Services.Relay.Relay.Instance.CreateAllocationAsync(8);
-
-        //NetworkManager.Singleton.NetworkConfig.NetworkTransport = NetworkManager.Singleton.gameObject.GetComponent<>
-
-
     }
 
     /// <summary>
@@ -76,18 +66,9 @@ public class LogInManager : MonoBehaviour
         {
             PasswordLabel.SetActive(true);
             PasswordInputField.SetActive(true);
-
-            //RelayIDLabel.SetActive(false);
-            //RelayIDInputField.SetActive(false);
-            //RelayIDWarningLabel.SetActive(false);
         }
         else if (DropdownMenu.transform.GetChild(0).GetComponent<TMP_Text>().text.Equals("Participant"))
         {
-           
-            //RelayIDLabel.SetActive(true);
-            //RelayIDInputField.SetActive(true);
-
-
             PasswordLabel.SetActive(false);
             PasswordInputField.SetActive(false);
             PasswordWarningLabel.SetActive(false);
@@ -176,20 +157,7 @@ public class LogInManager : MonoBehaviour
             return;
         }
 
-        //string ipAddressToConnect = IPAddressInputField.GetComponent<TMP_InputField>().text;
-        //if (String.IsNullOrWhiteSpace(ipAddressToConnect))
-        //{
-        //    ipAddressToConnect = "localhost";
-        //}
-
-        //NetworkManager.GetComponent<CCVRNetworkManager>().ResolvePlayerLogIn(userName, isResearcher, ipAddressToConnect);
-
-        
-
         ResolveLogin(isResearcher, userName);
-
-
-        //transform.gameObject.SetActive(false);
     }
 
 
@@ -212,15 +180,12 @@ public class LogInManager : MonoBehaviour
                 NetManager.StartClient();
                 calledStartClient = true;
                 userNameToPass = userName;
-                //NetworkManager.Singleton.LocalClient.PlayerObject.gameObject.GetComponent<Player>().InitPlayerServerRpc(userName, false);
             }
-            //transform.gameObject.SetActive(false);
         }
         else
         {
             NetworkManager.Singleton.NetworkConfig.NetworkTransport = UnityRelayTransport;
 
-            //Unity_Relay_Transport = NetManager.GetComponent<UnityTransport>();
             if (isResearcher)
             {
                 StartUnityRelayHost(userName);
@@ -241,7 +206,6 @@ public class LogInManager : MonoBehaviour
 
     public async void StartUnityRelayHost(string userName)
     {
-        //var chosenTransport = NetworkManager.Singleton.gameObject.GetComponent<TransportPicker>().UnityRelayTransport;
         NetManager.NetworkConfig.NetworkTransport = UnityRelayTransport;
 
         try
@@ -254,17 +218,14 @@ public class LogInManager : MonoBehaviour
                 Debug.Log(playerId);
             }
 
-            // we now need to get the joinCode?
             var serverRelayUtilityTask = RelayUtility.AllocateRelayServerAndGetJoinCode(4);
             await serverRelayUtilityTask;
-            // we now have the info from the relay service
             var (ipv4Address, port, allocationIdBytes, connectionData, key, joinCode) = serverRelayUtilityTask.Result;
 
             RelayJoinCode.Code = joinCode;
 
             UnityTransport utp = (UnityTransport)UnityRelayTransport;
 
-            // we now need to set the RelayCode somewhere :P
             utp.SetRelayServerData(ipv4Address, port, allocationIdBytes, key, connectionData);
 
             RelayIDDisplayText.SetActive(true);
@@ -279,7 +240,6 @@ public class LogInManager : MonoBehaviour
         NetManager.StartHost();
 
         NetworkManager.Singleton.ConnectedClients[NetworkManager.Singleton.LocalClientId].PlayerObject.GetComponent<Player>().InitPlayerServerRpc(userName, true);
-        // NetworkManager.Singleton.ConnectedClients[NetworkManager.Singleton.LocalClientId].PlayerObject.GetComponent<NewPlayer>().playerName = new NetworkVariable<FixedString64Bytes>(userName);
 
     }
 
@@ -312,23 +272,11 @@ public class LogInManager : MonoBehaviour
             throw;
         }
 
-        //ConnectClient(portal);
 
         NetManager.StartClient();
 
         calledStartClient = true;
         userNameToPass = userName;
-        //while (NetworkManager.Singleton.LocalClient == null) { }
-        // NetworkManager.Singleton.LocalClient.PlayerObject.gameObject.GetComponent<NewPlayer>().InitPlayerClientRpc(userName, false);
-
-        //StartCoroutine(WaitUntilClientStarted(userName));
-
-        //NetManager.LocalClient.PlayerObject.gameObject.GetComponent<NewPlayer>().InitPlayerClientRpc(userName, false);
-
-        //NetworkManager.Singleton.ConnectedClients[NetworkManager.Singleton.LocalClientId].PlayerObject.GetComponent<NewPlayer>().InitPlayer(userName, false);
-
-        //NetworkManager.Singleton.ConnectedClients[NetworkManager.Singleton.LocalClientId].PlayerObject.GetComponent<NewPlayer>().playerName = new NetworkVariable<FixedString64Bytes>(userName);
-        
     }
 
    
@@ -339,7 +287,6 @@ public class LogInManager : MonoBehaviour
         {
             if (NetworkManager.Singleton.LocalClient != null)
             {
-                Debug.Log("NOT NULL");
                 NetworkManager.Singleton.LocalClient.PlayerObject.gameObject.GetComponent<Player>().InitPlayerServerRpc(userNameToPass, false);
                 calledPlayerInit = true;
                 transform.gameObject.SetActive(false);

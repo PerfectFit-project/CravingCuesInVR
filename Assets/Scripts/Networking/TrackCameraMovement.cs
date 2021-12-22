@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 
+/// <summary>
+/// Class that tracks how much a camera controlled by a participant has rotated and if more than the threshold value, updates the researcher camera rotation.
+/// </summary>
 public class TrackCameraMovement : MonoBehaviour
 {
     public float MinCameraMovementToTrack;
@@ -12,7 +15,6 @@ public class TrackCameraMovement : MonoBehaviour
     Vector3 CurrentCameraRotation;
 
 
-    // Start is called before the first frame update
     void Start()
     {
         if (MinCameraMovementToTrack < 0.00001)
@@ -24,7 +26,6 @@ public class TrackCameraMovement : MonoBehaviour
         CurrentCameraRotation = AttachedCamera.eulerAngles;
     }
 
-    // Update is called once per frame
     void Update()
     {
         CurrentCameraRotation = AttachedCamera.eulerAngles;

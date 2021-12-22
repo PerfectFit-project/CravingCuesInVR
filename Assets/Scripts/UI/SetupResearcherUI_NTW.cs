@@ -17,11 +17,6 @@ public class SetupResearcherUI_NTW : MonoBehaviour
     public GameObject ResponseInputFieldPrefab;
 
 
-    //void Start()
-    //{
-    //    PopulateResearcherUI(RetrieveChatMessagesFromJSON());
-    //}
-
     public void InitializeResearcherUI()
     {
         PopulateResearcherUI(RetrieveChatMessagesFromJSON());
@@ -47,7 +42,6 @@ public class SetupResearcherUI_NTW : MonoBehaviour
     /// <param name="chatMessages"></param>
     void PopulateResearcherUI(ChatMessages chatMessages)
     {
-        //Debug.Log(chatMessages.chatMessages.Length);
         foreach (ChatMessage chatMessage in chatMessages.chatMessages)
         {
             GameObject newButtonGameObject = Instantiate(TemplateMessageButtonPrefab, TemplateMessageSVContent.transform);

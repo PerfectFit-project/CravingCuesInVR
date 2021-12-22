@@ -257,6 +257,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BlockingPlanes
       objectReference: {fileID: 0}
+    - target: {fileID: 3369320983230293674, guid: 41739eace38264b4ea37b01b21db1cfd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41739eace38264b4ea37b01b21db1cfd, type: 3}
 --- !u!4 &236334324 stripped
@@ -929,7 +933,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 611771123}
-  m_LocalRotation: {x: 0.18693368, y: 0.115436204, z: -0.022125056, w: 0.97531575}
+  m_LocalRotation: {x: 0, y: 0.6762333, z: 0, w: 0.7366876}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -938,7 +942,7 @@ Transform:
   - {fileID: 377341409}
   m_Father: {fileID: 1420769585}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 21.7, y: 13.5, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 85.1, z: 0}
 --- !u!1 &1020220304
 GameObject:
   m_ObjectHideFlags: 0
@@ -1715,14 +1719,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1361728924}
-  m_LocalRotation: {x: 0, y: 0.5477092, z: 0, w: 0.8366688}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_Children:
   - {fileID: 236334324}
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 66.42, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1361728929
 MonoBehaviour:
   m_ObjectHideFlags: 0

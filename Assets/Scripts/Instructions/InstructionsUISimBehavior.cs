@@ -7,20 +7,6 @@ using UnityEngine.InputSystem;
 
 public class InstructionsUISimBehavior : MonoBehaviour
 {
-    // Present questionnaire
-    // Determine how to prompt the user to fill the questionnaire:
-    //      1. Give them a notification and let them access the simulated smartphone of their own volition
-    //      2. End the current environment interaction and present them with the simulated smartphone to use.
-    //  Probably 2. since we want this to be a controlled experiment, and as such, we want to have control over how much exposure to the environment participants have.
-    // 
-    // Determine whether we want to present the questionnaires:
-    //      1. In a neutral (transitive) environment between environments.
-    //      2. Disable camera controls and focus the simulated smartphone in the same environment.
-    //
-    // Determine how to ask questions:    
-    //      1. All questions on a continuous scrolling panel
-    //      2. Different pages for each type of question (craving, SoP, or even different pages for each factor in those)
-
     public GameObject InstructionsUI;
 
     public GameObject ChatLogSVContent;

@@ -38,15 +38,14 @@ public class InstructionsController : MonoBehaviour
 
     short CurrentState;
     bool UpdateState;
+    bool UIInteractionTestActive;
 
     bool TriggerMessageProgress = false;
     string ActiveMessageCategory;
     bool SkippableMessages;
     short MessagePresentIndex;
-    string MessageToPresent;
 
     bool CheckObjectVisibility;
-    bool UIInteractionTestActive;
 
 
     Dictionary<string, List<string>> MessagesDict = new Dictionary<string, List<string>>
@@ -99,10 +98,12 @@ public class InstructionsController : MonoBehaviour
      * 2. Instruct them to look towards a certain location until a certain object is visible.
      * 3. Then instruct them to look towards another location until a different object is visible.
      * 4. Inform them about UI controls showing a picture of a gamepad controller and what different buttons do
-     *    a. Show them a sample list and inform them how they can traverse it using the D-Pad.
-     *    b. Show them a sample button and inform them how they can select it.
-     *    c. The above two can be combined by presenting them with a sample chat interaction.
-     *    d. Show them how they can "close" the UI by pressing the relevant button.
+     *    a. Show them a sample UI and inform them how they can use the UI to interact with it.
+     *        i. Sample list and how they can use the D-pad to traverse it.
+     *        ii. Sample slider and how they can use the D-pad to change its value.
+     *        iii. Sample button and how they can select it.
+     *        iv. How they can toggle the UI visibility by pressing the relevant button.
+     *        v. Perform a simple test to make them use the UI.
      * 
      */
 
@@ -123,6 +124,10 @@ public class InstructionsController : MonoBehaviour
 
     void Update()
     {
+        Gamepad = Gamepad.current;
+        if (Gamepad != null)
+            GamepadActive = true;
+
         if (GamepadActive)
         {
             if (Gamepad.buttonSouth.wasPressedThisFrame)
@@ -341,7 +346,6 @@ public class InstructionsController : MonoBehaviour
         if (MessagePresentIndex >= MessagesDict[ActiveMessageCategory].Count)
         {
             MessagePresentIndex = 0;
-            //NextUpdateState();
             UpdateState = true;
             return;
         }
@@ -446,6 +450,7 @@ public class InstructionsController : MonoBehaviour
         obj.SetActive(!obj.activeSelf);
     }
 
+    // Methods below to animate UI interaction presentation. Opted not to use it and just let users do it themselves from the start.
     IEnumerator MenuNavigationDelay(float seconds)
     {
         yield return new WaitForSeconds(seconds);

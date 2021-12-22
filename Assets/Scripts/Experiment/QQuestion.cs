@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Class holding a questionnaire question.
+/// </summary>
 [System.Serializable]
 public class QQuestion
 {
@@ -31,7 +34,7 @@ public class QQuestion
 }
 
 /// <summary>
-/// Class holding an array of ChatMessage. 
+/// Class holding an array of QQuestions. 
 /// </summary>
 [System.Serializable]
 public class Questionnaire

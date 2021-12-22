@@ -147,7 +147,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 39486209}
-  m_LocalRotation: {x: 0, y: 0.5, z: 0, w: 0.8660254}
+  m_LocalRotation: {x: 0, y: 0.6427876, z: 0, w: 0.7660445}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -156,7 +156,7 @@ Transform:
   - {fileID: 414951727}
   m_Father: {fileID: 1236969714}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 60, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 80, z: 0}
 --- !u!82 &39486211
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3941,8 +3941,8 @@ MonoBehaviour:
   LoginCanvas: {fileID: 1683598862}
   PanoramaCameraObj: {fileID: 4310070467522290852}
   QuestionnaireCanvasParent: {fileID: 4415577888484967403}
-  TimePerCueEnv: 3
-  TimePerTransitionEnv: 2
+  TimePerCueEnv: 180
+  TimePerTransitionEnv: 35
 --- !u!114 &5124409528576604550
 MonoBehaviour:
   m_ObjectHideFlags: 0

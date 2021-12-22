@@ -35,7 +35,6 @@ public class LogInManagerLC : MonoBehaviour
         }
 
         PlayerLC.GetComponent<ExperimentRun>().LogUserIn(userName);
-
     }
 
 

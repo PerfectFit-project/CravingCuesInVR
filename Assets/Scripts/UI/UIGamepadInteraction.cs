@@ -70,20 +70,12 @@ public class UIGamepadInteraction : MonoBehaviour
         else
             return;        
 
-        // Left
-        // on the Gamepad makes the UI appear / disappear.
         if (gamepad.yButton.wasPressedThisFrame)
         {
             if (transform.GetComponent<LocalExperimentUIBehavior>())
             {
                 transform.GetComponent<LocalExperimentUIBehavior>().HandleUIToggle();
-            }                
-            else
-            {
-                //transform.parent.GetComponent<MeshRenderer>().enabled = !transform.parent.GetComponent<MeshRenderer>().enabled;
-                //transform.GetComponent<Canvas>().enabled = !transform.GetComponent<Canvas>().enabled;
-                //transform.parent.parent.GetComponent<InstructionsController>().SmartphoneUIObject.GetComponent<MeshRenderer>().enabled = !transform.parent.parent.GetComponent<InstructionsController>().SmartphoneUIObject.GetComponent<MeshRenderer>().enabled;
-            }
+            } 
         }
       
         if (!GamepadActive || !GamepadDetected)        
@@ -264,7 +256,6 @@ public class UIGamepadInteraction : MonoBehaviour
         if (selectedObject == null)
             return;
 
-        //Color currentColor = selectedObject.GetComponent<Image>().color;
         selectedObject.GetComponent<Image>().color = new Color(1f, 1f, 1f, 1f);
         
         selectedObject = null;

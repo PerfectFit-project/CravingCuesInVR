@@ -5,7 +5,7 @@ using TMPro;
 using Unity.Netcode;
 
 /// <summary>
-/// Handle creationing and positioning of messages on a Canvas chat log.
+/// Handle creating and positioning of messages on a Canvas chat log.
 /// Used on Participant_Canvas_NTW and Researcher_Canvas_NTW objects, which have compatible chat logs.
 /// </summary>
 public class ChatLogBehaviour : MonoBehaviour
@@ -29,7 +29,6 @@ public class ChatLogBehaviour : MonoBehaviour
     /// <param name="chatMessage"></param>
     void OnPlayerMessage(Player player, ChatMessage chatMessage)
     {
-        //Debug.Log("ONPLAYERMESSAGE: " + "ISLOCAL: " + player.IsLocalPlayer + " ISRESEARCHER: " + player.IsResearcher.Value + " ISOWNEDBYSERVER: " + player.IsOwnedByServer);
         DisplayMessage(player.IsLocalPlayer, player.IsOwnedByServer, chatMessage);
     }
 
@@ -39,17 +38,6 @@ public class ChatLogBehaviour : MonoBehaviour
     /// <param name="chatMessage"></param>
     public void OnSend(ChatMessage chatMessage)
     {
-        //NewPlayer player;
-
-        //if (NetManager.LocalClient != null)
-        //{
-        //    player = NetManager.LocalClient.PlayerObject.gameObject.GetComponent<NewPlayer>();
-        //}
-        //else
-        //{
-        //    player = NetManager.ConnectedClients[0].PlayerObject.gameObject.GetComponent<NewPlayer>();
-        //}
-
         Player player;
 
         if (NetworkManager.Singleton.LocalClient != null)
@@ -115,8 +103,6 @@ public class ChatLogBehaviour : MonoBehaviour
                 foreach (string response in chatMessage.messageResponses)
                 {
                     GameObject newResponseButton = Instantiate(ResponseMessageButtonPrefab, newChatLogGameObject.transform.GetChild(0).transform.GetChild(1).GetChild(0).GetChild(0));
-                    //GameObject newResponseButton = Instantiate(ResponseMessageButtonPrefab, newChatLogGameObject.transform.GetChild(0).transform.GetChild(1).GetChild(0).GetChild(0).GetChild(0)); // THIS HERE
-                    //GameObject newResponseButton = Instantiate(ResponseMessageButtonPrefab, newChatLogGameObject.transform.GetChild(0).transform.GetChild(1));
 
                     newResponseButton.transform.GetChild(0).GetComponent<TMP_Text>().text = response;
 
@@ -168,12 +154,8 @@ public class ChatLogBehaviour : MonoBehaviour
     {
         string response = selectedResponseButton.transform.GetChild(0).GetComponent<TMP_Text>().text;
 
-        //GameObject parentChatObject = selectedResponseButton.transform.parent.transform.parent.transform.parent.parent.parent.parent.gameObject;
-        //GameObject parentChatObject = selectedResponseButton.transform.parent.transform.parent.transform.parent.gameObject;
         GameObject parentChatObject = selectedResponseButton.transform.parent.transform.parent.transform.parent.parent.parent.gameObject;
 
-        //Destroy(selectedResponseButton.transform.parent.parent.parent.parent.gameObject); //THIS HERE
-        //Destroy(selectedResponseButton.transform.parent.gameObject);
         Destroy(selectedResponseButton.transform.parent.parent.parent.gameObject);
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(parentChatObject.transform.GetComponent<RectTransform>());
