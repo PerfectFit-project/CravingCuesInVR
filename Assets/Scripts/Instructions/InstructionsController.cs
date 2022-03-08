@@ -96,7 +96,7 @@ public class InstructionsController : MonoBehaviour
      * 
      * 1. Inform user they can look around by moving their head towards the location in which they want to.
      * 2. Instruct them to look towards a certain location until a certain object is visible.
-     * 3. Then instruct them to look towards another location until a different object is visible.
+     * 3. Then instruct them to look towards another location until a different object is visible. x2
      * 4. Inform them about UI controls showing a picture of a gamepad controller and what different buttons do
      *    a. Show them a sample UI and inform them how they can use the UI to interact with it.
      *        i. Sample list and how they can use the D-pad to traverse it.
@@ -375,6 +375,7 @@ public class InstructionsController : MonoBehaviour
     /// <summary>
     /// Enabling / disabling specific objects based on which text is presented. Hardcoded to work with the controls instructions, to present indicators of specific buttons when the text describes them.
     /// </summary>
+    /// Commented-out coroutines perform a demonstration of UI use. Disable gamepad use if wanting to enable them, so that user input doesn't interfere with the demonstration and likely cause errors.
     void PresentImageToMatchText()
     {
         List<int> imageIndexesToEnable = new List<int>();

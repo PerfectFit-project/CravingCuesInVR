@@ -46,8 +46,6 @@ public class ExperimentRun : MonoBehaviour
         CurrentExperimentState = (short)ExperimentState.StartExperiment;
         UpdateState = false; 
         TakeAction();
-
-        //Camera.main.stereoTargetEye = StereoTargetEyeMask.None;
     }
 
     void Update()
@@ -156,7 +154,6 @@ public class ExperimentRun : MonoBehaviour
             QuestionnaireCanvasParent.transform.GetChild(0).GetComponent<LocalExperimentUIBehavior>().LastEnvironment = true;
         }
 
-
         StartCoroutine(QuestionnaireCanvasParent.transform.GetChild(0).GetComponent<LocalExperimentUIBehavior>().StartQuestionnairePresentation(1f));
     }
 
@@ -184,7 +181,7 @@ public class ExperimentRun : MonoBehaviour
      * Pseudo-Observers
      * 
      * Unity allows objects to interact with each other by providing references via the GUI. 
-     * So instead of manually defining observers for when different things happen in other objects,
+     * So instead of manually defining "typical" observers for when different things happen in other objects,
      * we can simply have the object in question call the relevant method when the appropriate event is triggered.
      */
 

@@ -13,12 +13,13 @@ public class ChatMessagesGamepadInteraction : MonoBehaviour
     public GameObject ContainerScrollView;
     public GameObject ContainerScrollBar;
 
+    GameObject ResponsesContainer;
     GameObject ResponsesContainerScrollBar;
 
     public List<GameObject> ListObjectsToIgnore;
     
     [SerializeField]
-    public bool GamepadActive { get; set; }
+    public bool GamepadMessageNavigationActive { get; set; }
     private bool GamepadDetected;
 
     [SerializeField]
@@ -35,8 +36,12 @@ public class ChatMessagesGamepadInteraction : MonoBehaviour
 
         if (gamepad == null)        
             GamepadDetected = false;
-        else        
+        else
+        {
             GamepadDetected = true;
+            GamepadMessageNavigationActive = false;
+        }
+
     }
 
     /// <summary>
@@ -47,7 +52,7 @@ public class ChatMessagesGamepadInteraction : MonoBehaviour
     {
         ResponsesContainerScrollBar = newMessageWithResponses.transform.GetChild(0).GetChild(1).GetChild(1).gameObject;
 
-        ContentContainer = newMessageWithResponses.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).gameObject;
+        ResponsesContainer = newMessageWithResponses.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).gameObject;
 
         InitializeUI();
     }
@@ -55,11 +60,11 @@ public class ChatMessagesGamepadInteraction : MonoBehaviour
 
     public void InitializeUI()
     {
-        int childrenCount = ContentContainer.transform.childCount;
+        int childrenCount = ResponsesContainer.transform.childCount;
         if (childrenCount < 1)
         {
             WaitingForMessageResponse = false;
-            GamepadActive = true;
+            GamepadMessageNavigationActive = true;
             return;
         }
 
@@ -68,9 +73,9 @@ public class ChatMessagesGamepadInteraction : MonoBehaviour
 
         for (int i = 0; i < childrenCount; i++)
         {
-            if (!ListObjectsToIgnore.Contains(ContentContainer.transform.GetChild(i).gameObject))
+            if (!ListObjectsToIgnore.Contains(ResponsesContainer.transform.GetChild(i).gameObject))
             {
-                gameObjectsToTraverse.Add(ContentContainer.transform.GetChild(i).gameObject);
+                gameObjectsToTraverse.Add(ResponsesContainer.transform.GetChild(i).gameObject);
             }            
         }
 
@@ -78,7 +83,28 @@ public class ChatMessagesGamepadInteraction : MonoBehaviour
         SetSelected(selectedObjIndex);
 
         WaitingForMessageResponse = true;
-        GamepadActive = true;
+        GamepadMessageNavigationActive = true;
+    }
+
+    public void InitializeQuestionnaireControl()
+    {
+        int childrenCount = ContentContainer.transform.childCount;
+        gameObjectsToTraverse = new List<GameObject>();
+        gameObjectsToTraverse.Clear();
+
+        for (int i = 0; i < childrenCount; i++)
+        {
+            if (!ListObjectsToIgnore.Contains(ContentContainer.transform.GetChild(i).gameObject) && (ContentContainer.transform.GetChild(i).gameObject.GetComponentInChildren<Slider>() || ContentContainer.transform.GetChild(i).gameObject.GetComponentInChildren<Button>()))
+            {
+                gameObjectsToTraverse.Add(ContentContainer.transform.GetChild(i).gameObject);
+            }
+        }
+
+        ResponsesContainer = ContentContainer;
+        selectedObjIndex = 0;
+        SetSelected(selectedObjIndex);
+        GamepadMessageNavigationActive = true;
+
     }
 
     private void Update()
@@ -88,15 +114,16 @@ public class ChatMessagesGamepadInteraction : MonoBehaviour
         {
             ResponsesContainerScrollBar.GetComponent<Scrollbar>().Select();
         }
+        else
+        {
+            ContainerScrollBar.GetComponent<Scrollbar>().Select();
+        }
 
         var gamepad = Gamepad.current;
 
         if (gamepad != null)
             GamepadDetected = true;
-
-
-        if (!GamepadActive || !GamepadDetected)        
-            return;
+        else return;
 
         // Left Trigger on the Gamepad makes the UI appear / disappear.
         if (gamepad.yButton.wasPressedThisFrame)
@@ -104,6 +131,7 @@ public class ChatMessagesGamepadInteraction : MonoBehaviour
             // Making the relevant objects invisible instead of disabling them, so that the attached scripts, this one included, continue to work even when the objects aren't visible.
             transform.parent.transform.GetComponent<MeshRenderer>().enabled = !transform.parent.transform.GetComponent<MeshRenderer>().enabled;
             transform.parent.transform.GetChild(0).GetComponent<Canvas>().enabled = !transform.parent.transform.GetChild(0).GetComponent<Canvas>().enabled;
+            transform.parent.transform.GetChild(1).GetComponent<MeshRenderer>().enabled = !transform.parent.transform.GetChild(1).GetComponent<MeshRenderer>().enabled;
         }
 
         // Navigate up or down on the ScrollRect without changing object selection
@@ -115,6 +143,15 @@ public class ChatMessagesGamepadInteraction : MonoBehaviour
         {
             ContainerScrollView.GetComponent<ScrollRect>().verticalNormalizedPosition -= 0.5f * Time.deltaTime;
         }
+
+
+        // Disable D-pad and A button if there is no message or questionnaire to respond to.
+        if (!GamepadMessageNavigationActive)        
+            return;
+
+ 
+
+
 
         // Up or Down on the DPad changes object selection.
         if (gamepad.dpad.down.wasPressedThisFrame)        
@@ -163,7 +200,7 @@ public class ChatMessagesGamepadInteraction : MonoBehaviour
                 WaitingForMessageResponse = false;
                 ResponsesContainerScrollBar = null;
                 selectedObject.GetComponentInChildren<Button>().onClick.Invoke();                
-                GamepadActive = false;
+                GamepadMessageNavigationActive = false;
             }
         }       
 
@@ -186,11 +223,11 @@ public class ChatMessagesGamepadInteraction : MonoBehaviour
     {
         Canvas.ForceUpdateCanvases();
 
-        RectTransform contentContainer = ContentContainer.GetComponent<RectTransform>();
+        RectTransform contentContainer = ResponsesContainer.GetComponent<RectTransform>();
 
         RectTransform selectedRectTransform = selectedObject.GetComponent<RectTransform>();
 
-        ScrollRect scrollRect = ContentContainer.transform.parent.parent.GetComponent<ScrollRect>();
+        ScrollRect scrollRect = ResponsesContainer.transform.parent.parent.GetComponent<ScrollRect>();
         RectTransform scrollWindow = scrollRect.GetComponent<RectTransform>();
 
         float scrollPadding = 75f;

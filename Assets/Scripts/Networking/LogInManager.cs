@@ -165,6 +165,8 @@ public class LogInManager : MonoBehaviour
 
     public void ResolveLogin(bool isResearcher, string userName)
     {
+        // If the Local Host checkmark was selected, use the Ip Host transport. Otherwise, use the Unity Relay transport.
+
         if (LocalHostToggle.GetComponent<Toggle>().isOn)
         {
             NetworkManager.Singleton.NetworkConfig.NetworkTransport = IpHostTransport;
@@ -283,6 +285,7 @@ public class LogInManager : MonoBehaviour
 
     private void Update()
     {
+
         if (!calledPlayerInit && calledStartClient)
         {
             if (NetworkManager.Singleton.LocalClient != null)

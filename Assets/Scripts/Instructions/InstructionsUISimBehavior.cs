@@ -75,20 +75,12 @@ public class InstructionsUISimBehavior : MonoBehaviour
     public void ConfirmButtonSelection(int objId)
     {
         bool testPassed = false;
-        Debug.Log("Correct Slider ID: " + CorrectSliderId + " Correct Slider Value: " + CorrectSliderValue);
-        Debug.Log("Correct Slider Actual Value: " + ChatLogSVContent.transform.GetChild(CorrectSliderId).GetComponentInChildren<Slider>().value);
-        Debug.Log("Correct Button ID: " + CorrectButtonId + " " + objId);
        
 
         if (objId == CorrectButtonId && ChatLogSVContent.transform.GetChild(CorrectSliderId).GetComponentInChildren<Slider>().value == CorrectSliderValue)
         {
-            Debug.Log("YAY!");
             testPassed = true;
 
-        }
-        else
-        {
-            Debug.Log("NOPE :(");            
         }
 
         InstructionsUI.GetComponent<InstructionsController>().UIInteractionTestResult(testPassed);

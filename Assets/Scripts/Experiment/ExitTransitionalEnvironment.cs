@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Class that handles exiting the transitional environment after a set amount of time counted elsewhere.
+/// </summary>
 public class ExitTransitionalEnvironment : MonoBehaviour
 {
     public GameObject PanoramaSphere;

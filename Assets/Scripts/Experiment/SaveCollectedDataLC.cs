@@ -35,7 +35,14 @@ public class SaveCollectedDataLC : MonoBehaviour
             QuestionnaireResponses.Add(envId, responseQs);
         }
 
-        SaveDataToFile(transform.GetComponent<ExperimentRun>().UserName);
+        if (transform.GetComponent<ExperimentRun>())
+        {
+            SaveDataToFile(transform.GetComponent<ExperimentRun>().UserName);
+        }
+        else
+        {
+            SaveDataToFile(System.DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss"));
+        }
     }
 
     /// <summary>
@@ -101,8 +108,6 @@ public class SaveCollectedDataLC : MonoBehaviour
             
         }
 
-        Debug.Log(headerTextToWrite);
-        Debug.Log(contentTextToWrite);
 
         string filePath = Application.streamingAssetsPath + "/SavedData/" + userName + "_responses" + ".csv";
 

@@ -51,7 +51,7 @@ public class UIGamepadInteraction : MonoBehaviour
 
         for (int i = 0; i < childrenCount; i++)
         {
-            if (!ListObjectsToIgnore.Contains(ContentContainer.transform.GetChild(i).gameObject))
+            if (!ListObjectsToIgnore.Contains(ContentContainer.transform.GetChild(i).gameObject) || ContentContainer.transform.GetChild(i).gameObject.GetComponentInChildren<Slider>() || ContentContainer.transform.GetChild(i).gameObject.GetComponentInChildren<Button>())
             {
                 gameObjectsToTraverse.Add(ContentContainer.transform.GetChild(i).gameObject);
             }            

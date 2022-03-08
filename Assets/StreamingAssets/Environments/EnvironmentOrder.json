@@ -1,0 +1,9 @@
+{
+    "Baseline_Env":1,
+    "NOPNSC_Gym":2,
+    "NOPNSC_Church":3,
+    "NOPSC_Lunch":4,
+    "NOPSC_BusStop":5,
+    "NOPSC_Bar":6,
+    "NOPNSC_Shower":7
+}

@@ -47,7 +47,6 @@ public class Player : NetworkBehaviour
 
     private void Awake()
     {
-        Debug.Log("AWAKE HAPPENS");
         LoadingScreen = GameObject.Find("LoadingScreenCanvas");
     }
 
@@ -55,7 +54,15 @@ public class Player : NetworkBehaviour
     [ServerRpc]
     public void InitPlayerServerRpc(string userName, bool isResearcher)
     {
-        Debug.Log("CUSTOM START HAPPENS");
+        InstantiateUIClientRpc(userName, isResearcher);
+    }
+
+    /// <summary>
+    /// Instantiate the appropriate UI depending on whether the user has logged in as Researcher or Participant. Activate the UI only on the client that has ownership of it, so as to not display every UI on every client.
+    /// </summary>
+    [ClientRpc]
+    public void InstantiateUIClientRpc(string userName, bool isResearcher)
+    {
         NetManager = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
 
         EnvironmentLoaded = false;
@@ -65,17 +72,6 @@ public class Player : NetworkBehaviour
 
         UserName = userName;
 
-        Debug.Log("IS RESEARCHER: " + isResearcher);
-
-        InstantiateUIClientRpc();
-    }
-
-    /// <summary>
-    /// Instantiate the appropriate UI depending on whether the user has logged in as Researcher or Participant. Activate the UI only on the client that has ownership of it, so as to not display every UI on every client.
-    /// </summary>
-    [ClientRpc]
-    public void InstantiateUIClientRpc()
-    {
         LoadingScreen.GetComponent<Canvas>().enabled = true;
 
         PanoramaSphere = GameObject.Find("PanoramaSphere");
@@ -97,8 +93,8 @@ public class Player : NetworkBehaviour
             userInterface = Instantiate(ParticipantUIPrefab);
             userInterface.transform.parent = PanoramaCamera.transform;
 
-            userInterface.transform.localPosition = new Vector3(0f, -0.8f, 1.4f);
-            userInterface.transform.localEulerAngles = new Vector3(-10f, 180f, 0f);
+            userInterface.transform.localPosition = new Vector3(0f, -1f, 2.15f);
+            userInterface.transform.localEulerAngles = new Vector3(-11f, 180f, 0f);
 
             PanoramaCamera.GetComponent<Camera>().enabled = true;
             PanoramaCamera.GetComponent<TrackedPoseDriver>().enabled = true;
@@ -131,12 +127,12 @@ public class Player : NetworkBehaviour
         OnMessage?.Invoke(this, chatMessage);
     }
 
-
     [ServerRpc]
     public void RotateCameraServerRpc(Vector3 rotation)
     {
         ReceiveCameraRotationClientRpc(rotation);
     }
+
 
     [ClientRpc]
     public void ReceiveCameraRotationClientRpc(Vector3 rotation)
@@ -147,6 +143,46 @@ public class Player : NetworkBehaviour
         }
 
     }
+
+    [ServerRpc]
+    public void RequestQuestionnairePresentationServerRpc()
+    {
+        if (!IsLocalPlayer) return;
+
+        // Hardcoding that the method is called on Participant UI, which would be the second client connected (host starts the server and is therefore always the first client).
+        NetworkManager.Singleton.ConnectedClients[1].PlayerObject.gameObject.GetComponent<Player>().PresentQuestionnaireClientRpc();
+
+    }
+
+    [ClientRpc]
+    public void PresentQuestionnaireClientRpc()
+    {
+        if (!IsLocalPlayer) return;
+
+        if (!IsHost)
+        {
+            if (userInterface.transform.GetChild(0).GetComponent<ParticipantUIQPresentation>())
+            {
+                userInterface.transform.GetChild(0).GetComponent<ParticipantUIQPresentation>().PresentQuestionnaire();
+            }
+        }
+    }
+
+    [ServerRpc]
+    public void QSubmissionResponseServerRpc(bool response)
+    {
+        NetworkManager.Singleton.ConnectedClients[0].PlayerObject.gameObject.GetComponent<Player>().ProcessQSubmissionClientRpc(response);
+    }
+
+    [ClientRpc]
+    public void ProcessQSubmissionClientRpc(bool response)
+    {
+        if (IsHost)
+        {
+            userInterface.GetComponent<SetupResearcherUI_NTW>().ProcessQuestionnaireResponse(response);
+        }
+    }
+
 
     public void LoadEnvironmentFromJSON()
     {
@@ -258,7 +294,6 @@ public class Player : NetworkBehaviour
     /// <returns></returns>
     IEnumerator LoadEnvironmentFiles(string textureFileName, string audioClipFileName)
     {
-        Debug.Log("LOADENVIRONMENTFILES");
         string wwwTextureFilePath = "file://" + textureFileName;
         UnityWebRequest webRequest = UnityWebRequestTexture.GetTexture(wwwTextureFilePath);
         yield return webRequest.SendWebRequest();

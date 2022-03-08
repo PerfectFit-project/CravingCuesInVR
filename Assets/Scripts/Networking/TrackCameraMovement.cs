@@ -4,7 +4,7 @@ using UnityEngine;
 using Unity.Netcode;
 
 /// <summary>
-/// Class that tracks how much a camera controlled by a participant has rotated and if more than the threshold value, updates the researcher camera rotation.
+/// Class that tracks how much a camera controlled by a participant has rotated and if more than the threshold value, sends the new rotation over the network connection to update the researcher camera rotation.
 /// </summary>
 public class TrackCameraMovement : MonoBehaviour
 {

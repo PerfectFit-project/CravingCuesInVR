@@ -81,17 +81,19 @@ public class ChatLogBehaviour : MonoBehaviour
         }
         else
         {
-            if (sentFromResearcher && chatMessage.messageResponses != null)
+            if (!transform.GetComponent<Canvas>().enabled) // Playing notification sound if the UI is not visible.
             {
-                if (!transform.GetComponent<Canvas>().enabled)
-                {
-                    transform.GetComponent<AudioSource>().Play();
-                }
-
+                transform.GetComponent<AudioSource>().Play();
+                transform.parent.transform.GetComponent<MeshRenderer>().enabled = !transform.parent.transform.GetComponent<MeshRenderer>().enabled;
+                transform.parent.transform.GetChild(0).GetComponent<Canvas>().enabled = !transform.parent.transform.GetChild(0).GetComponent<Canvas>().enabled;
+                transform.parent.transform.GetChild(1).GetComponent<MeshRenderer>().enabled = !transform.parent.transform.GetChild(1).GetComponent<MeshRenderer>().enabled;
+            }
+            if (sentFromResearcher && chatMessage.messageResponses.Length > 0)
+            {
                 newChatLogGameObject = Instantiate(ChatObjWResponsesPrefab, ChatLogSVContent.transform);
 
                 if (chatMessage.messageResponses.Length < 1)
-                    Destroy(newChatLogGameObject.transform.GetChild(0).GetChild(1).gameObject);
+                    Destroy(newChatLogGameObject.transform.GetChild(0).GetChild(1).gameObject); // New message object by default contains components to house response buttons. If no responses, those are not needed.
                 else
                 {
                     newChatLogGameObject.transform.GetChild(0).GetChild(1).GetComponent<RectTransform>().sizeDelta = new Vector2(150f, 110f);
@@ -134,7 +136,15 @@ public class ChatLogBehaviour : MonoBehaviour
 
         if (ChatLogSVContent.transform.childCount > 1)
         {
-            yPos = yPos - Math.Abs(ChatLogSVContent.transform.GetChild(ChatLogSVContent.transform.childCount - 2).GetChild(0).transform.GetChild(0).GetComponent<RectTransform>().localPosition.y) - Math.Abs(ChatLogSVContent.transform.GetChild(ChatLogSVContent.transform.childCount - 2).GetComponent<RectTransform>().sizeDelta.y / 2f);
+            if (ChatLogSVContent.transform.GetChild(ChatLogSVContent.transform.childCount - 2).GetComponent<Button>() == null)
+            {
+                yPos = yPos - Math.Abs(ChatLogSVContent.transform.GetChild(ChatLogSVContent.transform.childCount - 2).GetChild(0).transform.GetChild(0).GetComponent<RectTransform>().localPosition.y) - Math.Abs(ChatLogSVContent.transform.GetChild(ChatLogSVContent.transform.childCount - 2).GetComponent<RectTransform>().sizeDelta.y / 2f);
+            }
+            else
+            {
+                yPos = yPos - Math.Abs(ChatLogSVContent.transform.GetChild(ChatLogSVContent.transform.childCount - 2).GetComponent<RectTransform>().localPosition.y) - Math.Abs(ChatLogSVContent.transform.GetChild(ChatLogSVContent.transform.childCount - 2).GetComponent<RectTransform>().sizeDelta.y / 2f);
+            }
+            
         }
 
         newChatLogGameObject.transform.GetChild(0).transform.GetChild(0).GetComponent<RectTransform>().transform.localPosition = new Vector3(xPos, 0, 0f);

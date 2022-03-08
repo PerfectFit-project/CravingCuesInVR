@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Constraint camera rotation when using a mouse. Does not work for the VR camera.
+/// Constraint camera rotation when using a mouse. Does not work for the VR camera due to Oculus policies disallowing the manual control of the VR camera.
 /// </summary>
 public class CameraConstraint : MonoBehaviour
 {

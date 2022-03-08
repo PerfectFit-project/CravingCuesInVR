@@ -3,6 +3,8 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.Netcode;
+
 
 /// <summary>
 /// Loads template messages and acceptable responses from a JSON file and presenting them in the UI.
@@ -15,6 +17,8 @@ public class SetupResearcherUI_NTW : MonoBehaviour
     public GameObject MessageInputField;
     public GameObject MessageResponsesSVContent;
     public GameObject ResponseInputFieldPrefab;
+    public GameObject RequestQuestionnaireButton;
+    public GameObject QuestionnaireRequestResponseText;
 
 
     public void InitializeResearcherUI()
@@ -144,6 +148,55 @@ public class SetupResearcherUI_NTW : MonoBehaviour
 
         ChatMessage chatMessage = new ChatMessage(message, responses);
         GetComponent<ChatLogBehaviour>().OnSend(chatMessage);
+    }
+
+
+    public void SendQuestionnaire()
+    {
+        Player player;
+
+        if (NetworkManager.Singleton.LocalClient != null)
+        {
+            player = NetworkManager.Singleton.LocalClient.PlayerObject.gameObject.GetComponent<Player>();
+        }
+        else
+        {
+            player = NetworkManager.Singleton.ConnectedClients[NetworkManager.Singleton.LocalClientId].PlayerObject.gameObject.GetComponent<Player>();
+        }
+
+        bool qSendSuccess = false;
+        try
+        {
+            player.RequestQuestionnairePresentationServerRpc();
+            qSendSuccess = true;
+        }
+        catch { }
+
+        if (qSendSuccess)
+        {
+            QuestionnaireRequestResponseText.GetComponent<TMP_Text>().text = "Response Request Sent. Questionnaire Submission Pending.";
+            RequestQuestionnaireButton.GetComponent<Button>().interactable = false;
+        }
+        else
+        {
+            QuestionnaireRequestResponseText.GetComponent<TMP_Text>().text = "Response Request Failed.";
+        }
+
+    }
+
+    public void ProcessQuestionnaireResponse(bool saveSuccess)
+    {
+        if (saveSuccess)
+        {
+            QuestionnaireRequestResponseText.GetComponent<TMP_Text>().text = "Responses Saved.";
+        }
+        else
+        {
+            QuestionnaireRequestResponseText.GetComponent<TMP_Text>().text = "Failed to Save Responses.";
+        }
+
+        RequestQuestionnaireButton.GetComponent<Button>().interactable = true;
+
     }
 
 }

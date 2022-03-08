@@ -410,7 +410,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 6ad2ffc93e300534399a3818ef7b025c, type: 3}
+  m_Texture: {fileID: 2800000, guid: 6abca3cb04149904185ce101785fec54, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -432,6 +432,8 @@ GameObject:
   - component: {fileID: 1509025971432778965}
   - component: {fileID: 2053800193851814085}
   - component: {fileID: 67598580944324798}
+  - component: {fileID: 3933569628633522280}
+  - component: {fileID: 5695561899030725492}
   m_Layer: 5
   m_Name: Participant_Canvas_NTW - World Space
   m_TagString: Untagged
@@ -466,7 +468,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1804333023312869685}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_RenderMode: 2
   m_Camera: {fileID: 0}
@@ -649,6 +651,33 @@ MonoBehaviour:
   ContainerScrollView: {fileID: 1804333023193437096}
   ContainerScrollBar: {fileID: 1804333022871468689}
   ListObjectsToIgnore: []
+--- !u!114 &3933569628633522280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1804333023312869685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a34095cc5fc72404fba4dde3bdc1c8ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SliderObjPrefab: {fileID: 1950405834377179044, guid: a3d2127c33e1cd14c98fa0ba09fa52dd, type: 3}
+  ChatLogSVContent: {fileID: 1804333023409942628}
+  ResponseMessageButtonPrefab: {fileID: 2619027684773502530, guid: 03ed0ccf097071740a180c4f6ee2c7db, type: 3}
+--- !u!114 &5695561899030725492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1804333023312869685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f9956b3c640a0840b226a07964166b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1804333023394905878
 GameObject:
   m_ObjectHideFlags: 0
@@ -952,7 +981,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3456713886255621188}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1130,7 +1159,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8209266697058283134}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1

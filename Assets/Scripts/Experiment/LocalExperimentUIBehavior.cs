@@ -341,16 +341,19 @@ public class LocalExperimentUIBehavior : MonoBehaviour
 
     public void RecordQuestionnaireResponses(string qId)
     {
-        // Adjusting the size to account for the submit button being a child of the panel too.
-        int questionCount = ChatLogSVContent.transform.childCount - 1;
-
         // Seems a bit unnecessary to have an <int, int> dictionary here since a simple array or list would suffice, but this makes it easier to add to the overall questionnare responses file later.
         Dictionary<int, int> qResponses = new Dictionary<int, int>();
                 
 
-        for (int i = 1; i < questionCount; i++)
+        for (int i = 1; i < ChatLogSVContent.transform.childCount; i++)
         {
-            Slider selectedSlider = ChatLogSVContent.transform.GetChild(i).transform.GetChild(2).transform.GetChild(0).GetComponent<Slider>();
+            Slider selectedSlider;
+
+            if (ChatLogSVContent.transform.GetChild(i).GetComponentInChildren<Slider>())
+            {
+                selectedSlider = ChatLogSVContent.transform.GetChild(i).transform.GetChild(2).transform.GetChild(0).GetComponent<Slider>();
+            }
+            else continue;
 
             // Hardcoding that the Slider object is the second child of the composite slider object
             qResponses[i] = (int)selectedSlider.value;
