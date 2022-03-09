@@ -1,51 +1,65 @@
 # Craving Cues in VR
 
 ## Networked Solution
-### Goals
-1. Develop a system that takes textures and audio from the streamingassets folder at runtime and presents them as a virtual environment.
-2. Develop UI to facilitate communication between researchers and participants during the experiment.
+### Description
+1. System that takes textures and audio from the Streamingassets folder at runtime and presents them as a virtual environment.
+2. Establishes network commection (via local host or Unity Relay server) to facilitate communication between researchers and participants during the experiment, and for updating the Researcher camera based on Participant camera rotation.
+3. Presents UI based on user type:
+	1. Researcher: UI that allows for selecting message from template or composing one from scratch, along with their predefined responses, and sending it to the Participant. Presents the chat history. Facilitates sending a request for the Participant to submit responses to a questionnaire.
+	2. Participant: UI rendered on a 3D virtual smartphone that allows for the viewing of messages sent by Researchers, selecting the desired response if applicable, and for submitting responses to a questionnaire.
 
-### Progress Status
-1. Researcher and participant UI complete in terms of planned functionality. 
-2. Implemented a panoramic photo viewer using a camera attached to a sphere and rendering the desired texture inside it.
-3. Implemented networking: 
-	1. Host (researcher) and client (participant) can communicate via the former selecting a message template (loaded from a JSON file) with acceptable responses, and the latter selecting the response desired.
-	2. The client (participant) can look around in the environments using an HMD, while the host (researcher) can only view what the participant is viewing.
 
-### (Rough) Plan
-1. Perform final tests.
 
 ### Use
-Open as Unity project, open the "PanoramicEnvsNetworkingVR" Scene, build the project for PC Standalone with Windows as the target platform, and run. 
-Need two instances running to test the communication functionality, i.e. editor and an instance from the build executable, or two instances of the built executable, one being the researcher (host) and the other being the participant (client). Host password is "a". 
+Open as Unity project, open the *PanoramicEnvsNetworkingVR* Scene, build the project for PC Standalone with Windows as the target platform, and run. 
+Need two instances running to test the communication functionality. Either editor and an instance from the build executable, or two instances of the built executable. One instance needs to log in as Researcher (host) and the other as Participant (client). Host password is **a**. 
 
 Either (via a ticking the relevant checkbox on the UI): 
 1. Host sets up a server and connects on the localhost network address. Waits for client to connect through the localhost network address as well.
 2. Host sets up Unity Relay server, which produces a Relay ID key. This key needs to be passed to the participant who has to enter it at login, so that they can connect to the server created by the host. 
 
-Camera movement only works with HDM in this version, but if using the editor as one running instance, the camera can be manually rotated through the "Camera Offset" object attached to the "XR Rig" object in the hierarchy.
+Camera movement only works with HDM in this version, but if using the editor as one running instance, the camera can be manually rotated by adjusting the Transform Rotation of the "Camera Offset" object attached to the "XR Rig" object in the hierarchy.
 
-By default the UI is not visible. In both Researcher and UI instances, the key combination Left-Control + Space will open / close the UI. Researcher UI interaction works with a mouse. Participant UI also works with a gamepad controller (XBOX One controller confirmed).
+By default the UI is not visible. In both Researcher and UI instances, the key combination Left-Control + Space will toggle the UI. Researcher UI interaction works with a mouse. Participant UI also works with a gamepad controller (XBOX One controller confirmed). The gamepad button to toggle the Participant UI is "Y".
 
-Need to specify which environment to load in the EnvironmentToPresent.json file. The JSON file specifies the bar scene by default. The naming scheme is as follows: environmentname\_image.png, environmentname\_audio.wav. Here the "environmentname" is the name of the environment (EN), and the "\_image" and "\_audio" are the file descriptors (FD). The EN needs to be specified in the JSON file, and not the FD or file extensions. Make sure that each image file has a corresponding audio file, and both need to share exactly the EN.
+Need to specify which environment to load in the *EnvironmentToPresent.json* file. The JSON file specifies the bus stop scene by default. The naming scheme is as follows: environmentname\_image.png, environmentname\_audio.wav. Here the "environmentname" is the name of the environment (EN), and the "\_image" and "\_audio" are the file descriptors (FD). The EN needs to be specified in the JSON file, but not the FD or file extensions. Make sure that each image file has a corresponding audio file, and both need to share exactly the same EN.
 
+Can pre-define messages available for Reseachers to send Participants, in the *messages.json* file. Examples present in the file by default. Copy the structure between curly brackets to define a new message and its responses. If you want the message to not have responses, delete the content between the square brackets (but not the square brackets themselves). **messages.json file needs to be on the Reasercher computer.**
+
+Can pre-define the questionnaire to be presented to the Participant upon request, in the *questionnaire.json* file. Examples present in the file by default, and you can replicate the structure to define your own. **questionnaire.json file needs to be on the Participant computer.** Submitted responses are saved in a .csv file named after the submission time-stamp, and is placed in the *StreamingAssets\SavedData* folder **on the Participant computer.** Upon the Participant submitting their responses, the Researcher instance is notified of whether they have been successfully saved.  
+
+-------
+-------
 -------
 
 ## Local Experiment
-### Goals
-1. Develop a system that takes textures and audio from the streamingassets folder at runtime and presents them as virtual environment based on the order defined in the relevant JSON file.
-2. Develop UI to facilitate obtaining responses to questionnaires entered defined in the relevant JSON file.
+### Description
+1. System that takes textures and audio from the Streamingassets folder at runtime and presents them as virtual environments in the order defined in the *EnvironmentOrder.json* file.
+2. Facilitates presenting questionnaires on a UI rendered on a 3D virtual smartphone at the end of every timed virtual environment presentation.
+3. Implements a Finite-State Machine (FSM) for automating the experiment process.
 
-### Progress Status
-1. Implemented a panoramic photo viewer using a camera attached to a sphere and rendering the desired texture inside it.
-2. Implemented UI that presents questionnaires.
-3. Implemented recording questionnaire responses and exporting them in a JSON file.
-4. Implemented FSM to handle running the experiment.
-
-### (Rough) Plan
-1. Perform final tests.
 
 ### Use
-Open as Unity project, open the "LocalExperimentScene" Scene, build the project for PC Standalone with Windows as the target platform, and run. 
-Currently each environment is presented for 180 seconds, and transitional environments for 35 seconds. This can be changed through the PlayerLC object in the project hierarchy, via the Unity editor.
+Open as Unity project, open the *LocalExperimentScene* Scene, build the project for PC Standalone with Windows as the target platform, and run. 
+Currently each environment is presented for 180 seconds, and transitional environments for 35 seconds. This can be changed through the *PlayerLC* object in the project hierarchy, via the Unity editor.
+
 Camera movement is controlled via an HMD, and UI navigation using a gamepad controller (XBOX One controller confirmed). UI interaction also works with a mouse.
+
+The environments to be presented are located in the *StreamingAssets/Environments* folder, and the order in which they are presented is defined in the *EnvironmentOrder.json* file in the same folder. **Maximum supported resolution for images is 16384x16384.**
+
+The questionnaire to be presented is defined in *craving_questionnaire.json*. Examples present in the file by default, and you can replicate the structure to define your own. Submitted responses are saved in a .csv file named after the username used at login, followed by "_responses". and is placed in the *SavedData* folder.
+
+-------
+-------
+-------
+
+## System-Use Tutorial
+### Description
+1. System that aims to familiarize partiicpants with using an HMD to view virtual environments, and instructs them on how to use the UI to interact with sliders and buttoms.
+2. First has users locate an object outside current view of the camera three times.
+3. Then presents a sample UI and informs how one can interact with it using a gamepad controller.
+4. Finally, performs a small test by having participants change a specific slider value to a given one, and to press a specific button. 
+
+### Use
+Open as Unity project, open the *InstructionsScene* Scene, build the project for PC Standalone with Windows as the target platform, and run. 
+ 
