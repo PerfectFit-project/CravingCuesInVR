@@ -1,4 +1,20 @@
 # Craving Cues in VR
+Project to present environments in VR, and enable different functionality depending on which executable is built. Networked solution allows for communication between two instances of the application, local experiment enables conducting an experiment to collect participant responses after viewing different virtual environments, and the Syste-use tutorial acts as a short exposition and exercise for participants to familiarize themselves with VR.
+
+Additional documentation can be found in the *Accompanying Documents* folder.
+1. *Technical Design Document.pdf*: Describes objects and their attached scripts in the Unity project.
+2. *Researcher Guidelines Document.pdf*: Provides guidelines for:
+	1. Preparing audiovisual material.
+	2. Editing .json files to specify which virtual environments to present, what messages to offer researchers to send, and what questionnaire to present participants.
+	3. How to use the system.
+3. *System Architecture.png*: Diagram ilustrating the system architecture
+
+
+<br/>
+
+-------
+
+<br/>
 
 ## Networked Solution
 ### Description
@@ -28,9 +44,11 @@ Can pre-define messages available for Reseachers to send Participants, in the *m
 
 Can pre-define the questionnaire to be presented to the Participant upon request, in the *questionnaire.json* file. Examples present in the file by default, and you can replicate the structure to define your own. **questionnaire.json file needs to be on the Participant computer.** Submitted responses are saved in a .csv file named after the submission time-stamp, and is placed in the *StreamingAssets\SavedData* folder **on the Participant computer.** Upon the Participant submitting their responses, the Researcher instance is notified of whether they have been successfully saved.  
 
+<br/>
+
 -------
--------
--------
+
+<br/>
 
 ## Local Experiment
 ### Description
@@ -49,9 +67,11 @@ The environments to be presented are located in the *StreamingAssets/Environment
 
 The questionnaire to be presented is defined in *craving_questionnaire.json*. Examples present in the file by default, and you can replicate the structure to define your own. Submitted responses are saved in a .csv file named after the username used at login, followed by "_responses". and is placed in the *SavedData* folder.
 
+<br/>
+
 -------
--------
--------
+
+<br/>
 
 ## System-Use Tutorial
 ### Description
