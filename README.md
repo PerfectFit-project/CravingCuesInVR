@@ -1,5 +1,5 @@
 # Craving Cues in VR
-Project to present environments in VR, and enable different functionality depending on which executable is built. Networked solution allows for communication between two instances of the application, local experiment enables conducting an experiment to collect participant responses after viewing different virtual environments, and the Syste-use tutorial acts as a short exposition and exercise for participants to familiarize themselves with VR.
+Project to present environments in VR and enable different functionality depending on which scene is used to build an executable. Networked solution allows for communication between two instances of the application, local experiment enables conducting an experiment to collect participant responses after viewing different virtual environments, and the Syste-use tutorial acts as a short exposition and exercise for participants to familiarize themselves with VR.
 
 Additional documentation can be found in the *Accompanying Documents* folder.
 1. *Technical Design Document.pdf*: Describes objects and their attached scripts in the Unity project.
