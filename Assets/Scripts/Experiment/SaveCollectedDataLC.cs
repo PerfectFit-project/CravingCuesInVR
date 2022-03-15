@@ -4,7 +4,7 @@ using UnityEngine;
 using System.IO;
 
 /// <summary>
-/// Store questionnaire responses to a local dictionary, and to a JSON file.
+/// Store questionnaire responses to a local dictionary, and to a csv file.
 /// </summary>
 public class SaveCollectedDataLC : MonoBehaviour
 {
@@ -46,7 +46,7 @@ public class SaveCollectedDataLC : MonoBehaviour
     }
 
     /// <summary>
-    /// Save global Dictionary data to JSON file.
+    /// Save global Dictionary data to csv file.
     /// </summary>
     /// <param name="userName"></param>
     public void SaveDataToFile(string userName)

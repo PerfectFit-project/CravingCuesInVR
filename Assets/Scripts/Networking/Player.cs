@@ -12,7 +12,7 @@ using Unity.Collections;
 
 
 /// <summary>
-/// Holds player information, and instantiates the correct UI based on user type, and handles network interaction. 
+/// Holds player information, instantiates the correct UI based on user type, and handles network interaction. 
 /// </summary>
 public class Player : NetworkBehaviour
 {
