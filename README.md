@@ -27,7 +27,7 @@ Additional documentation can be found in the *Accompanying Documents* folder.
 
 
 ### Use
-Open as Unity project, open the *PanoramicEnvsNetworkingVR* Scene, build the project for PC Standalone with Windows as the target platform, and run. 
+Open as Unity project, open the *PanoramicEnvsNetworkingVR* Scene, build the project for PC Standalone with Windows as the target platform, and run. Not tested on other platforms, but may also work as intended. Likely incompatibilities include folder paths and file loading/saving, and functionalities related to the VR headset. 
 Need two instances running to test the communication functionality. Either editor and an instance from the build executable, or two instances of the built executable. One instance needs to log in as Researcher (host) and the other as Participant (client). Host password is **a**. 
 
 Either (via a ticking the relevant checkbox on the UI): 
@@ -58,7 +58,7 @@ Can pre-define the questionnaire to be presented to the Participant upon request
 
 
 ### Use
-Open as Unity project, open the *LocalExperimentScene* Scene, build the project for PC Standalone with Windows as the target platform, and run. 
+Open as Unity project, open the *LocalExperimentScene* Scene, build the project for PC Standalone with Windows as the target platform, and run. Not tested on other platforms, but may also work as intended. Likely incompatibilities include folder paths and file loading/saving, and functionalities related to the VR headset. 
 Currently each environment is presented for 180 seconds, and transitional environments for 35 seconds. This can be changed through the *PlayerLC* object in the project hierarchy, via the Unity editor.
 
 Camera movement is controlled via an HMD, and UI navigation using a gamepad controller (XBOX One controller confirmed). UI interaction also works with a mouse.
@@ -81,5 +81,5 @@ The questionnaire to be presented is defined in *craving_questionnaire.json*. Ex
 4. Finally, performs a small test by having participants change a specific slider value to a given one, and to press a specific button. 
 
 ### Use
-Open as Unity project, open the *InstructionsScene* Scene, build the project for PC Standalone with Windows as the target platform, and run. 
+Open as Unity project, open the *InstructionsScene* Scene, build the project for PC Standalone with Windows as the target platform, and run. Not tested on other platforms, but may also work as intended. Likely incompatibilities include folder paths and file loading/saving, and functionalities related to the VR headset. 
  
