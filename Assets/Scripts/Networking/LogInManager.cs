@@ -235,6 +235,8 @@ public class LogInManager : MonoBehaviour
         }
         catch (Exception e)
         {
+            PasswordWarningLabel.SetActive(true);
+            PasswordWarningLabel.GetComponent<TMP_Text>().text = e.Message;
             Debug.LogErrorFormat($"{e.Message}");
             throw;
         }
@@ -270,6 +272,8 @@ public class LogInManager : MonoBehaviour
         }
         catch (Exception e)
         {
+            PasswordWarningLabel.SetActive(true);
+            PasswordWarningLabel.GetComponent<TMP_Text>().text = e.Message;
             Debug.LogErrorFormat($"{e.Message}");
             throw;
         }

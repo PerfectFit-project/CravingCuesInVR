@@ -9,6 +9,7 @@ using UnityEngine.Networking;
 using Newtonsoft.Json;
 using Unity.Netcode;
 using Unity.Collections;
+using TMPro;
 
 
 /// <summary>
@@ -36,6 +37,7 @@ public class Player : NetworkBehaviour
     AudioClip audioClipToPlay;
 
     GameObject LoadingScreen;
+    GameObject ErrorMessageLabel;
 
     GameObject PanoramaCamera;
 
@@ -48,6 +50,7 @@ public class Player : NetworkBehaviour
     private void Awake()
     {
         LoadingScreen = GameObject.Find("LoadingScreenCanvas");
+        ErrorMessageLabel = LoadingScreen.transform.GetChild(0).GetChild(2).gameObject;
     }
 
 
@@ -83,7 +86,18 @@ public class Player : NetworkBehaviour
         {
             PanoramaCamera = researcherCamera;
             userInterface = Instantiate(ResearcherUIPrefab, transform);
-            userInterface.GetComponent<SetupResearcherUI_NTW>().InitializeResearcherUI();
+            try
+            {
+                userInterface.GetComponent<SetupResearcherUI_NTW>().InitializeResearcherUI();
+            }
+            catch (Exception e)
+            {
+                ErrorMessageLabel.SetActive(true);
+                ErrorMessageLabel.GetComponent<TMP_Text>().text = "Error: " + e.Message;
+                Debug.LogErrorFormat($"{e.Message}");
+                throw;
+            }
+
             participantCamera.SetActive(false);
         }
         else if (IsOwner)
@@ -163,7 +177,14 @@ public class Player : NetworkBehaviour
         {
             if (userInterface.transform.GetChild(0).GetComponent<ParticipantUIQPresentation>())
             {
-                userInterface.transform.GetChild(0).GetComponent<ParticipantUIQPresentation>().PresentQuestionnaire();
+                try
+                {
+                    userInterface.transform.GetChild(0).GetComponent<ParticipantUIQPresentation>().PresentQuestionnaire();
+                }
+                catch (Exception e)
+                {
+                    ProcessQSubmissionClientRpc(e.Message);
+                }
             }
         }
     }
@@ -174,12 +195,27 @@ public class Player : NetworkBehaviour
         NetworkManager.Singleton.ConnectedClients[0].PlayerObject.gameObject.GetComponent<Player>().ProcessQSubmissionClientRpc(response);
     }
 
+    [ServerRpc]
+    public void QSubmissionResponseServerRpc(string errorMessage)
+    {
+        NetworkManager.Singleton.ConnectedClients[0].PlayerObject.gameObject.GetComponent<Player>().ProcessQSubmissionClientRpc(errorMessage);
+    }
+
     [ClientRpc]
     public void ProcessQSubmissionClientRpc(bool response)
     {
         if (IsHost)
         {
             userInterface.GetComponent<SetupResearcherUI_NTW>().ProcessQuestionnaireResponse(response);
+        }
+    }
+
+    [ClientRpc]
+    public void ProcessQSubmissionClientRpc(string errorMessage)
+    {
+        if (IsHost)
+        {
+            userInterface.GetComponent<SetupResearcherUI_NTW>().ProcessQuestionnaireResponse(errorMessage);
         }
     }
 
@@ -194,11 +230,23 @@ public class Player : NetworkBehaviour
         DirectoryInfo directoryInfo = new DirectoryInfo(filePath);
         FileInfo[] AllFilesInFolder = directoryInfo.GetFiles("*.*");
 
-        var jsonString = File.ReadAllText(Application.streamingAssetsPath + "/EnvironmentToPresent.json");
+        string environmentToPresentName;
+        try
+        {
+            var jsonString = File.ReadAllText(Application.streamingAssetsPath + "/EnvironmentToPresent.json");
+            environmentToPresentName = jsonString.Substring(jsonString.IndexOf("{ \"") + 3);
+            environmentToPresentName = environmentToPresentName.Substring(0, jsonString.IndexOf("\" }") - 3);
+        }
+        catch (Exception e)
+        {
+            ErrorMessageLabel.SetActive(true);
+            ErrorMessageLabel.GetComponent<TMP_Text>().text = "Error: " + e.Message;
+            Debug.LogErrorFormat($"{e.Message}");
+            throw;
+        }
 
-        string environmentToPresentName = jsonString.Substring(jsonString.IndexOf("{ \"") + 3);
-        environmentToPresentName = environmentToPresentName.Substring(0, jsonString.IndexOf("\" }") - 3);
 
+        bool foundFile = false;
 
         foreach (var file in AllFilesInFolder)
         {
@@ -214,11 +262,28 @@ public class Player : NetworkBehaviour
                     {
                         if (file2.Name.Contains(environmentToPresentName))
                         {
-                            StartCoroutine(LoadEnvironmentFiles(file.FullName, file2.FullName));
+                            try
+                            {
+                                StartCoroutine(LoadEnvironmentFiles(file.FullName, file2.FullName));
+                                foundFile = true;
+                            }
+                            catch (Exception e)
+                            {
+                                ErrorMessageLabel.SetActive(true);
+                                ErrorMessageLabel.GetComponent<TMP_Text>().text = "Error: " + e.Message;
+                                Debug.LogErrorFormat($"{e.Message}");
+                                throw;
+                            }
                         }
                     }
                 }
             }
+        }
+
+        if (!foundFile)
+        {
+            ErrorMessageLabel.SetActive(true);
+            ErrorMessageLabel.GetComponent<TMP_Text>().text = "Error: Environment file name(s) not found.";
         }
 
     }

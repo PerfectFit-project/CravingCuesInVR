@@ -1729,6 +1729,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5519977439863949289, guid: ba431042afbc02043afd483668d852aa, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5519977439863949292, guid: ba431042afbc02043afd483668d852aa, type: 3}
       propertyPath: m_Name
       value: LoadingScreenCanvas

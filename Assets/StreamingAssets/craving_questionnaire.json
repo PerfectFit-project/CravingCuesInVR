@@ -78,7 +78,7 @@
         {
             "descriptionText": "",
             "questionText": "How familiar to your experiences in the real world does your experience in this current virtual environment feel?",
-            "acceptableResponseRange": ["-3", "3"],
+            "acceptableResponseRange": ["-5", "5"],
             "extremeRangeLabels": ["Completely Unfamiliar", "Neutral", "Completely Familiar"]                    
         }
 

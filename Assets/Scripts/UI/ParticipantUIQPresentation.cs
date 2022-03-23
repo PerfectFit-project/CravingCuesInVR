@@ -34,8 +34,15 @@ public class ParticipantUIQPresentation : MonoBehaviour
 
     public void PresentQuestionnaire()
     {
-        Questionnaire q = JsonUtility.FromJson<Questionnaire>(File.ReadAllText(Application.streamingAssetsPath + "/questionnaire.json"));
-        LoadQuestionnaireToUI(q);
+        try
+        {
+            Questionnaire q = JsonUtility.FromJson<Questionnaire>(File.ReadAllText(Application.streamingAssetsPath + "/questionnaire.json"));
+            LoadQuestionnaireToUI(q);
+        }
+        catch (Exception e)
+        {
+            NetworkManager.Singleton.LocalClient.PlayerObject.gameObject.GetComponent<Player>().QSubmissionResponseServerRpc(e.Message);
+        }
     }
 
     void LoadQuestionnaireToUI(Questionnaire questionnaire)

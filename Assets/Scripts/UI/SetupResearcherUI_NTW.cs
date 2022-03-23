@@ -199,4 +199,10 @@ public class SetupResearcherUI_NTW : MonoBehaviour
 
     }
 
+    public void ProcessQuestionnaireResponse(string errorMessage)
+    {
+        QuestionnaireRequestResponseText.GetComponent<TMP_Text>().text = "Error: " + errorMessage;
+
+        RequestQuestionnaireButton.GetComponent<Button>().interactable = true;
+    }
 }
