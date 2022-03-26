@@ -1,14 +1,17 @@
 # Craving Cues in VR
 Project to present environments in VR and enable different functionality depending on which scene is used to build an executable. Networked solution allows for communication between two instances of the application, local experiment enables conducting an experiment to collect participant responses after viewing different virtual environments, and the Syste-use tutorial acts as a short exposition and exercise for participants to familiarize themselves with VR.
 
-Additional documentation can be found in the *Accompanying Documents* folder.
-1. *Technical Design Document.pdf*: Describes objects and their attached scripts in the Unity project.
-2. *Researcher Guidelines Document.pdf*: Provides guidelines for:
-	1. Preparing audiovisual material.
-	2. Editing .json files to specify which virtual environments to present, what messages to offer researchers to send, and what questionnaire to present participants.
-	3. How to use the system.
-3. *System Architecture.png*: Diagram ilustrating the system architecture
-
+Additional material can be found in the *Accompanying Material* folder:
+1. *Documents* subfolder:
+	1. *Technical Design Document.pdf*: Describes objects and their attached scripts in the Unity project.
+	2. *Researcher Guidelines Document.pdf*r: Provides guidelines for:
+		1. Preparing audiovisual material.
+		2. Editing .json files to specify which virtual environments to present, what messages to offer researchers to send, and what questionnaire to present participants.
+		3. How to use the system.
+	3. *System Architecture.png*: Diagram ilustrating the system architecture
+2. *Non-Personalized Virtual Environment Material* subfolder: 
+	1. Contains photos and audio incorporated by our system to create the non-personalized virtual environments used in our experiment, in a ready-to-use form. *NOPNSC_X* refers to "non-personalized non-smoking environment X", and *NOPSC_X* refers to "non-personalized smoking environment X".
+	2. *Non-Vertically-Stretched Photos* subfolder containing the non-personalized environment photos in the stage before stretching them to be used by our system. *NS - X* refers to "non-smoking environment X", and *S - X* refers to "smoking environment X".
 
 <br/>
 
