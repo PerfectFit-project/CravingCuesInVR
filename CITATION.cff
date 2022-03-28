@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Antoniades"
+  given-names: "Alkis"
+title: "VR system to present environments composed of 360° images and audio, and enabling interaction with a virtual smartphone."
+version: 1.0.0
+doi: 10.5281/zenodo.6390738
+date-released: 2022
+url: "https://github.com/PerfectFit-project/CravingCuesInVR"
